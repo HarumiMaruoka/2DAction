@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Burrett
+  - Enemy
+  - Ground
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: lear
+    uniqueID: 1808511677
+    locked: 0
+  - name: LearBackGround
+    uniqueID: 1158612145
+    locked: 0
+  - name: FrontBackGround
+    uniqueID: 3203778209
+    locked: 0
+  - name: LearObject
+    uniqueID: 4011364025
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Enemy
+    uniqueID: 68316101
+    locked: 0
+  - name: Player
+    uniqueID: 877056781
+    locked: 0
+  - name: FrontObject
+    uniqueID: 2347076137
+    locked: 0
+  - name: front
+    uniqueID: 3880679505
+    locked: 0
