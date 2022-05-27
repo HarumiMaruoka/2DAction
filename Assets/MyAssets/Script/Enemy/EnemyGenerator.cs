@@ -26,7 +26,7 @@ public class EnemyGenerator : MonoBehaviour
         _diffY = transform.position.y - _playerTransform.position.y;
 
         //プレイヤーとエネミーが一定距離近づいたら、子オブジェクトをアクティブにし、このコンポーネントを非アクティブにする。
-        if (Mathf.Abs(_diffX) < 10f && Mathf.Abs(_diffY) < 6.5f)
+        if (Mathf.Abs(_diffX) < 12.5f && Mathf.Abs(_diffY) < 7f)
         {
             _child.SetActive(true);
             enabled = false;

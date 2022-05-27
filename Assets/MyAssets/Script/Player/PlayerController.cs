@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject burrett_prefab;
     float burrett_Cool_Time;
 
+    [SerializeField] float _hoverPower;
+
 
     // Start is called before the first frame update
     void Start()
@@ -62,11 +64,17 @@ public class PlayerController : MonoBehaviour
             //ジャンプ
             jump_script.Jump(jump_power);
 
+            //ホバー
+            if (change_player_state._isHover)
+            {
+                rigidbody2D.velocity = Vector2.up * _hoverPower;
+            }
+
             //ショット
-            if (v == 0)//縦の入力がある時は打てない
+            if (v == 0 && !change_player_state._isHover)//縦の入力がある時は打てない、ホバー中も打てない
             {
                 //ショット
-                if (burrett_Cool_Time < 0f)
+                if (burrett_Cool_Time <= 0f)
                 {
                     if (Input.GetButton("Fire1"))
                     {
@@ -85,4 +93,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-    

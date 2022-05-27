@@ -42,6 +42,7 @@ public class ChangePlayerState : MonoBehaviour
     bool _isFrySingleShot;
     bool _isDash;
     bool _isBeatenAnim;//殴られた時のアニメーション
+    public bool _isHover;//ホバーしているかどうか
 
 
     // Start is called before the first frame update
@@ -217,23 +218,43 @@ public class ChangePlayerState : MonoBehaviour
             }
 
             //ジャンプ
-            if (rigidbody2D.velocity.y > 0 && !jump_script.GetIsGround())
+            if (rigidbody2D.velocity.y > 0 && !jump_script.GetIsGround())//非接地かつ上昇中
             {
                 _isJumpAnim = true;
+                //ホバーする場合
+                if (Input.GetButtonDown("Jump"))
+                {
+                    _isHover = true;
+                }
+                else if (Input.GetButtonUp("Jump"))
+                {
+                    _isHover = false;
+                }
             }
-            else if (jump_script.GetIsGround())
+            else if (jump_script.GetIsGround())//接地中
             {
                 _isJumpAnim = false;
+                _isHover = false;
             }
 
             //降下
-            if (rigidbody2D.velocity.y < 0 && !jump_script.GetIsGround())
+            if (rigidbody2D.velocity.y < 0 && !jump_script.GetIsGround())//非接地かつ下降中
             {
                 _isFallAnim = true;
+                //ホバーする場合
+                if (Input.GetButtonDown("Jump"))
+                {
+                    _isHover = true;
+                }
+                else if (Input.GetButtonUp("Jump"))
+                {
+                    _isHover = false;
+                }
             }
-            else
+            else if(jump_script.GetIsGround())
             {
                 _isFallAnim = false;
+                _isHover = false;
             }
 
             //殴られた時の処理
@@ -267,6 +288,7 @@ public class ChangePlayerState : MonoBehaviour
         anim.SetBool("isFrySingleShot", _isFrySingleShot);
         anim.SetBool("isDash", _isDash);
         anim.SetBool("isBeaten", _isBeatenAnim);
+        anim.SetBool("isHover", _isHover);
     }
 
     public void ChibiRoboComeback()

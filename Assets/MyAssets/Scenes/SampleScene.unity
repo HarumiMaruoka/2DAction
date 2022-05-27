@@ -4226,6 +4226,7 @@ MonoBehaviour:
   isRigth: 1
   isLeft: 0
   _isDead: 0
+  _isHover: 0
 --- !u!50 &621943478
 Rigidbody2D:
   serializedVersion: 4
@@ -4288,6 +4289,7 @@ MonoBehaviour:
   move_speed_x: 6500
   jump_power: 50
   burrett_prefab: {fileID: 1761726668855302954, guid: 543bf3b3327461546b54c3f95a0376a4, type: 3}
+  _hoverPower: 8
 --- !u!114 &621943481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4318,8 +4320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e95755b559efc4cb3c131068192e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHitPoint: 500
-  _playerHitPoint: 500
+  _maxHitPoint: 10
+  _playerHitPoint: 10
 --- !u!114 &621943483
 MonoBehaviour:
   m_ObjectHideFlags: 0

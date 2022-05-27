@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ShotBarrett_Script : MonoBehaviour
 {
-    GameObject player;
     ChangePlayerState change_player_state;
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D;
@@ -16,9 +15,6 @@ public class ShotBarrett_Script : MonoBehaviour
     bool is_deth = false;
 
     float isDash;
-
-    Vector2 over_lap_pos;
-    public float over_lap_radias;
 
     [SerializeField, Tooltip("Gizmo表示")] bool _isGizmo;
 
@@ -47,24 +43,25 @@ public class ShotBarrett_Script : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         rigidbody2D = GetComponent<Rigidbody2D>();
 
-        //プレイヤーの位置を設定する
-        player = GameObject.Find("ChibiRobo");
-        transform.position = player.transform.position + (Vector3.down * 0.25f);//初期位置は銃口辺り
-        over_lap_pos = transform.position;//over lap position の初期位置を設定
-
         //プレイヤーの向きを取得する
-        change_player_state = player.GetComponent<ChangePlayerState>();
+        change_player_state = GameObject.Find("ChibiRobo").GetComponent<ChangePlayerState>();
         isRigth = change_player_state.isRigth;
         isLeft = change_player_state.isLeft;
+
+        int direction = 1;//発射位置調整用
         if (isLeft)//必要であれば左向きにする
         {
             spriteRenderer.flipX = true;
+            direction = -1;
         }
 
         if (Input.GetButton("Dash"))
         {
             isDash *= 1.5f;
         }
+
+        //発射位置を設定する
+        transform.position = GameObject.Find("ChibiRobo").transform.position + (Vector3.down * 0.25f) + (Vector3.right * direction * 0.8f);//初期位置は銃口辺り
     }
 
     // Update is called once per frame
@@ -79,8 +76,6 @@ public class ShotBarrett_Script : MonoBehaviour
         {
             rigidbody2D.velocity = Vector2.left * moveSpeed * isDash;
         }
-        //over lap position を更新
-        over_lap_pos = transform.position;
 
         //距離で破壊
         //if(Vector3.Distance(transform.position, player.transform.position) > 8)
