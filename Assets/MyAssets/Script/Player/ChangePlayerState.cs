@@ -82,7 +82,6 @@ public class ChangePlayerState : MonoBehaviour
         _isBeatenAnim = false;
 
         _isShotExit = false;
-
         _isDead = false;
     }
 
@@ -263,6 +262,7 @@ public class ChangePlayerState : MonoBehaviour
                 isHitEnemy = false;
                 isMove = false;
                 anim.Play("Beaten");
+                anim.SetTrigger("Blinking");
                 _isBeatenAnim = true;
             }
         }

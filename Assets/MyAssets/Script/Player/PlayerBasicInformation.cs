@@ -12,6 +12,10 @@ public class PlayerBasicInformation : MonoBehaviour
     ChangePlayerState _changePlayerState;
     PlayerController _playerController;
 
+    float _godModeTime = 1.5f;
+
+    bool _isGodMode = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +35,37 @@ public class PlayerBasicInformation : MonoBehaviour
     }
 
     //“G‚ÆÚG‚µ‚½‚Æ‚«A“G‚ÌUŒ‚—Í•ªdamage‚ğó‚¯A“G‚Ìforce•ªŒã•û‚Ö”ò‚Î‚³‚ê‚é
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        //Enemy‚ÆÚG‚µ‚½‚çEnemy‚ÌHitPlayerŠÖ”‚ğÀs‚·‚é
-        if (collision.gameObject.tag == "Enemy") 
+        if (!_isGodMode)
         {
-            collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
-            _changePlayerState.isHitEnemy = true;
+            //Enemy‚ÆÚG‚µ‚½‚çEnemy‚ÌHitPlayerŠÖ”‚ğÀs‚·‚é
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
+                _changePlayerState.isHitEnemy = true;
+                StartCoroutine(GodMode());
+            }
         }
+    }
+    ////“G‚ÆÚG‚µ‚½‚Æ‚«A“G‚ÌUŒ‚—Í•ªdamage‚ğó‚¯A“G‚Ìforce•ªŒã•û‚Ö”ò‚Î‚³‚ê‚é
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (!_isGodMode)
+    //    {
+    //        //Enemy‚ÆÚG‚µ‚½‚çEnemy‚ÌHitPlayerŠÖ”‚ğÀs‚·‚é
+    //        if (collision.gameObject.tag == "Enemy")
+    //        {
+    //            collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
+    //            _changePlayerState.isHitEnemy = true;
+    //            StartCoroutine(GodMode());
+    //        }
+    //    }
+    //}
+    IEnumerator GodMode()
+    {
+        _isGodMode = true;
+        yield return new WaitForSeconds(_godModeTime);
+        _isGodMode = false;
     }
 }
