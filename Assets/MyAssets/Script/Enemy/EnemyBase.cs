@@ -82,7 +82,7 @@ public class EnemyBase : MonoBehaviour
     }
 
     //Burrett‚©‚çŒÄ‚Ño‚·‚Ì‚Å public ‚ÅéŒ¾‚·‚é
-    public void HitBurrett(int damage)
+    public void HitPlayerAttadk(int damage)
     {
         _hit_Point -= damage;
         isColorChange = true;

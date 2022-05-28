@@ -43,7 +43,7 @@ public class PlayerBasicInformation : MonoBehaviour
             if (collision.gameObject.tag == "Enemy")
             {
                 collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
-                _changePlayerState.isHitEnemy = true;
+                _changePlayerState._isHitEnemy = true;
                 StartCoroutine(GodMode());
             }
         }

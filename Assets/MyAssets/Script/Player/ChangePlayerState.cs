@@ -7,14 +7,14 @@ using UnityEngine;
 public class ChangePlayerState : MonoBehaviour
 {
     //このクラスで利用する、自身の各コンポーネント
-    Animator anim;
-    Rigidbody2D rigidbody2D;
-    SpriteRenderer spriteRenderer;
-    Jump_Script jump_script;
+    Animator _anim;
+    Rigidbody2D _rigidbody2D;
+    SpriteRenderer _spriteRenderer;
+    Jump_Script _jumpScript;
 
     //行動可能か？
-    public bool isMove;
-    public bool isHitEnemy;
+    public bool _isMove;
+    public bool _isHitEnemy;
 
 
     //向いている向き
@@ -48,14 +48,14 @@ public class ChangePlayerState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        jump_script = GetComponent<Jump_Script>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _jumpScript = GetComponent<Jump_Script>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
 
         //行動可能か？
-        isMove = true;
-        isHitEnemy = false;
+        _isMove = true;
+        _isHitEnemy = false;
 
         //向いている向き
         isRigth = true;
@@ -97,14 +97,14 @@ public class ChangePlayerState : MonoBehaviour
         if (!_isDead)
         {
             //横移動
-            if (v == 0 && isMove)
+            if (v == 0 && _isMove)
             {
                 if (h < 0)
                 {
                     isEnd_of_move_left = false;
                     isLeft = true;
                     isRigth = false;
-                    spriteRenderer.flipX = true;
+                    _spriteRenderer.flipX = true;
                     _isRunAnim = true;
                     if (Input.GetButton("Dash"))
                     {
@@ -128,7 +128,7 @@ public class ChangePlayerState : MonoBehaviour
                 //(右移動中であれば)
                 if (h > 0)
                 {
-                    spriteRenderer.flipX = false;
+                    _spriteRenderer.flipX = false;
                     isEnd_of_move_rigth = false;
                     _isRunAnim = true;
                     isLeft = false;
@@ -186,7 +186,7 @@ public class ChangePlayerState : MonoBehaviour
 
             if (Input.GetButton("Fire1"))
             {
-                if (!jump_script.GetIsGround())
+                if (!_jumpScript.GetIsGround())
                 {
                     _isFrySingleShot = true;
                 }
@@ -201,7 +201,7 @@ public class ChangePlayerState : MonoBehaviour
                 _isFrySingleShot = false;
                 _isShotAnim = false;
             }
-            if (jump_script.GetIsGround())
+            if (_jumpScript.GetIsGround())
             {
                 _isFrySingleShot = false;
             }
@@ -217,7 +217,7 @@ public class ChangePlayerState : MonoBehaviour
             }
 
             //ジャンプ
-            if (rigidbody2D.velocity.y > 0 && !jump_script.GetIsGround())//非接地かつ上昇中
+            if (_rigidbody2D.velocity.y > 0 && !_jumpScript.GetIsGround())//非接地かつ上昇中
             {
                 _isJumpAnim = true;
                 //ホバーする場合
@@ -230,14 +230,14 @@ public class ChangePlayerState : MonoBehaviour
                     _isHover = false;
                 }
             }
-            else if (jump_script.GetIsGround())//接地中
+            else if (_jumpScript.GetIsGround())//接地中
             {
                 _isJumpAnim = false;
                 _isHover = false;
             }
 
             //降下
-            if (rigidbody2D.velocity.y < 0 && !jump_script.GetIsGround())//非接地かつ下降中
+            if (_rigidbody2D.velocity.y < 0 && !_jumpScript.GetIsGround())//非接地かつ下降中
             {
                 _isFallAnim = true;
                 //ホバーする場合
@@ -250,26 +250,26 @@ public class ChangePlayerState : MonoBehaviour
                     _isHover = false;
                 }
             }
-            else if(jump_script.GetIsGround())
+            else if(_jumpScript.GetIsGround())
             {
                 _isFallAnim = false;
                 _isHover = false;
             }
 
             //殴られた時の処理
-            if (isHitEnemy)
+            if (_isHitEnemy)
             {
-                isHitEnemy = false;
-                isMove = false;
-                anim.Play("Beaten");
-                anim.SetTrigger("Blinking");
+                _isHitEnemy = false;
+                _isMove = false;
+                _anim.Play("Beaten");
+                _anim.SetTrigger("Blinking");
                 _isBeatenAnim = true;
             }
         }
         //倒されたとき
         if (_isDead)
         {
-            anim.Play("Killed");
+            _anim.Play("Killed");
         }
 
         //Animetion Set
@@ -278,22 +278,22 @@ public class ChangePlayerState : MonoBehaviour
 
     void SetAnim()
     {
-        anim.SetBool("isShot", _isShotAnim);
-        anim.SetBool("isRun", _isRunAnim);
-        anim.SetBool("isJump", _isJumpAnim);
-        anim.SetBool("isFall", _isFallAnim);
-        anim.SetBool("isFront", _isFrontAnim);
-        anim.SetBool("isBehind", _isBehindAnim);
-        anim.SetBool("isSingelShot", _isSingleShot);
-        anim.SetBool("isFrySingleShot", _isFrySingleShot);
-        anim.SetBool("isDash", _isDash);
-        anim.SetBool("isBeaten", _isBeatenAnim);
-        anim.SetBool("isHover", _isHover);
+        _anim.SetBool("isShot", _isShotAnim);
+        _anim.SetBool("isRun", _isRunAnim);
+        _anim.SetBool("isJump", _isJumpAnim);
+        _anim.SetBool("isFall", _isFallAnim);
+        _anim.SetBool("isFront", _isFrontAnim);
+        _anim.SetBool("isBehind", _isBehindAnim);
+        _anim.SetBool("isSingelShot", _isSingleShot);
+        _anim.SetBool("isFrySingleShot", _isFrySingleShot);
+        _anim.SetBool("isDash", _isDash);
+        _anim.SetBool("isBeaten", _isBeatenAnim);
+        _anim.SetBool("isHover", _isHover);
     }
 
     public void ChibiRoboComeback()
     {
-        isMove = true;
+        _isMove = true;
         _isBeatenAnim = false;
     }
 }

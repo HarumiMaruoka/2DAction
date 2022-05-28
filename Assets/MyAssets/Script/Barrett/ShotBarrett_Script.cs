@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ShotBarrett_Script : MonoBehaviour
 {
-    ChangePlayerState change_player_state;
-    SpriteRenderer spriteRenderer;
-    Rigidbody2D rigidbody2D;
+    ChangePlayerState _changePlayerState;
+    SpriteRenderer _spriteRenderer;
+    Rigidbody2D _rigidBody2D;
 
-    bool isRigth;
-    bool isLeft;
+    bool _isRigth;
+    bool _isLeft;
 
-    float destroy_Time;
-    bool is_deth = false;
+    float _destroyTime;
+    bool _isDeth = false;
 
     float isDash;
 
@@ -23,9 +23,11 @@ public class ShotBarrett_Script : MonoBehaviour
     [SerializeField] LayerMask layerMask_Hit_Enemy;
     [SerializeField] LayerMask layerMask_Hit_Ground;
 
-    [SerializeField] float moveSpeed;
+    [SerializeField] float _moveSpeed;
+    [SerializeField] float _dashSpeed;
+    [SerializeField] int _barrettPower;
 
-    EnemyBase enemy;
+    EnemyBase _enemy;
 
     float dethTimer = 0;
 
@@ -38,26 +40,26 @@ public class ShotBarrett_Script : MonoBehaviour
     void Start()
     {
         isDash = 1f;
-        destroy_Time = 0f;
+        _destroyTime = 0f;
         //SpriteRenderer‚ğæ“¾‚·‚é
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _rigidBody2D = GetComponent<Rigidbody2D>();
 
         //ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğæ“¾‚·‚é
-        change_player_state = GameObject.Find("ChibiRobo").GetComponent<ChangePlayerState>();
-        isRigth = change_player_state.isRigth;
-        isLeft = change_player_state.isLeft;
+        _changePlayerState = GameObject.Find("ChibiRobo").GetComponent<ChangePlayerState>();
+        _isRigth = _changePlayerState.isRigth;
+        _isLeft = _changePlayerState.isLeft;
 
         int direction = 1;//”­ËˆÊ’u’²®—p
-        if (isLeft)//•K—v‚Å‚ ‚ê‚Î¶Œü‚«‚É‚·‚é
+        if (_isLeft)//•K—v‚Å‚ ‚ê‚Î¶Œü‚«‚É‚·‚é
         {
-            spriteRenderer.flipX = true;
+            _spriteRenderer.flipX = true;
             direction = -1;
         }
 
         if (Input.GetButton("Dash"))
         {
-            isDash *= 1.5f;
+            isDash *= _dashSpeed;
         }
 
         //”­ËˆÊ’u‚ğİ’è‚·‚é
@@ -68,13 +70,13 @@ public class ShotBarrett_Script : MonoBehaviour
     void Update()
     {
         //Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚İ‘±‚¯‚é
-        if (isRigth)
+        if (_isRigth)
         {
-            rigidbody2D.velocity = Vector2.right * moveSpeed * isDash;
+            _rigidBody2D.velocity = Vector2.right * _moveSpeed * isDash;
         }
-        else if (isLeft)
+        else if (_isLeft)
         {
-            rigidbody2D.velocity = Vector2.left * moveSpeed * isDash;
+            _rigidBody2D.velocity = Vector2.left * _moveSpeed * isDash;
         }
 
         //‹——£‚Å”j‰ó
@@ -86,17 +88,17 @@ public class ShotBarrett_Script : MonoBehaviour
 
 
         //ŠÔ‚Å”j‰ó
-        if (destroy_Time > 1)
+        if (_destroyTime > 1)
         {
             Destroy(this.gameObject);
         }
         else
         {
-            destroy_Time += Time.deltaTime;
+            _destroyTime += Time.deltaTime;
         }
 
         //“G‚ÆÚG‚µ‚½‚Æ‚«‚Í­‚µ’x‚ç‚¹‚ÄA’e‚ğÁ¸‚³‚¹‚é
-        if (is_deth)
+        if (_isDeth)
         {
             dethTimer += Time.deltaTime;
         }
@@ -113,16 +115,13 @@ public class ShotBarrett_Script : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
-            collision.gameObject.GetComponent<EnemyBase>().HitBurrett(1);
-            is_deth = true;
+            collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_barrettPower);
+            _isDeth = true;
         }
         else if (collision.gameObject.tag == "Ground")
         {
             //Ground‚ÆÚG‚µ‚½A’e‚ÍÁ¸‚·‚é
             Destroy(this.gameObject);
         }
-
     }
-
-
 }
