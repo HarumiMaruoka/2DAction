@@ -13,9 +13,8 @@ public class ChangePlayerState : MonoBehaviour
     Jump_Script _jumpScript;
 
     //行動可能か？
-    public bool _isMove;
-    public bool _isHitEnemy;
-
+    public bool _isMove;//行動不能の時はfalseになる。
+    public bool _isHitEnemy;//敵に殴られた時にtrueになる。
 
     //向いている向き
     public bool isRigth;
@@ -46,6 +45,7 @@ public class ChangePlayerState : MonoBehaviour
 
 
     // Start is called before the first frame update
+    //各変数の初期化
     void Start()
     {
         _anim = GetComponent<Animator>();
@@ -89,8 +89,6 @@ public class ChangePlayerState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Run animation
-
         //入力を受け付ける
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -168,7 +166,8 @@ public class ChangePlayerState : MonoBehaviour
                 _isFrontAnim = false;
             }
 
-            if (v > 0)//ビハインドに向ける処理
+            //ビハインドに向ける処理
+            if (v > 0)
             {
                 _isBehindAnim = true;
                 isBehind = false;
@@ -181,9 +180,7 @@ public class ChangePlayerState : MonoBehaviour
                 _isBehindAnim = false;
             }
 
-            //ショット
-            float fire2 = Input.GetAxisRaw("Fire2");
-
+            //ショット mouseButton0 が押されている間実行される
             if (Input.GetButton("Fire1"))
             {
                 if (!_jumpScript.GetIsGround())
@@ -201,11 +198,13 @@ public class ChangePlayerState : MonoBehaviour
                 _isFrySingleShot = false;
                 _isShotAnim = false;
             }
+
+            //スラッシュ mouseButton1 が押されている間実行される
             if (_jumpScript.GetIsGround())
             {
                 _isFrySingleShot = false;
             }
-            if (fire2 == 1)
+            if (Input.GetButton("Fire2"))
             {
                 _isShotAnim = true;
                 _isCharge_now = true;
@@ -266,6 +265,7 @@ public class ChangePlayerState : MonoBehaviour
                 _isBeatenAnim = true;
             }
         }
+
         //倒されたとき
         if (_isDead)
         {
@@ -276,6 +276,7 @@ public class ChangePlayerState : MonoBehaviour
         SetAnim();
     }
 
+    //アニメーション用変数を設定する関数。毎フレーム呼ばれる。
     void SetAnim()
     {
         _anim.SetBool("isShot", _isShotAnim);
@@ -291,6 +292,7 @@ public class ChangePlayerState : MonoBehaviour
         _anim.SetBool("isHover", _isHover);
     }
 
+    //プレイヤーが行動不能状態から復帰する時の処理。敵に殴られた時のアニメーションイベントから呼ばれる。
     public void ChibiRoboComeback()
     {
         _isMove = true;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotBarrett_Script : MonoBehaviour
+public class Shot : MonoBehaviour
 {
     ChangePlayerState _changePlayerState;
     SpriteRenderer _spriteRenderer;
@@ -14,7 +14,7 @@ public class ShotBarrett_Script : MonoBehaviour
     float _destroyTime;
     bool _isDeth = false;
 
-    float isDash;
+    float dashMode;
 
     [SerializeField, Tooltip("Gizmo•\¦")] bool _isGizmo;
 
@@ -33,13 +33,13 @@ public class ShotBarrett_Script : MonoBehaviour
 
     enum Contact_partner
     {
-        NON,ENEMY,BLOCK,ERROR,
+        NON, ENEMY, BLOCK, ERROR,
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        isDash = 1f;
+        dashMode = 1f;
         _destroyTime = 0f;
         //SpriteRenderer‚ğæ“¾‚·‚é
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,7 +59,7 @@ public class ShotBarrett_Script : MonoBehaviour
 
         if (Input.GetButton("Dash"))
         {
-            isDash *= _dashSpeed;
+            dashMode *= _dashSpeed;
         }
 
         //”­ËˆÊ’u‚ğİ’è‚·‚é
@@ -72,20 +72,12 @@ public class ShotBarrett_Script : MonoBehaviour
         //Œü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚İ‘±‚¯‚é
         if (_isRigth)
         {
-            _rigidBody2D.velocity = Vector2.right * _moveSpeed * isDash;
+            _rigidBody2D.velocity = Vector2.right * _moveSpeed * dashMode;
         }
         else if (_isLeft)
         {
-            _rigidBody2D.velocity = Vector2.left * _moveSpeed * isDash;
+            _rigidBody2D.velocity = Vector2.left * _moveSpeed * dashMode;
         }
-
-        //‹——£‚Å”j‰ó
-        //if(Vector3.Distance(transform.position, player.transform.position) > 8)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-
-
 
         //ŠÔ‚Å”j‰ó
         if (_destroyTime > 1)
@@ -109,13 +101,12 @@ public class ShotBarrett_Script : MonoBehaviour
 
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.TryGetComponent(out EnemyBase enemy))
         {
             //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
-            collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_barrettPower,Vector2.zero);
+            enemy.HitPlayerAttadk(_barrettPower);
             _isDeth = true;
         }
         else if (collision.gameObject.tag == "Ground")

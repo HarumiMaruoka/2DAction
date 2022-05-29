@@ -32,7 +32,6 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] public float _tank;//吹っ飛ばされにくさ
     float _knockBackModeTime = 0f;//ノックバック時間を表す変数
 
-
     //全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。
     protected void Enemy_Initialize()
     {
@@ -88,14 +87,14 @@ public class EnemyBase : MonoBehaviour
     }
 
 
-    //Burrettから呼び出すので public で宣言する
-    public void HitPlayerAttadk(int damage, Vector2 knockBackPower)
+    //プレイヤーからの攻撃時に、呼び出すので public で宣言する。
+    public void HitPlayerAttadk(int damage)//ノックバックしない場合
     {
         _hit_Point -= damage;
         isColorChange = true;
         _color_change_time = 0.1f;
     }
-    public void HitPlayerAttadk(int damage, float knockBackTimer)
+    public void HitPlayerAttadk(int damage, float knockBackTimer)//ノックバックする場合
     {
         _hit_Point -= damage;
         isColorChange = true;
@@ -106,8 +105,7 @@ public class EnemyBase : MonoBehaviour
         StartCoroutine(KnockBackMode());
     }
 
-
-    //プレイヤーと敵が接触した時に呼ばれる
+    //プレイヤーと敵が接触した時に呼ばれる。プレイヤーの体力を減らして、ノックバックさせる。
     public void HitPlayer()
     {
         //プレイヤーのHitPointを減らす
@@ -129,7 +127,7 @@ public class EnemyBase : MonoBehaviour
 
     }
 
-    //ノックバック用のコード
+    //ノックバック用のコード。
     IEnumerator KnockBackMode()
     {
         _isKnockBackNow = true;

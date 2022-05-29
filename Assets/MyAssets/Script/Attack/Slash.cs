@@ -20,11 +20,15 @@ public class Slash : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //プレイヤーのコンポーネントを取得する。
         _playerPos = GameObject.Find("ChibiRobo").GetComponent<Transform>();
         _playerSpriteRendere = GameObject.Find("ChibiRobo").GetComponent<SpriteRenderer>();
+
+        //自分のコンポーネントを取得する。
         _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         _mySpriteRendere = GetComponent<SpriteRenderer>();
 
+        //Slashの向き、位置を調整する。
         _mySpriteRendere.flipX = _playerSpriteRendere.flipX;
         transform.position = _playerSpriteRendere.flipX ? _playerPos.position + Vector3.left * 1.5f : _playerPos.position + Vector3.right * 1.5f;
         if (_mySpriteRendere.flipX)
@@ -58,5 +62,5 @@ public class Slash : MonoBehaviour
         {
             enemy.HitPlayerAttadk(_slashPower, _knockBackTimer);
         }
-       }
+    }
 }

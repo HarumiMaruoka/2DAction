@@ -19,6 +19,7 @@ public class PlayerBasicInformation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //自身のコンポーネントを取得する。
         _changePlayerState = GetComponent<ChangePlayerState>();
         _playerController = GetComponent<PlayerController>();
     }
@@ -41,9 +42,9 @@ public class PlayerBasicInformation : MonoBehaviour
         if (!_isGodMode)
         {
             //Enemyと接触したらEnemyのHitPlayer関数を実行する
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.TryGetComponent(out EnemyBase enemy))
             {
-                collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
+                enemy.HitPlayer();
                 _changePlayerState._isHitEnemy = true;
                 StartCoroutine(GodMode());
             }

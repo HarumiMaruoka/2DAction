@@ -37,10 +37,9 @@ public class PlayerController : MonoBehaviour
     {
         if (change_player_state._isMove)//行動可能であれば実行する
         {
-            //横移動の入力を受け付ける
+            //入力を取得する
             float h = Input.GetAxisRaw("Horizontal");//横方向
             float v = Input.GetAxisRaw("Vertical");//縦方向
-
 
             //横移動
             if (v == 0)//縦の入力がある時は横移動できない
@@ -94,7 +93,6 @@ public class PlayerController : MonoBehaviour
             //スラッシュ
             if (v == 0 && !change_player_state._isHover)//縦の入力がある時は打てない、ホバー中も打てない
             {
-                //ショット
                 if (_slashCoolTime <= 0f)
                 {
                     if (Input.GetButtonDown("Fire2"))

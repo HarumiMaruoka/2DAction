@@ -12,26 +12,29 @@ public class EnemyGenerator : MonoBehaviour
     //生成すべきエネミー
     GameObject _child;
 
+    //Gizmo表示
     [SerializeField, Tooltip("Gizmo表示")] bool _isGizmo = true;
 
+    //Startで子オブジェクトを取得する。
     private void Start()
     {
         _child = transform.GetChild(0).gameObject;
     }
 
-    //固定フレームで呼ばれる
+    //プレイヤーとエネミーが一定距離近づいたら、子オブジェクトをアクティブにし、このコンポーネントを非アクティブにする。
     private void FixedUpdate()
     {
         _diffX = transform.position.x - _playerTransform.position.x;
         _diffY = transform.position.y - _playerTransform.position.y;
 
-        //プレイヤーとエネミーが一定距離近づいたら、子オブジェクトをアクティブにし、このコンポーネントを非アクティブにする。
         if (Mathf.Abs(_diffX) < 12.5f && Mathf.Abs(_diffY) < 7f)
         {
             _child.SetActive(true);
             enabled = false;
         }
     }
+
+    //このオブジェクトの位置を見やすいように表示する。
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
