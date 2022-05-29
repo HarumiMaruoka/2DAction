@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slashPower: 3
+  _knockBackPower: {x: 100000, y: 1000000}
 --- !u!70 &2850971396839338785
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -131,8 +132,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.07, y: 0.09}
-  m_Size: {x: 0.67, y: 0.63}
+  m_Offset: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.65, y: 0.75}
   m_Direction: 1
 --- !u!50 &-930259047457035137
 Rigidbody2D:
@@ -147,8 +148,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 10
+  m_AngularDrag: 10
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0

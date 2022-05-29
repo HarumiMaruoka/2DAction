@@ -7,29 +7,37 @@ public class Slash : MonoBehaviour
     [SerializeField] int _slashPower;
     Transform _playerPos;
     SpriteRenderer _playerSpriteRendere;
-
+    CapsuleCollider2D _capsuleCollider2D;
     SpriteRenderer _mySpriteRendere;
 
+    [SerializeField] Vector2 _knockBackPower;
+
     bool _isRigth;
+
+    bool _isEnemyKnockBack;
 
     // Start is called before the first frame update
     void Start()
     {
         _playerPos = GameObject.Find("ChibiRobo").GetComponent<Transform>();
         _playerSpriteRendere = GameObject.Find("ChibiRobo").GetComponent<SpriteRenderer>();
-
+        _capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         _mySpriteRendere = GetComponent<SpriteRenderer>();
 
         _mySpriteRendere.flipX = _playerSpriteRendere.flipX;
-        transform.position = _playerSpriteRendere.flipX ? _playerPos.position + Vector3.left : _playerPos.position + Vector3.right;
+        transform.position = _playerSpriteRendere.flipX ? _playerPos.position + Vector3.left * 1.5f : _playerPos.position + Vector3.right * 1.5f;
+        if (_mySpriteRendere.flipX)
+        {
+            _capsuleCollider2D.offset = new Vector2(-0.1f, 0.1f);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = _playerPos.position;
+        transform.position = _playerSpriteRendere.flipX ? _playerPos.position + Vector3.left * 1.2f : _playerPos.position + Vector3.right * 1.2f;
         //ƒvƒŒƒCƒ„[‚ªU‚èŒü‚¢‚½‚çaŒ‚‚ÍÁ‚¦‚é
-        if(_mySpriteRendere.flipX != _playerSpriteRendere.flipX)
+        if (_mySpriteRendere.flipX != _playerSpriteRendere.flipX)
         {
             Destroy(this.gameObject);
         }
@@ -44,10 +52,16 @@ public class Slash : MonoBehaviour
     //“G‚ÆÚG‚µ‚½‚Æ‚«‚És‚¤ˆ—
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.TryGetComponent(out EnemyBase enemy) && collision.TryGetComponent(out Rigidbody2D enemyiesRigitBody2D))
         {
-            //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
-            collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_slashPower);
+            enemy.HitPlayerAttadk(_slashPower,_knockBackPower);
+            enemyiesRigitBody2D.AddForce(_knockBackPower, ForceMode2D.Impulse);
         }
+        //if (collision.gameObject.tag == "Enemy")
+        //{
+        //    //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
+        //    collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_slashPower);
+        //    collision.gameObject.GetComponent<Rigidbody2D>().AddForce(_knockBackPower, ForceMode2D.Impulse);
+        //}
     }
 }

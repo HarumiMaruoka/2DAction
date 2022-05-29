@@ -115,7 +115,7 @@ public class ShotBarrett_Script : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
-            collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_barrettPower);
+            collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_barrettPower,Vector2.zero);
             _isDeth = true;
         }
         else if (collision.gameObject.tag == "Ground")

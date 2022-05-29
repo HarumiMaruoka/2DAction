@@ -7,7 +7,7 @@ public class EnemyBase : MonoBehaviour
     //エネミー共通の基本情報
     [SerializeField] protected int _hit_Point;//体力
     [SerializeField] protected int _offensive_Power;//攻撃力
-    [SerializeField] protected Vector2 _player_knock_back_Power;//ノックバック力
+    [SerializeField] protected Vector2 _player_knock_back_Power;//プレイヤーに対するノックバック力
 
     //向いている方向
     protected bool _isRight;
@@ -20,11 +20,15 @@ public class EnemyBase : MonoBehaviour
     protected Rigidbody2D _playersRigidBody2D;
     //自身のコンポーネント
     protected SpriteRenderer sprite_renderer;
-    protected Rigidbody2D rigidbody2d;
+    protected Rigidbody2D _rigidbody2d;
 
     //色変更用
     bool isColorChange = false;
     float _color_change_time = 0;
+
+    //ノックバック中かどうか
+    public bool _isKnockBackNow;
+    [SerializeField] public float _tank;//吹っ飛ばされにくさ
 
 
     //全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。
@@ -38,7 +42,7 @@ public class EnemyBase : MonoBehaviour
 
         //自身のコンポーネントを取得
         sprite_renderer = GetComponent<SpriteRenderer>();
-        rigidbody2d = GetComponent<Rigidbody2D>();
+        _rigidbody2d = GetComponent<Rigidbody2D>();
     }
 
     //全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す
@@ -82,11 +86,18 @@ public class EnemyBase : MonoBehaviour
     }
 
     //Burrettから呼び出すので public で宣言する
-    public void HitPlayerAttadk(int damage)
+    public void HitPlayerAttadk(int damage,Vector2 knockBackPower)
     {
         _hit_Point -= damage;
         isColorChange = true;
         _color_change_time = 0.1f;
+
+        //ノックバックする
+        Debug.Log("KnockBack!");
+        _isKnockBackNow = true;
+        _rigidbody2d.velocity = knockBackPower;
+        Debug.Log("Stop!");
+        _isKnockBackNow = false;
     }
 
     //プレイヤーと敵が接触した時に呼ばれる
@@ -95,7 +106,8 @@ public class EnemyBase : MonoBehaviour
         //プレイヤーのHitPointを減らす
         _player_basic_information._playerHitPoint -= _offensive_Power;
         //プレイヤーをノックバックする
-        if (_isRight) {
+        if (_isRight)
+        {
             _playersRigidBody2D.AddForce(Vector2.right * _player_knock_back_Power, ForceMode2D.Impulse);
         }
         else

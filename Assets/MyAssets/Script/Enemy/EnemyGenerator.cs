@@ -40,6 +40,4 @@ public class EnemyGenerator : MonoBehaviour
             Gizmos.DrawCube(transform.position, new Vector3(1,1,0));
         }
     }
-
-
 }

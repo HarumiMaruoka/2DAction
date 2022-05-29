@@ -37,6 +37,7 @@ public class PlayerBasicInformation : MonoBehaviour
     //“G‚ÆÚG‚µ‚½‚Æ‚«A“G‚ÌUŒ‚—Í•ªdamage‚ğó‚¯A“G‚Ìforce•ªŒã•û‚Ö”ò‚Î‚³‚ê‚é
     private void OnCollisionStay2D(Collision2D collision)
     {
+        //–³“Gó‘Ô‚Å‚ ‚ê‚ÎUŒ‚‚ğó‚¯‚È‚¢
         if (!_isGodMode)
         {
             //Enemy‚ÆÚG‚µ‚½‚çEnemy‚ÌHitPlayerŠÖ”‚ğÀs‚·‚é
