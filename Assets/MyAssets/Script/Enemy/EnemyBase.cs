@@ -18,17 +18,19 @@ public class EnemyBase : MonoBehaviour
     protected Transform _playerPos;//player's position
     protected PlayerBasicInformation _player_basic_information;//プレイヤーのライフを減らす用
     protected Rigidbody2D _playersRigidBody2D;
+
     //自身のコンポーネント
-    protected SpriteRenderer sprite_renderer;
-    protected Rigidbody2D _rigidbody2d;
+    protected SpriteRenderer _spriteRenderer;
+    protected Rigidbody2D _rigidBody2d;
 
     //色変更用
     bool isColorChange = false;
     float _color_change_time = 0;
 
-    //ノックバック中かどうか
-    public bool _isKnockBackNow;
+    //ノックバック関連
+    public bool _isKnockBackNow;//ノックバック中かどうか
     [SerializeField] public float _tank;//吹っ飛ばされにくさ
+    float _knockBackModeTime = 0f;//ノックバック時間を表す変数
 
 
     //全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。
@@ -41,8 +43,8 @@ public class EnemyBase : MonoBehaviour
         _playersRigidBody2D = player.GetComponent<Rigidbody2D>();
 
         //自身のコンポーネントを取得
-        sprite_renderer = GetComponent<SpriteRenderer>();
-        _rigidbody2d = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _rigidBody2d = GetComponent<Rigidbody2D>();
     }
 
     //全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す
@@ -60,12 +62,12 @@ public class EnemyBase : MonoBehaviour
 
             if (isColorChange)
             {
-                sprite_renderer.color = Color.red;
+                _spriteRenderer.color = Color.red;
                 isColorChange = false;
             }
             else if (_color_change_time < 0)
             {
-                sprite_renderer.color = new Color(255, 255, 255, 255);
+                _spriteRenderer.color = new Color(255, 255, 255, 255);
             }
             else if (_color_change_time > 0)
             {
@@ -85,20 +87,25 @@ public class EnemyBase : MonoBehaviour
 
     }
 
+
     //Burrettから呼び出すので public で宣言する
-    public void HitPlayerAttadk(int damage,Vector2 knockBackPower)
+    public void HitPlayerAttadk(int damage, Vector2 knockBackPower)
+    {
+        _hit_Point -= damage;
+        isColorChange = true;
+        _color_change_time = 0.1f;
+    }
+    public void HitPlayerAttadk(int damage, float knockBackTimer)
     {
         _hit_Point -= damage;
         isColorChange = true;
         _color_change_time = 0.1f;
 
-        //ノックバックする
-        Debug.Log("KnockBack!");
-        _isKnockBackNow = true;
-        _rigidbody2d.velocity = knockBackPower;
-        Debug.Log("Stop!");
-        _isKnockBackNow = false;
+        //ノックバックする。プレイヤーのノックバック力(時間)-エネミーの耐久力(時間)分、Moveを停止する。
+        _knockBackModeTime = (knockBackTimer - _tank) > 0f ? (knockBackTimer - _tank) : 0f;
+        StartCoroutine(KnockBackMode());
     }
+
 
     //プレイヤーと敵が接触した時に呼ばれる
     public void HitPlayer()
@@ -122,4 +129,11 @@ public class EnemyBase : MonoBehaviour
 
     }
 
+    //ノックバック用のコード
+    IEnumerator KnockBackMode()
+    {
+        _isKnockBackNow = true;
+        yield return new WaitForSeconds(_knockBackModeTime);
+        _isKnockBackNow = false;
+    }
 }

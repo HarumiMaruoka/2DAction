@@ -100,8 +100,8 @@ MonoBehaviour:
   _hit_Point: 5000
   _offensive_Power: 0
   _player_knock_back_Power: {x: 50, y: 500}
-  _isKnockBackNow: 0
   _tank: 0
+  moveSpeed: 100
 --- !u!50 &8771018621740978193
 Rigidbody2D:
   serializedVersion: 4

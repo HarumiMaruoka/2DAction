@@ -49,20 +49,7 @@ public class PlayerBasicInformation : MonoBehaviour
             }
         }
     }
-    ////“G‚ÆÚG‚µ‚½‚Æ‚«A“G‚ÌUŒ‚—Í•ªdamage‚ğó‚¯A“G‚Ìforce•ªŒã•û‚Ö”ò‚Î‚³‚ê‚é
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (!_isGodMode)
-    //    {
-    //        //Enemy‚ÆÚG‚µ‚½‚çEnemy‚ÌHitPlayerŠÖ”‚ğÀs‚·‚é
-    //        if (collision.gameObject.tag == "Enemy")
-    //        {
-    //            collision.gameObject.GetComponent<EnemyBase>().HitPlayer();
-    //            _changePlayerState.isHitEnemy = true;
-    //            StartCoroutine(GodMode());
-    //        }
-    //    }
-    //}
+
     IEnumerator GodMode()
     {
         _isGodMode = true;

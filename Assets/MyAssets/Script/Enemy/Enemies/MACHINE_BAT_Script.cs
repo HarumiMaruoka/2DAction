@@ -6,7 +6,8 @@ using UnityEngine;
 //コウモリマシンのコード
 public class MACHINE_BAT_Script : EnemyBase
 {
-    protected Rigidbody2D _rigidBody2d;
+    //移動スピード
+    [SerializeField]float moveSpeed = 120f;
 
 
     // Start is called before the first frame update
@@ -26,7 +27,7 @@ public class MACHINE_BAT_Script : EnemyBase
     //プレイヤーに向かって移動し続ける
     protected override void Move()
     {
-        if (!_isKnockBackNow)
+        if (!_isKnockBackNow)//ノックバック中でなければ実行する
         {
             //プレイヤーとエネミーの位置を取得する
             Vector3 pv = _playerPos.transform.position;
@@ -40,19 +41,17 @@ public class MACHINE_BAT_Script : EnemyBase
             float vx = 0f;
             float vy = 0f;
 
-            //移動スピード
-            float moveSpeed = 120f;
 
             // 減算した結果がマイナスであればXは減算処理
             if (p_vX < 0)
             {
                 vx = -moveSpeed;
-                sprite_renderer.flipX = false;
+                _spriteRenderer.flipX = false;
             }
             else
             {
                 vx = moveSpeed;
-                sprite_renderer.flipX = true;
+                _spriteRenderer.flipX = true;
             }
 
             // 減算した結果がマイナスであればYは減算処理
@@ -64,8 +63,14 @@ public class MACHINE_BAT_Script : EnemyBase
             {
                 vy = moveSpeed;
             }
-
-            _rigidbody2d.velocity = new Vector2(vx / 50, vy / 150);
+            //無機質で機械的な移動を表現したいのでvelocityで移動する
+            _rigidBody2d.velocity = new Vector2(vx / 50, vy / 150);
+        }
+        else//ノックバック処理
+        {
+            _rigidBody2d.velocity = new Vector2(0f, 0f);
+            Vector2 knockBack = _spriteRenderer.flipX ? new Vector2(-1, 1) : new Vector2(1, 1);
+            _rigidBody2d.AddForce(knockBack, ForceMode2D.Impulse);
         }
     }
 }

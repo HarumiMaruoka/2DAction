@@ -11,6 +11,7 @@ public class Slash : MonoBehaviour
     SpriteRenderer _mySpriteRendere;
 
     [SerializeField] Vector2 _knockBackPower;
+    [SerializeField] float _knockBackTimer;
 
     bool _isRigth;
 
@@ -52,16 +53,10 @@ public class Slash : MonoBehaviour
     //“G‚ÆÚG‚µ‚½‚Æ‚«‚És‚¤ˆ—
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out EnemyBase enemy) && collision.TryGetComponent(out Rigidbody2D enemyiesRigitBody2D))
+        //GetComponent‚Ì‚æ‚èŒy‚­’Z‚¢‘‚«•û
+        if (collision.TryGetComponent(out EnemyBase enemy))
         {
-            enemy.HitPlayerAttadk(_slashPower,_knockBackPower);
-            enemyiesRigitBody2D.AddForce(_knockBackPower, ForceMode2D.Impulse);
+            enemy.HitPlayerAttadk(_slashPower, _knockBackTimer);
         }
-        //if (collision.gameObject.tag == "Enemy")
-        //{
-        //    //‚±‚±‚É“G‚ÆÚG‚µ‚½‚Æ‚«‚Ìˆ—‚ğ‘‚­
-        //    collision.gameObject.GetComponent<EnemyBase>().HitPlayerAttadk(_slashPower);
-        //    collision.gameObject.GetComponent<Rigidbody2D>().AddForce(_knockBackPower, ForceMode2D.Impulse);
-        //}
-    }
+       }
 }

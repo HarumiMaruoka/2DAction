@@ -118,7 +118,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slashPower: 3
-  _knockBackPower: {x: 100000, y: 1000000}
+  _knockBackPower: {x: 0.1, y: 0.1}
+  _knockBackTimer: 0.1
 --- !u!70 &2850971396839338785
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
