@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Slash : MonoBehaviour
 {
-    [SerializeField] int _slashPower;
+    //各パラメータ
+    [SerializeField] int _slashOffensivePower;//エネミーに対する攻撃力
+    [SerializeField] Vector2 _knockBackPower;//ノックバックパワー
+    [SerializeField] float _knockBackTimer;//ノックバックタイマー
+    bool _isRigth;//プレイヤーと同じ方向を向ける用
+
+    //プレイヤーのコンポーネント
     Transform _playerPos;
     SpriteRenderer _playerSpriteRendere;
+
+    //自身のコンポーネント
     CapsuleCollider2D _capsuleCollider2D;
     SpriteRenderer _mySpriteRendere;
 
-    [SerializeField] Vector2 _knockBackPower;
-    [SerializeField] float _knockBackTimer;
-
-    bool _isRigth;
-
-    bool _isEnemyKnockBack;
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +62,7 @@ public class Slash : MonoBehaviour
         //GetComponentのより軽く短い書き方
         if (collision.TryGetComponent(out EnemyBase enemy))
         {
-            enemy.HitPlayerAttadk(_slashPower, _knockBackTimer);
+            enemy.HitPlayerAttadk(_slashOffensivePower, _knockBackTimer);
         }
     }
 }

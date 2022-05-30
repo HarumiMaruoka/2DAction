@@ -6,21 +6,23 @@ using UnityEngine;
 //プレイヤーの体力などの基礎情報を持つクラス
 public class PlayerBasicInformation : MonoBehaviour
 {
-    public int _maxHitPoint = 3;
+    //基本パラメータ
+    [SerializeField] public int _maxHitPoint = 3;//最大HP
+    [SerializeField] public int _playerHitPoint = 3;//現在のHP
 
-    public int _playerHitPoint = 3;
-    ChangePlayerState _changePlayerState;
+    //各コンポーネント
+    PlayerAnimationManagement _changePlayerState;
     PlayerController _playerController;
 
+    //無敵関連(ヒット後の無敵時間とか)
     float _godModeTime = 1.5f;
-
     bool _isGodMode = false;
 
     // Start is called before the first frame update
     void Start()
     {
         //自身のコンポーネントを取得する。
-        _changePlayerState = GetComponent<ChangePlayerState>();
+        _changePlayerState = GetComponent<PlayerAnimationManagement>();
         _playerController = GetComponent<PlayerController>();
     }
 

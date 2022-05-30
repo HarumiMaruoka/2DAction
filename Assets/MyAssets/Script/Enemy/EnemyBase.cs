@@ -7,11 +7,10 @@ public class EnemyBase : MonoBehaviour
     //エネミー共通の基本情報
     [SerializeField] protected int _hit_Point;//体力
     [SerializeField] protected int _offensive_Power;//攻撃力
-    [SerializeField] protected Vector2 _player_knock_back_Power;//プレイヤーに対するノックバック力
+    [SerializeField] protected Vector2 _playerKnockBackPower;//プレイヤーに対するノックバック力
 
-    //向いている方向
+    //向いている方向、ノックバック時に使う
     protected bool _isRight;
-    protected bool _isLeft;
 
     //プレイヤーのコンポーネント
     GameObject player;
@@ -24,7 +23,7 @@ public class EnemyBase : MonoBehaviour
     protected Rigidbody2D _rigidBody2d;
 
     //色変更用
-    bool isColorChange = false;
+    bool _isColorChange = false;
     float _color_change_time = 0;
 
     //ノックバック関連
@@ -35,6 +34,7 @@ public class EnemyBase : MonoBehaviour
     //全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。
     protected void Enemy_Initialize()
     {
+        //各変数の初期化
         //プレイヤーの情報を取得
         player = GameObject.Find("ChibiRobo");
         _player_basic_information = player.GetComponent<PlayerBasicInformation>();
@@ -55,14 +55,15 @@ public class EnemyBase : MonoBehaviour
             //体力がなくなったら消滅する
             Destroy(this.gameObject);
         }
+
         //色を変える処理
         if (!Mathf.Approximately(_color_change_time, 0f))
         {
 
-            if (isColorChange)
+            if (_isColorChange)
             {
                 _spriteRenderer.color = Color.red;
-                isColorChange = false;
+                _isColorChange = false;
             }
             else if (_color_change_time < 0)
             {
@@ -72,32 +73,27 @@ public class EnemyBase : MonoBehaviour
             {
                 _color_change_time -= Time.deltaTime;
             }
-
         }
+
         //プレイヤーがいる方向を取得する
-        if (transform.position.x < _playerPos.transform.position.x)
-        {
-            _isRight = true;
-        }
-        else
-        {
-            _isRight = false;
-        }
-
+        _isRight = (transform.position.x < _playerPos.transform.position.x);
+        //エネミーはプレイヤーがいる方向を向く
+        _spriteRenderer.flipX = _isRight;
     }
-
 
     //プレイヤーからの攻撃時に、呼び出すので public で宣言する。
     public void HitPlayerAttadk(int damage)//ノックバックしない場合
     {
+        //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hit_Point -= damage;
-        isColorChange = true;
+        _isColorChange = true;
         _color_change_time = 0.1f;
     }
     public void HitPlayerAttadk(int damage, float knockBackTimer)//ノックバックする場合
     {
+        //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hit_Point -= damage;
-        isColorChange = true;
+        _isColorChange = true;
         _color_change_time = 0.1f;
 
         //ノックバックする。プレイヤーのノックバック力(時間)-エネミーの耐久力(時間)分、Moveを停止する。
@@ -113,11 +109,11 @@ public class EnemyBase : MonoBehaviour
         //プレイヤーをノックバックする
         if (_isRight)
         {
-            _playersRigidBody2D.AddForce(Vector2.right * _player_knock_back_Power, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce(Vector2.right * _playerKnockBackPower, ForceMode2D.Impulse);
         }
         else
         {
-            _playersRigidBody2D.AddForce(Vector2.left * _player_knock_back_Power, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce(Vector2.left * _playerKnockBackPower, ForceMode2D.Impulse);
         }
     }
 

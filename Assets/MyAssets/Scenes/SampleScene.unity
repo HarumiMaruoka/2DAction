@@ -13204,7 +13204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hit_Point: 0
   _offensive_Power: 0
-  _player_knock_back_Power: {x: 0, y: 0}
+  _playerKnockBackPower: {x: 0, y: 0}
   _isKnockBackNow: 0
   _tank: 0
   moveSpeed: 120

@@ -36,7 +36,6 @@ public class MACHINE_BAT_Script : EnemyBase
             float moveY = pv.y - ev.y;
 
             // 減算した結果がマイナスであればXは減算処理。プレイヤーがいる方向によって向きも変える
-            _spriteRenderer.flipX = (moveX > 0);
             moveX = (moveX > 0) ? moveSpeed : -moveSpeed;
 
             // 減算した結果がマイナスであればYは減算処理

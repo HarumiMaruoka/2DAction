@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public float jump_power;
     Rigidbody2D _rigidbody2D;
     Jump_Script jump_script;
-    ChangePlayerState change_player_state;
+    PlayerAnimationManagement change_player_state;
 
     [SerializeField] GameObject _burrettPrefab;
     [SerializeField] GameObject _slashPrefabOne;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         jump_script = GetComponent<Jump_Script>();
-        change_player_state = GetComponent<ChangePlayerState>();
+        change_player_state = GetComponent<PlayerAnimationManagement>();
         _burrettCoolTime = 0f;
     }
 
@@ -42,29 +42,23 @@ public class PlayerController : MonoBehaviour
             float v = Input.GetAxisRaw("Vertical");//c•ûŒü
 
             //‰¡ˆÚ“®
-            if (v == 0)//c‚Ì“ü—Í‚ª‚ ‚éŽž‚Í‰¡ˆÚ“®‚Å‚«‚È‚¢
+            if (v == 0 && h != 0)//c‚Ì“ü—Í‚ª‚ ‚éŽž‚Í‰¡ˆÚ“®‚Å‚«‚È‚¢
             {
-                if (h != 0)
+                if (Input.GetButton("Dash"))
                 {
-                    if (Input.GetButton("Dash"))
-                    {
-                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime * dash_speed, ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        //rigidbody2D.AddForce‚Å‚ÌˆÚ“®
-                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime, ForceMode2D.Force);
-
-                        //velocity‚ÅˆÚ“®‚·‚é”Å
-                        //rigidbody2D.velocity = Vector2.right * h * move_speed_x * dash_speed;
-
-
-                    }
+                    _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime * dash_speed, ForceMode2D.Force);
+                }
+                else
+                {
+                    _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime, ForceMode2D.Force);
                 }
             }
 
             //ƒWƒƒƒ“ƒv
-            jump_script.Jump(jump_power);
+            if (v == 0)
+            {
+                jump_script.Jump(jump_power);
+            }
 
             //ƒzƒo[
             if (change_player_state._isHover)
@@ -86,7 +80,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (_burrettCoolTime >= 0f)
                 {
-                        _burrettCoolTime -= Time.deltaTime;
+                    _burrettCoolTime -= Time.deltaTime;
                 }
             }
 

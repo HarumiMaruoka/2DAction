@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f02833c95df8c488b3e7793f52c70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slashPower: 3
+  _slashOffensivePower: 3
   _knockBackPower: {x: 0.1, y: 0.1}
   _knockBackTimer: 0.1
 --- !u!70 &2850971396839338785

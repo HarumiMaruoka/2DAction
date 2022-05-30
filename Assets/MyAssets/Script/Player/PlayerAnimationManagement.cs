@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-//プレイヤーのアニメーションに関するクラス
-public class ChangePlayerState : MonoBehaviour
+public class PlayerAnimationManagement : MonoBehaviour
 {
     //このクラスで利用する、自身の各コンポーネント
     Animator _anim;
