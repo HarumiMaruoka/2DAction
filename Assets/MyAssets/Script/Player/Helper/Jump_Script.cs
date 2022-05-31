@@ -33,7 +33,7 @@ public class Jump_Script : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             //Ú’n‚µ‚Ä‚¢‚ê‚ÎƒWƒƒƒ“ƒv‚·‚é
-            if (GetIsGround() && (Input.GetAxisRaw("Fire2") == 0))
+            if (GetIsGround() && !Input.GetButton("Fire2"))
             {
                 rigidbody2d.velocity = new Vector3(0, 40, 0);
                 //rigidbody2d.AddForce(Vector2.up * jamp_power, ForceMode2D.Impulse);

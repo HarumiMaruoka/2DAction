@@ -22,6 +22,9 @@ public class Shot : MonoBehaviour
     SpriteRenderer _spriteRenderer;
     Rigidbody2D _rigidBody2D;
 
+    //破壊時のエフェクト
+    [SerializeField] GameObject _destroyingEffectPrefab;
+
 
     enum Contact_partner
     {
@@ -88,8 +91,9 @@ public class Shot : MonoBehaviour
         {
             _dethTimer += Time.deltaTime;
         }
-        if (_dethTimer > 0.04f)
+        if (_dethTimer > 0.03f)
         {
+            Instantiate(_destroyingEffectPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
     }
@@ -103,6 +107,7 @@ public class Shot : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Ground")//Groundと接触した時、弾は消失する
         {
+            Instantiate(_destroyingEffectPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
     }

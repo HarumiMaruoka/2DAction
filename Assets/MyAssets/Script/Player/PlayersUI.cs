@@ -6,20 +6,28 @@ using UnityEngine.UI;
 public class PlayersUI : MonoBehaviour
 {
     //スライダーを取得
-    [SerializeField] Slider _slider;
+    [SerializeField] Slider _hitPointSlider;
+    [SerializeField] Slider _hoverSlider;
     PlayerBasicInformation _playerBasicInformation;
 
     // Start is called before the first frame update
     void Start()
     {
+        //コンポーネントを取得
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
-        _slider.maxValue = _playerBasicInformation._maxHitPoint;
-        _slider.minValue = 0;
+
+        //HP用スライダー
+        _hitPointSlider.maxValue = _playerBasicInformation._maxHitPoint;
+        _hitPointSlider.minValue = 0;
+        //ホバー用スライダーの初期化
+        _hoverSlider.maxValue = _playerBasicInformation._maxHealthForHover;
+        _hoverSlider.minValue = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        _slider.value = _playerBasicInformation._playerHitPoint;
+        _hitPointSlider.value = _playerBasicInformation._playerHitPoint;
+        _hoverSlider.value = _playerBasicInformation._hoverValue;
     }
 }

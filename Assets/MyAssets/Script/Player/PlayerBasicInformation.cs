@@ -18,9 +18,14 @@ public class PlayerBasicInformation : MonoBehaviour
     float _godModeTime = 1.5f;
     bool _isGodMode = false;
 
+    //ホバー制限
+    [SerializeField] public float _hoverValue;
+    public float _maxHealthForHover { get; } = 300f;
+
     // Start is called before the first frame update
     void Start()
     {
+        _hoverValue = _maxHealthForHover;
         //自身のコンポーネントを取得する。
         _changePlayerState = GetComponent<PlayerAnimationManagement>();
         _playerController = GetComponent<PlayerController>();

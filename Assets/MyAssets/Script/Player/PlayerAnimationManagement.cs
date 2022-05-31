@@ -23,20 +23,19 @@ public class PlayerAnimationManagement : MonoBehaviour
     bool isEnd_of_move_rigth;
     bool isEnd_of_move_left;
 
-    bool _isShotExit;
-
     bool _isCharge_now;
     bool _isMoveStop;
     public bool _isDead;//倒されたかどうか
 
-    bool _isShotAnim;
+    bool _isAttack;
+    bool _isAttack2;
     bool _isRunAnim;
     bool _isJumpAnim;
     bool _isFallAnim;
     bool _isFrontAnim;
     bool _isBehindAnim;
-    bool _isSingleShot;
-    bool _isFrySingleShot;
+    bool _isFryAttack;
+    bool _isFryAttack2;
     bool _isDash;
     bool _isBeatenAnim;//殴られた時のアニメーション
     public bool _isHover;//ホバーしているかどうか
@@ -68,18 +67,18 @@ public class PlayerAnimationManagement : MonoBehaviour
         //Chargeしているかどうか
         _isCharge_now = false;
 
-        _isShotAnim = false;
+        _isAttack = false;
+        _isAttack2 = false;
         _isRunAnim = false;
         _isJumpAnim = false;
         _isFallAnim = false;
         _isFrontAnim = false;
         _isBehindAnim = false;
-        _isSingleShot = false;
-        _isFrySingleShot = false;
+        _isFryAttack = false;
+        _isFryAttack2 = false;
         _isDash = false;
         _isBeatenAnim = false;
 
-        _isShotExit = false;
         _isDead = false;
     }
 
@@ -181,39 +180,43 @@ public class PlayerAnimationManagement : MonoBehaviour
             //ショット mouseButton0 が押されている間実行される
             if (Input.GetButton("Fire1"))
             {
-                if (!_jumpScript.GetIsGround())
+                if (_jumpScript.GetIsGround())
                 {
-                    _isFrySingleShot = true;
+                    _isAttack = true;
                 }
                 else
                 {
-                    _isShotAnim = true;
+                    _isFryAttack = true;
                 }
-                _isShotExit = true;
             }
-            else if (_isShotExit)
+            else
             {
-                _isFrySingleShot = false;
-                _isShotAnim = false;
+                _isFryAttack = false;
+                _isAttack = false;
             }
 
             //スラッシュ mouseButton1 が押されている間実行される
-            if (_jumpScript.GetIsGround())
-            {
-                _isFrySingleShot = false;
-            }
             if (Input.GetButton("Fire2"))
             {
-                _isShotAnim = true;
-                _isCharge_now = true;
+                if (_jumpScript.GetIsGround())
+                {
+                    _isAttack2 = true;
+                }
+                else
+                {
+                    _isFryAttack2 = true;
+                }
             }
-            else if (_isCharge_now)
+            else
             {
-                _isCharge_now = false;
-                _isShotAnim = false;
+                _isFryAttack2 = false;
+                _isAttack2 = false;
             }
 
-            //ジャンプ
+            _isAttack = (_isAttack2 || _isAttack);
+            _isFryAttack = (_isFryAttack2 || _isFryAttack);
+
+            //ジャンプ/ホバー
             if (_rigidbody2D.velocity.y > 0 && !_jumpScript.GetIsGround())//非接地かつ上昇中
             {
                 _isJumpAnim = true;
@@ -247,7 +250,7 @@ public class PlayerAnimationManagement : MonoBehaviour
                     _isHover = false;
                 }
             }
-            else if(_jumpScript.GetIsGround())
+            else if (_jumpScript.GetIsGround())
             {
                 _isFallAnim = false;
                 _isHover = false;
@@ -277,14 +280,13 @@ public class PlayerAnimationManagement : MonoBehaviour
     //アニメーション用変数を設定する関数。毎フレーム呼ばれる。
     void SetAnim()
     {
-        _anim.SetBool("isShot", _isShotAnim);
+        _anim.SetBool("isAttack", _isAttack);
         _anim.SetBool("isRun", _isRunAnim);
         _anim.SetBool("isJump", _isJumpAnim);
         _anim.SetBool("isFall", _isFallAnim);
         _anim.SetBool("isFront", _isFrontAnim);
         _anim.SetBool("isBehind", _isBehindAnim);
-        _anim.SetBool("isSingelShot", _isSingleShot);
-        _anim.SetBool("isFrySingleShot", _isFrySingleShot);
+        _anim.SetBool("isFlyAttack", _isFryAttack);
         _anim.SetBool("isDash", _isDash);
         _anim.SetBool("isBeaten", _isBeatenAnim);
         _anim.SetBool("isHover", _isHover);

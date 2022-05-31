@@ -12,15 +12,21 @@ public class PlayerController : MonoBehaviour
     public float jump_power;
     Rigidbody2D _rigidbody2D;
     Jump_Script jump_script;
-    PlayerAnimationManagement change_player_state;
+    PlayerAnimationManagement _playerAnimationManagement;
+    PlayerBasicInformation _playerBasicInformation;
 
     [SerializeField] GameObject _burrettPrefab;
     [SerializeField] GameObject _slashPrefabOne;
+    [SerializeField] GameObject _slashPrefabTwo;
+    GameObject _temporary;//仮の入れ物
     //[SerializeField] GameObject _slashPrefabTow;
     float _burrettCoolTime;
-    float _slashCoolTime;
+    float _slashCoolTimeOne;
+    float _slashCoolTimeTow;
 
     [SerializeField] float _hoverPower;
+
+    [SerializeField] float _gasValue;
 
 
     // Start is called before the first frame update
@@ -28,14 +34,15 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         jump_script = GetComponent<Jump_Script>();
-        change_player_state = GetComponent<PlayerAnimationManagement>();
+        _playerAnimationManagement = GetComponent<PlayerAnimationManagement>();
+        _playerBasicInformation = GetComponent<PlayerBasicInformation>();
         _burrettCoolTime = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (change_player_state._isMove)//行動可能であれば実行する
+        if (_playerAnimationManagement._isMove)//行動可能であれば実行する
         {
             //入力を取得する
             float h = Input.GetAxisRaw("Horizontal");//横方向
@@ -61,16 +68,12 @@ public class PlayerController : MonoBehaviour
             }
 
             //ホバー
-            if (change_player_state._isHover)
-            {
-                _rigidbody2D.velocity = Vector2.up * _hoverPower;
-            }
+            HoverManagement();
 
             //ショット
-            if (v == 0 && !change_player_state._isHover)//縦の入力がある時は打てない、ホバー中も打てない
+            if (v == 0 && !_playerAnimationManagement._isHover)//縦の入力がある時は打てない、ホバー中も打てない
             {
-                //ショット
-                if (_burrettCoolTime <= 0f)
+                if (_burrettCoolTime < 0f)
                 {
                     if (Input.GetButton("Fire1"))
                     {
@@ -85,23 +88,69 @@ public class PlayerController : MonoBehaviour
             }
 
             //スラッシュ
-            if (v == 0 && !change_player_state._isHover)//縦の入力がある時は打てない、ホバー中も打てない
+            if (v == 0 && !_playerAnimationManagement._isHover)//縦の入力がある時は打てない、ホバー中も打てない
             {
-                if (_slashCoolTime <= 0f)
+                //二撃目発動が発動できるなら発動する
+                if (_slashCoolTimeTow < 0f && _slashCoolTimeOne > 0f)
                 {
                     if (Input.GetButtonDown("Fire2"))
                     {
-                        Instantiate(_slashPrefabOne, Vector3.zero, Quaternion.identity);
-                        _slashCoolTime = 0.25f;
+                        Destroy(_temporary);
+                        Instantiate(_slashPrefabTwo, Vector3.zero, Quaternion.identity);
+                        _slashCoolTimeTow = 0.35f;
+                        _slashCoolTimeOne = 0.35f;
                     }
                 }
-                else
+
+                //一撃目
+                if (_slashCoolTimeOne < 0f)
                 {
-                    if (_slashCoolTime >= 0f)
+                    if (Input.GetButtonDown("Fire2"))
                     {
-                        _slashCoolTime -= Time.deltaTime;
+                        _temporary = Instantiate(_slashPrefabOne, Vector3.zero, Quaternion.identity);
+                        _slashCoolTimeOne = 0.35f;
                     }
                 }
+
+                //クールタイム解消
+                if (_slashCoolTimeOne >= 0f)
+                {
+                    _slashCoolTimeOne -= Time.deltaTime;
+                }
+                if (_slashCoolTimeTow >= 0f)
+                {
+                    _slashCoolTimeTow -= Time.deltaTime;
+                }
+            }
+        }
+    }
+
+    /// <summary> ホバー管理用関数 </summary>
+    void HoverManagement()//ホバー管理
+    {
+        //ホバーしているときの処理
+        if (_playerAnimationManagement._isHover)
+        {
+            //ホバー用体力が0より大きければ
+            if (_playerBasicInformation._hoverValue > 0f)
+            {
+                //上昇処理、ガスを消費する
+                _rigidbody2D.velocity = Vector2.up * _hoverPower;
+                _playerBasicInformation._hoverValue -= Time.deltaTime * _gasValue;
+            }
+        }
+        //ホバーしてないときの処理
+        else
+        {
+            //体力が最大であれば
+            if (_playerBasicInformation._maxHealthForHover <= _playerBasicInformation._hoverValue)
+            {
+                _playerBasicInformation._hoverValue = _playerBasicInformation._maxHealthForHover;
+            }
+            //体力が最大ではなければ
+            else
+            {
+                _playerBasicInformation._hoverValue += Time.deltaTime * _gasValue;
             }
         }
     }
