@@ -10,7 +10,6 @@ public class PlayersUI : MonoBehaviour
     [SerializeField] Slider _hoverSlider;
     PlayerBasicInformation _playerBasicInformation;
 
-    // Start is called before the first frame update
     void Start()
     {
         //コンポーネントを取得
@@ -24,10 +23,10 @@ public class PlayersUI : MonoBehaviour
         _hoverSlider.minValue = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         _hitPointSlider.value = _playerBasicInformation._playerHitPoint;
         _hoverSlider.value = _playerBasicInformation._hoverValue;
     }
+
 }

@@ -26,11 +26,6 @@ public class Shot : MonoBehaviour
     [SerializeField] GameObject _destroyingEffectPrefab;
 
 
-    enum Contact_partner
-    {
-        NON, ENEMY, BLOCK, ERROR,
-    }
-
     // Start is called before the first frame update
     void Start()
     {

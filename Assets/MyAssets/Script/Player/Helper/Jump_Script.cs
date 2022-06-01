@@ -20,14 +20,18 @@ public class Jump_Script : MonoBehaviour
     [SerializeField]
     LayerMask _layer_mask_Ground;
 
+    float _groundCheckPositionY = -0.725f;
+    float _jumpPower = 40;
+
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
     }
 
-   public void Jump(float jamp_power)
+    /// <summary> 接地していればジャンプする </summary>
+    public void Jump(float jamp_power)
     {
-        _over_lap_box_center = transform.position + new Vector3(0f, -0.725f, 0);
+        _over_lap_box_center = transform.position + new Vector3(0f, _groundCheckPositionY, 0);
 
         //ジャンプ入力と接地判定があればジャンプする
         if (Input.GetButtonDown("Jump"))
@@ -35,7 +39,7 @@ public class Jump_Script : MonoBehaviour
             //接地していればジャンプする
             if (GetIsGround() && !Input.GetButton("Fire2"))
             {
-                rigidbody2d.velocity = new Vector3(0, 40, 0);
+                rigidbody2d.velocity = new Vector3(0, _jumpPower, 0);
                 //rigidbody2d.AddForce(Vector2.up * jamp_power, ForceMode2D.Impulse);
             }
         }

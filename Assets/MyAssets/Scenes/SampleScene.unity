@@ -4482,12 +4482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d566eae6ec7f96409c8eec0fd6d3070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isMove: 0
   _isHitEnemy: 0
-  isRigth: 1
-  isLeft: 0
-  _isDead: 0
-  _isHover: 0
 --- !u!50 &621943478
 Rigidbody2D:
   serializedVersion: 4
@@ -14538,7 +14533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1992604946
 Transform:
   m_ObjectHideFlags: 0

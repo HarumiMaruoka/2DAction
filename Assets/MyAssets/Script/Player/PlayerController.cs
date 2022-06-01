@@ -16,8 +16,13 @@ public class PlayerController : MonoBehaviour
     PlayerBasicInformation _playerBasicInformation;
 
     [SerializeField] GameObject _burrettPrefab;
+
+    [Tooltip("右クリック攻撃 一撃目のプレハブ")]
     [SerializeField] GameObject _slashPrefabOne;
+
+    [Tooltip("右クリック攻撃 二撃目のプレハブ")]
     [SerializeField] GameObject _slashPrefabTwo;
+
     GameObject _temporary;//仮の入れ物
     //[SerializeField] GameObject _slashPrefabTow;
     float _burrettCoolTime;
@@ -122,6 +127,8 @@ public class PlayerController : MonoBehaviour
                     _slashCoolTimeTow -= Time.deltaTime;
                 }
             }
+
+            v = 100f;
         }
     }
 

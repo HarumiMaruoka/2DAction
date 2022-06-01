@@ -11,22 +11,19 @@ public class PlayerAnimationManagement : MonoBehaviour
     Jump_Script _jumpScript;
 
     //行動可能か？
-    public bool _isMove;//行動不能の時はfalseになる。
+    public bool _isMove { get; private set; }//行動不能の時はfalseになる。
     public bool _isHitEnemy;//敵に殴られた時にtrueになる。
 
     //向いている向き
-    public bool isRigth;
-    public bool isLeft;
-    bool isFront; //前向き
-    bool isBehind;//後向き
+    bool _isFront; //前向き
+    bool _isBehind;//後向き
 
     bool isEnd_of_move_rigth;
     bool isEnd_of_move_left;
 
-    bool _isCharge_now;
-    bool _isMoveStop;
-    public bool _isDead;//倒されたかどうか
+    public bool _isDead { get; set; }//倒されたかどうか
 
+    //アニメーション管理用変数
     bool _isAttack;
     bool _isAttack2;
     bool _isRunAnim;
@@ -38,7 +35,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     bool _isFryAttack2;
     bool _isDash;
     bool _isBeatenAnim;//殴られた時のアニメーション
-    public bool _isHover;//ホバーしているかどうか
+    public bool _isHover { get; private set; }//ホバーしているかどうか
 
 
     // Start is called before the first frame update
@@ -55,17 +52,12 @@ public class PlayerAnimationManagement : MonoBehaviour
         _isHitEnemy = false;
 
         //向いている向き
-        isRigth = true;
-        isLeft = false;
-        isFront = false;
-        isBehind = false;
+        _isFront = false;
+        _isBehind = false;
 
         //移動終了判定
         isEnd_of_move_rigth = true;
         isEnd_of_move_left = true;
-
-        //Chargeしているかどうか
-        _isCharge_now = false;
 
         _isAttack = false;
         _isAttack2 = false;
@@ -94,11 +86,11 @@ public class PlayerAnimationManagement : MonoBehaviour
             //横移動
             if (v == 0 && _isMove)
             {
+                //水平方向移動向きが正であれば以下を実行せよ
+                //(左移動中の場合)
                 if (h < 0)
                 {
                     isEnd_of_move_left = false;
-                    isLeft = true;
-                    isRigth = false;
                     _spriteRenderer.flipX = true;
                     _isRunAnim = true;
                     if (Input.GetButton("Dash"))
@@ -120,14 +112,12 @@ public class PlayerAnimationManagement : MonoBehaviour
                 }
 
                 //水平方向移動向きが正であれば以下を実行せよ
-                //(右移動中であれば)
+                //(右移動中の場合)
                 if (h > 0)
                 {
                     _spriteRenderer.flipX = false;
                     isEnd_of_move_rigth = false;
                     _isRunAnim = true;
-                    isLeft = false;
-                    isRigth = true;
                     if (Input.GetButton("Dash"))
                     {
                         _isDash = true;
@@ -153,13 +143,13 @@ public class PlayerAnimationManagement : MonoBehaviour
             if (v < 0)//フロントに向ける処理
             {
                 _isFrontAnim = true;
-                isFront = false;
+                _isFront = false;
                 _isRunAnim = false;
 
             }
-            else if (!isFront)
+            else if (!_isFront)
             {
-                isFront = true;
+                _isFront = true;
                 _isFrontAnim = false;
             }
 
@@ -167,13 +157,13 @@ public class PlayerAnimationManagement : MonoBehaviour
             if (v > 0)
             {
                 _isBehindAnim = true;
-                isBehind = false;
+                _isBehind = false;
                 _isRunAnim = false;
 
             }
-            else if (!isBehind)
+            else if (!_isBehind)
             {
-                isBehind = true;
+                _isBehind = true;
                 _isBehindAnim = false;
             }
 
