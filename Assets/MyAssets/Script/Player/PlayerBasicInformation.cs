@@ -64,6 +64,4 @@ public class PlayerBasicInformation : MonoBehaviour
         yield return new WaitForSeconds(_godModeTime);
         _isGodMode = false;
     }
-
-    
 }

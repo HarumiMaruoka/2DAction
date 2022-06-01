@@ -8,7 +8,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     Animator _animator;
     Rigidbody2D _rigidbody2D;
     SpriteRenderer _spriteRenderer;
-    Jump_Script _jumpScript;
+    JumpScript _jumpScript;
 
     //行動可能か？
     public bool _isMove { get; set; }//行動不能の時はfalseになる。
@@ -44,7 +44,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _jumpScript = GetComponent<Jump_Script>();
+        _jumpScript = GetComponent<JumpScript>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
         //行動可能か？

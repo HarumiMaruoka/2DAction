@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     //コンポーネント
     Rigidbody2D _rigidbody2D;
-    Jump_Script _jumpScript;
+    JumpScript _jumpScript;
     SpriteRenderer _spriteRenderer;
     Animator _animator;
     PlayerAnimationManagement _playerAnimationManagement;
@@ -48,15 +48,17 @@ public class PlayerController : MonoBehaviour
     [Tooltip("梯子を登るスピード")]
     [SerializeField] float _climbSpeed;
     bool _isclimb;
-    float _climbGravityScale = 0;
-    float _notClimbGravityScale = 12;
+    float _climbGravityScale = 0f;
+    float _notClimbGravityScale = 12f;
+    float _linerDrag = 100f;
+    float _notLinerDrag = 5f;
 
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _jumpScript = GetComponent<Jump_Script>();
+        _jumpScript = GetComponent<JumpScript>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _playerAnimationManagement = GetComponent<PlayerAnimationManagement>();
@@ -76,13 +78,32 @@ public class PlayerController : MonoBehaviour
             //横移動
             if (v == 0 && h != 0)//縦の入力がある時は横移動できない
             {
-                if (Input.GetButton("Dash"))
+                if (Mathf.Approximately(_rigidbody2D.drag, _linerDrag))
                 {
-                    _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime * dash_speed, ForceMode2D.Force);
+                    h *= 5f;
+                    //ダッシュする場合
+                    if (Input.GetButton("Dash"))
+                    {
+                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime * dash_speed, ForceMode2D.Force);
+                    }
+                    //通常の横移動
+                    else
+                    {
+                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime, ForceMode2D.Force);
+                    }
                 }
                 else
                 {
-                    _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime, ForceMode2D.Force);
+                    //ダッシュする場合
+                    if (Input.GetButton("Dash"))
+                    {
+                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime * dash_speed, ForceMode2D.Force);
+                    }
+                    //通常の横移動
+                    else
+                    {
+                        _rigidbody2D.AddForce(Vector2.right * h * move_speed_x * Time.deltaTime, ForceMode2D.Force);
+                    }
                 }
             }
 
@@ -92,7 +113,7 @@ public class PlayerController : MonoBehaviour
             //ジャンプ
             if (v == 0 && !_isSlidingNow)//縦入力がある時、あるいはスライディング中は実行できない
             {
-                _jumpScript.Jump(jump_power);
+                //_jumpScript.Jump(jump_power);
             }
 
             //ホバー
@@ -211,12 +232,12 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary> アニメーションイベントから呼び出す、スライディング終了用関数 </summary>
-    public void SlidingStop()
-    {
-        _isSlidingNow = false;
-        _playerAnimationManagement._isMove = true;
-        _animator.SetTrigger("SlidingOff");
-    }
+    //public void SlidingStop()
+    //{
+    //    _isSlidingNow = false;
+    //    _playerAnimationManagement._isMove = true;
+    //    _animator.SetTrigger("SlidingOff");
+    //}
 
     /// <summary> 梯子昇降管理用関数 </summary>
     void Climb(float v, float h)
@@ -224,13 +245,16 @@ public class PlayerController : MonoBehaviour
         //梯子昇降中
         if (_isclimb)
         {
+            Debug.Log("aaa");
             _rigidbody2D.gravityScale = _climbGravityScale;
-            _rigidbody2D.velocity = new Vector2(h * move_speed_x * Time.deltaTime, _climbSpeed * v);
+            _rigidbody2D.drag = _linerDrag;
+            _rigidbody2D.AddForce(new Vector2(0f, _climbSpeed * v * Time.deltaTime));
         }
         else
         {
             _rigidbody2D.gravityScale = _notClimbGravityScale;
         }
+
         if (_jumpScript.GetIsGround())
         {
             _rigidbody2D.gravityScale = _notClimbGravityScale;
@@ -250,12 +274,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //梯子と接触しているときの処理
-        if (collision.tag == "Ladder")
-        {
-            _isclimb = false;
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //梯子と接触しているときの処理
+    //    if (collision.tag == "Ladder")
+    //    {
+    //        _isclimb = false;
+    //        _rigidbody2D.gravityScale = _notClimbGravityScale;
+    //        _rigidbody2D.drag = _notLinerDrag;
+    //    }
+    //}
 }

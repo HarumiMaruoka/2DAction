@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jump_Script : MonoBehaviour
+public class JumpScript : MonoBehaviour
 {
     Rigidbody2D rigidbody2d;
 
@@ -42,6 +42,7 @@ public class Jump_Script : MonoBehaviour
 
     public bool GetIsGround()
     {
+        _over_lap_box_center = transform.position + new Vector3(0f, _groundCheckPositionY, 0);
         Collider2D[] collision = Physics2D.OverlapBoxAll(
             _over_lap_box_center,
             _over_lap_box_size,
