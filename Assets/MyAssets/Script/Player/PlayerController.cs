@@ -6,15 +6,21 @@ using UnityEngine;
 //プレイヤーの移動に関するクラス
 public class PlayerController : MonoBehaviour
 {
+    //各パラメータ
     public float move_speed_x;
     float previous_move_speed;
     const float dash_speed = 1.6f;
     public float jump_power;
+
+    //コンポーネント
     Rigidbody2D _rigidbody2D;
-    Jump_Script jump_script;
+    Jump_Script _jumpScript;
+    SpriteRenderer _spriteRenderer;
+    Animator _animator;
     PlayerAnimationManagement _playerAnimationManagement;
     PlayerBasicInformation _playerBasicInformation;
 
+    //武器のプレハブ
     [SerializeField] GameObject _burrettPrefab;
 
     [Tooltip("右クリック攻撃 一撃目のプレハブ")]
@@ -24,21 +30,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject _slashPrefabTwo;
 
     GameObject _temporary;//仮の入れ物
+
     //[SerializeField] GameObject _slashPrefabTow;
     float _burrettCoolTime;
     float _slashCoolTimeOne;
     float _slashCoolTimeTow;
 
-    [SerializeField] float _hoverPower;
+    //ホバー関連
+    [SerializeField] float _hoverPower;//ホバー時の上昇力
+    [SerializeField] float _gasValue;//1フレーム単位のガスの消費量
 
-    [SerializeField] float _gasValue;
+    //スライディング関連
+    [SerializeField] float _slidingPower;
+    public bool _isSlidingNow;
+
+    //梯子昇降関連
+    [Tooltip("梯子を登るスピード")]
+    [SerializeField] float _climbSpeed;
+    bool _isclimb;
+    float _climbGravityScale = 0;
+    float _notClimbGravityScale = 12;
 
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        jump_script = GetComponent<Jump_Script>();
+        _jumpScript = GetComponent<Jump_Script>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
         _playerAnimationManagement = GetComponent<PlayerAnimationManagement>();
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
         _burrettCoolTime = 0f;
@@ -66,10 +86,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //スライディング
+            Sliding(v);
+
             //ジャンプ
-            if (v == 0)
+            if (v == 0 && !_isSlidingNow)//縦入力がある時、あるいはスライディング中は実行できない
             {
-                jump_script.Jump(jump_power);
+                _jumpScript.Jump(jump_power);
             }
 
             //ホバー
@@ -128,15 +151,16 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            v = 100f;
+            //梯子昇降
+            Climb(v, h);
         }
     }
 
     /// <summary> ホバー管理用関数 </summary>
     void HoverManagement()//ホバー管理
     {
-        //ホバーしているときの処理
-        if (_playerAnimationManagement._isHover)
+        //ホバー中の処理。スライディング中ではないときに実行できる。
+        if (_playerAnimationManagement._isHover && !_isSlidingNow)
         {
             //ホバー用体力が0より大きければ
             if (_playerBasicInformation._hoverValue > 0f)
@@ -159,6 +183,79 @@ public class PlayerController : MonoBehaviour
             {
                 _playerBasicInformation._hoverValue += Time.deltaTime * _gasValue;
             }
+        }
+    }
+
+    /// <summary> スライディング </summary>
+    void Sliding(float inputVertical)
+    {
+        //下入力がある時かつ、接地状態で、スペースキーを押すことでスライディング！
+        if (inputVertical < 0 && _jumpScript.GetIsGround())
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                //左に向いている時
+                if (_spriteRenderer.flipX)
+                {
+                    _rigidbody2D.AddForce(Vector2.left * _slidingPower, ForceMode2D.Impulse);
+                }
+                //右に向いている時
+                else
+                {
+                    _rigidbody2D.AddForce(Vector2.right * _slidingPower, ForceMode2D.Impulse);
+                }
+                _isSlidingNow = true;
+                _playerAnimationManagement._isMove = false;
+            }
+        }
+    }
+
+    /// <summary> アニメーションイベントから呼び出す、スライディング終了用関数 </summary>
+    public void SlidingStop()
+    {
+        _isSlidingNow = false;
+        _playerAnimationManagement._isMove = true;
+        _animator.SetTrigger("SlidingOff");
+    }
+
+    /// <summary> 梯子昇降管理用関数 </summary>
+    void Climb(float v, float h)
+    {
+        //梯子昇降中
+        if (_isclimb)
+        {
+            _rigidbody2D.gravityScale = _climbGravityScale;
+            _rigidbody2D.velocity = new Vector2(h * move_speed_x * Time.deltaTime, _climbSpeed * v);
+        }
+        else
+        {
+            _rigidbody2D.gravityScale = _notClimbGravityScale;
+        }
+        if (_jumpScript.GetIsGround())
+        {
+            _rigidbody2D.gravityScale = _notClimbGravityScale;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        //梯子と接触しているときの処理
+        if (collision.tag == "Ladder")
+        {
+            //梯子を登る場合
+            if (Input.GetAxisRaw("Vertical") != 0)
+            {
+                _isclimb = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        //梯子と接触しているときの処理
+        if (collision.tag == "Ladder")
+        {
+            _isclimb = false;
         }
     }
 }

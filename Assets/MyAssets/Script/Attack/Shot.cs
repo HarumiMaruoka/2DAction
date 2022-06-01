@@ -12,7 +12,6 @@ public class Shot : MonoBehaviour
     bool _isRigth;//プレイヤーが向いている方向を向く
     float _destroyTime;//弾が破壊されるまでの時間。
     float _dethTimer;//敵に当たったら、タイマースタート。
-    bool _isDeth = false;//プレイヤーがダッシュしているかどうかを表す。
     float _dashMode;//プレイヤーが歩いているときは、1が入る。
 
     //プレイヤーのコンポーネント
@@ -25,6 +24,12 @@ public class Shot : MonoBehaviour
     //破壊時のエフェクト
     [SerializeField] GameObject _destroyingEffectPrefab;
 
+    //破壊管理用
+    bool _isDeth;
+
+    bool _isDethMode;
+    float _dethTimer2;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +38,7 @@ public class Shot : MonoBehaviour
         _dashMode = 1f;
         _destroyTime = 0f;
         _dethTimer = 0f;
+        _dethTimer2 = 1.5f;
 
         //SpriteRendererを取得する
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -71,15 +77,17 @@ public class Shot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Destroy(this.gameObject,1.5f);
         //時間で破壊
-        if (_destroyTime > 1)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _destroyTime += Time.deltaTime;
-        }
+        //if (_destroyTime > 1)
+        //{
+        //    Destroy(this.gameObject);
+        //    Destroy(this,)
+        //}
+        //else
+        //{
+        //    _destroyTime += Time.deltaTime;
+        //}
 
         //敵と接触したときは少し遅らせて、弾を消失させる
         if (_isDeth)
@@ -93,6 +101,7 @@ public class Shot : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out EnemyBase enemy))//敵に接触したときの処理
@@ -105,5 +114,12 @@ public class Shot : MonoBehaviour
             Instantiate(_destroyingEffectPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
+    }
+
+    IEnumerator DethTimer()
+    {
+        _isDethMode = true;
+        yield return new WaitForSeconds(_dethTimer2);
+        _isDethMode = false;
     }
 }

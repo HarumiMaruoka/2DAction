@@ -8,11 +8,6 @@ public class Jump_Script : MonoBehaviour
 
     [SerializeField, Tooltip("Gizmo•\Ž¦")] bool _isGizmo = true;
 
-    //CheckGround
-    //[SerializeField]
-    //private CheckGround _checkGround;
-
-
     [SerializeField]
     private Vector2 _over_lap_box_center;
     [SerializeField]

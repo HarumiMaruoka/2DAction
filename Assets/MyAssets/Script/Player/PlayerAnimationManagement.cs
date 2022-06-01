@@ -5,13 +5,13 @@ using UnityEngine;
 public class PlayerAnimationManagement : MonoBehaviour
 {
     //このクラスで利用する、自身の各コンポーネント
-    Animator _anim;
+    Animator _animator;
     Rigidbody2D _rigidbody2D;
     SpriteRenderer _spriteRenderer;
     Jump_Script _jumpScript;
 
     //行動可能か？
-    public bool _isMove { get; private set; }//行動不能の時はfalseになる。
+    public bool _isMove { get; set; }//行動不能の時はfalseになる。
     public bool _isHitEnemy;//敵に殴られた時にtrueになる。
 
     //向いている向き
@@ -42,7 +42,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     //各変数の初期化
     void Start()
     {
-        _anim = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _jumpScript = GetComponent<Jump_Script>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -139,20 +139,10 @@ public class PlayerAnimationManagement : MonoBehaviour
                 _isDash = false;
             }
 
+            //スライディング
+            SlidingAnim();
+
             //縦向き
-            if (v < 0)//フロントに向ける処理
-            {
-                _isFrontAnim = true;
-                _isFront = false;
-                _isRunAnim = false;
-
-            }
-            else if (!_isFront)
-            {
-                _isFront = true;
-                _isFrontAnim = false;
-            }
-
             //ビハインドに向ける処理
             if (v > 0)
             {
@@ -251,16 +241,18 @@ public class PlayerAnimationManagement : MonoBehaviour
             {
                 _isHitEnemy = false;
                 _isMove = false;
-                _anim.Play("Beaten");
-                _anim.SetTrigger("Blinking");
+                _animator.Play("Beaten");
+                _animator.SetTrigger("Blinking");
                 _isBeatenAnim = true;
             }
+
+            //スライディング
         }
 
         //倒されたとき
         if (_isDead)
         {
-            _anim.Play("Killed");
+            _animator.Play("Killed");
         }
 
         //Animetion Set
@@ -270,16 +262,16 @@ public class PlayerAnimationManagement : MonoBehaviour
     //アニメーション用変数を設定する関数。毎フレーム呼ばれる。
     void SetAnim()
     {
-        _anim.SetBool("isAttack", _isAttack);
-        _anim.SetBool("isRun", _isRunAnim);
-        _anim.SetBool("isJump", _isJumpAnim);
-        _anim.SetBool("isFall", _isFallAnim);
-        _anim.SetBool("isFront", _isFrontAnim);
-        _anim.SetBool("isBehind", _isBehindAnim);
-        _anim.SetBool("isFlyAttack", _isFryAttack);
-        _anim.SetBool("isDash", _isDash);
-        _anim.SetBool("isBeaten", _isBeatenAnim);
-        _anim.SetBool("isHover", _isHover);
+        _animator.SetBool("isAttack", _isAttack);
+        _animator.SetBool("isRun", _isRunAnim);
+        _animator.SetBool("isJump", _isJumpAnim);
+        _animator.SetBool("isFall", _isFallAnim);
+        _animator.SetBool("isFront", _isFrontAnim);
+        _animator.SetBool("isBehind", _isBehindAnim);
+        _animator.SetBool("isFlyAttack", _isFryAttack);
+        _animator.SetBool("isDash", _isDash);
+        _animator.SetBool("isBeaten", _isBeatenAnim);
+        _animator.SetBool("isHover", _isHover);
     }
 
     //プレイヤーが行動不能状態から復帰する時の処理。敵に殴られた時のアニメーションイベントから呼ばれる。
@@ -287,5 +279,24 @@ public class PlayerAnimationManagement : MonoBehaviour
     {
         _isMove = true;
         _isBeatenAnim = false;
+    }
+
+    /// <summary> スライディング </summary>
+    void SlidingAnim()
+    {
+        //下入力がある時かつ、接地状態で、スペースキーを押すことでスライディング！
+        if (Input.GetAxisRaw("Vertical") < 0 && _jumpScript.GetIsGround())
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                _animator.Play("Sliding");
+            }
+        }
+    }
+
+    /// <summary> 梯子の登り降り </summary>
+    void LadderClimb()
+    {
+
     }
 }
