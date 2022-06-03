@@ -96,7 +96,7 @@ public class PlayerMoveManager : MonoBehaviour
         _isRigth = !_spriteRendere.flipX;
 
 
-        if (_playerAnimationManagement._isMove)
+        if (_playerAnimationManagement._isMove && !_playerAnimationManagement._isDead)
         {
             MoveHorizontal();
             Dash();
@@ -113,7 +113,10 @@ public class PlayerMoveManager : MonoBehaviour
             //é¿ç€Ç…óÕÇâ¡Ç¶ÇÈ
             _rigidBody2D.AddForce(_newImpulse * 10f, ForceMode2D.Impulse);
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
-            _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
+            if (Mathf.Approximately(_newImpulse.x, 0f))
+            {
+                _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
+            }
         }
     }
 
@@ -169,7 +172,6 @@ public class PlayerMoveManager : MonoBehaviour
             if (_inputManager._inputVertical != 0)
             {
                 _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;
-                _rigidBody2D.gravityScale = _gravity;
             }
             //ècÇÃì¸óÕÇ™Ç»Ç≠Ç»Ç¡ÇΩéûÇÃèàóù
             else

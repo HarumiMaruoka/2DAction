@@ -10,7 +10,6 @@ public class Shot : MonoBehaviour
     [SerializeField] int _barrettPower;//弾の攻撃力
 
     bool _isRigth;//プレイヤーが向いている方向を向く
-    float _destroyTime;//弾が破壊されるまでの時間。
     float _dethTimer;//敵に当たったら、タイマースタート。
     float _dashMode;//プレイヤーが歩いているときは、1が入る。
 
@@ -36,7 +35,6 @@ public class Shot : MonoBehaviour
     {
         //各変数の初期化
         _dashMode = 1f;
-        _destroyTime = 0f;
         _dethTimer = 0f;
         _dethTimer2 = 1.5f;
 

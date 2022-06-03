@@ -74,11 +74,6 @@ public class EnemyBase : MonoBehaviour
                 _color_change_time -= Time.deltaTime;
             }
         }
-
-        //プレイヤーがいる方向を取得する
-        _isRight = (transform.position.x < _playerPos.transform.position.x);
-        //エネミーはプレイヤーがいる方向を向く
-        _spriteRenderer.flipX = _isRight;
     }
 
     //プレイヤーからの攻撃時に、呼び出すので public で宣言する。

@@ -11,8 +11,7 @@ public class PlayerBasicInformation : MonoBehaviour
     [SerializeField] public int _playerHitPoint = 3;//現在のHP
 
     //各コンポーネント
-    PlayerAnimationManagement _changePlayerState;
-    PlayerController _playerController;
+    PlayerAnimationManagement _playerAnimationManagement;
 
     //無敵関連(ヒット後の無敵時間とか)
     float _godModeTime = 1.5f;
@@ -27,8 +26,7 @@ public class PlayerBasicInformation : MonoBehaviour
     {
         _hoverValue = _maxHealthForHover;
         //自身のコンポーネントを取得する。
-        _changePlayerState = GetComponent<PlayerAnimationManagement>();
-        _playerController = GetComponent<PlayerController>();
+        _playerAnimationManagement = GetComponent<PlayerAnimationManagement>();
     }
 
     // Update is called once per frame
@@ -37,8 +35,7 @@ public class PlayerBasicInformation : MonoBehaviour
         //player の体力がなくなったら消滅する
         if (_playerHitPoint < 1)
         {
-            _playerController.enabled = false;
-            _changePlayerState._isDead = true;
+            _playerAnimationManagement._isDead = true;
         }
     }
 
@@ -52,7 +49,7 @@ public class PlayerBasicInformation : MonoBehaviour
             if (collision.gameObject.TryGetComponent(out EnemyBase enemy))
             {
                 enemy.HitPlayer();
-                _changePlayerState._isHitEnemy = true;
+                _playerAnimationManagement._isHitEnemy = true;
                 StartCoroutine(GodMode());
             }
         }

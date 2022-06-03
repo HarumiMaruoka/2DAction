@@ -31,8 +31,11 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        Fire1();
-        Fire2();
+        if (!_playerAnimationManagement._isDead)
+        {
+            Fire1();
+            Fire2();
+        }
     }
 
     void Fire1()

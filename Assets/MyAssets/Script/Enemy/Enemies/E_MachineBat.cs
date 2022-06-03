@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 //コウモリマシンのコード
-public class MACHINE_BAT_Script : EnemyBase
+public class E_MachineBat : EnemyBase
 {
     //移動スピード
     [SerializeField]float moveSpeed = 120f;
@@ -25,6 +25,11 @@ public class MACHINE_BAT_Script : EnemyBase
     //プレイヤーに向かって移動し続ける
     protected override void Move()
     {
+        //プレイヤーがいる方向を取得する
+        _isRight = (transform.position.x < _playerPos.transform.position.x);
+        //エネミーはプレイヤーがいる方向を向く
+        _spriteRenderer.flipX = _isRight;
+
         if (!_isKnockBackNow)//ノックバック中でなければ移動する。
         {
             //プレイヤーとエネミーの位置を取得する
