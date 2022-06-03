@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
 
     //マウスの入力
     public bool _inputFire1 { get; private set; } = false;//左クリック
-    public bool _inputFire2 { get; private set; } = false;//右クリック
+    public bool _inputFire2Down { get; private set; } = false;//右クリック
 
     void Update()
     {
@@ -36,6 +36,6 @@ public class InputManager : MonoBehaviour
         _inputJump = Input.GetButton("Jump");
 
         _inputFire1 = Input.GetButton("Fire1");
-        _inputFire2 = Input.GetButton("Fire2");
+        _inputFire2Down = Input.GetButtonDown("Fire2");
     }
 }

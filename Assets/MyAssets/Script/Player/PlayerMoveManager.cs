@@ -29,7 +29,7 @@ public class PlayerMoveManager : MonoBehaviour
     [SerializeField] float _climbSpeed;
     public float ClimbSpeed { get => _climbSpeed; }
 
-    [Tooltip("梯子昇降中の横移動速度の減速率")]
+    [Tooltip("横移動速度の減速率")]
     [SerializeField] float _decelerationRateX;
     public float DecelerationRateX { get => _decelerationRateX; }
 
@@ -49,6 +49,7 @@ public class PlayerMoveManager : MonoBehaviour
     //このフレームで加える力
     Vector2 _newForce;
     Vector2 _newImpulse;
+    Vector2 _newVelocity;
 
     //ジャンプできるか:スペースキーはジャンプとスライディングの機能を兼ねる為
     bool _canJump = false;
@@ -56,8 +57,7 @@ public class PlayerMoveManager : MonoBehaviour
     bool _isRigth = false;
     //梯子を登れるかどうか
     bool _isClimb = false;
-
-    //重力
+    //重力:梯子を登っているときは重力を0にするため
     float _gravity;
 
 
@@ -75,6 +75,8 @@ public class PlayerMoveManager : MonoBehaviour
 
         //各変数の初期化
         _newForce = Vector2.zero;
+        _newImpulse = Vector2.zero;
+        _newVelocity = Vector2.zero;
         //プレイヤーが向いている方向を取得
         _isRigth = !_spriteRendere.flipX;
     }
@@ -89,6 +91,7 @@ public class PlayerMoveManager : MonoBehaviour
         //加える力の初期化
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
+        _newVelocity = Vector2.zero;
         //プレイヤーが向いている方向を取得
         _isRigth = !_spriteRendere.flipX;
 
@@ -101,13 +104,16 @@ public class PlayerMoveManager : MonoBehaviour
             Jump();
             Climb();
             Hover();
+            if (!_jumpScript.GetIsGround())
+            {
+                _newForce.x *= DecelerationRateX;
+            }
 
             //Debug.Log(newVelocity);
             //実際に力を加える
             _rigidBody2D.AddForce(_newImpulse * 10f, ForceMode2D.Impulse);
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
-            //Debug.Log("newImpulse" + _newImpulse);
-            //Debug.Log("newForce" + _newForce);
+            _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
         }
     }
 
@@ -116,7 +122,7 @@ public class PlayerMoveManager : MonoBehaviour
         //縦の入力がある時は実行できない
         if (!(_inputManager._inputVertical != 0))
         {
-            _newForce += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+            _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
         }
     }
 
@@ -125,7 +131,7 @@ public class PlayerMoveManager : MonoBehaviour
         //LeftShiftキーで加速
         if (_inputManager._inputLeftShift)
         {
-            _newForce *= _moveDashSpeed;
+            _newVelocity *= _moveDashSpeed;
         }
     }
 
@@ -156,15 +162,16 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Climb()
     {
+        //梯子を昇降する時の処理
         if (_isClimb)
         {
+            //縦の入力がある時
             if (_inputManager._inputVertical != 0)
             {
-                //_newForce += new Vector2(0f, ClimbSpeed * _inputManager._inputVertical);
                 _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;
-                _newForce.x *= DecelerationRateX;
                 _rigidBody2D.gravityScale = _gravity;
             }
+            //縦の入力がなくなった時の処理
             else
             {
                 _rigidBody2D.velocity = Vector2.zero;
@@ -182,8 +189,8 @@ public class PlayerMoveManager : MonoBehaviour
             if (_playerBasicInformation._hoverValue > 0f)
             {
                 //上昇処理、ガスを消費する
-                _newForce += Vector2.up * _hoverPower;
                 _playerBasicInformation._hoverValue -= Time.deltaTime * _gasValue;
+                _rigidBody2D.velocity = new Vector2(_rigidBody2D.velocity.x, _hoverPower);
             }
         }
         //ホバーしてないときの処理
@@ -215,6 +222,7 @@ public class PlayerMoveManager : MonoBehaviour
         }
     }
 
+    //コライダーが接触しているときの処理
     private void OnTriggerExit2D(Collider2D collision)
     {
         //梯子と接触しているときの処理
