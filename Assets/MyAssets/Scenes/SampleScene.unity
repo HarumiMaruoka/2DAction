@@ -5087,6 +5087,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6616842508434420329, guid: fb7d703560b161c40acd10d64c651fb9, type: 3}
+      propertyPath: _playerKnockBackPower.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616842508434420329, guid: fb7d703560b161c40acd10d64c651fb9, type: 3}
       propertyPath: _player_knock_back_Power.y
       value: 50
       objectReference: {fileID: 0}
@@ -14047,10 +14051,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hit_Point: 10
-  _offensive_Power: 0
-  _playerKnockBackPower: {x: 10, y: 10}
+  _offensive_Power: 1
+  _playerKnockBackPower: {x: -100, y: 100}
   _isKnockBackNow: 0
-  _tank: 0
+  _tank: -2
   _moveSpeed: 2
 --- !u!1 &1694121257
 GameObject:

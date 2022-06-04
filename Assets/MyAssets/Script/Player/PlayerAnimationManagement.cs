@@ -9,6 +9,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     Rigidbody2D _rigidbody2D;
     SpriteRenderer _spriteRenderer;
     JumpScript _jumpScript;
+    InputManager _inputManager;
 
     //行動可能か？
     public bool _isMove { get; set; }//行動不能の時はfalseになる。
@@ -36,6 +37,7 @@ public class PlayerAnimationManagement : MonoBehaviour
     bool _isDash;
     bool _isBeatenAnim;//殴られた時のアニメーション
     public bool _isHover { get; private set; }//ホバーしているかどうか
+    public bool _isClimb { get; private set; }//梯子を昇降しているかどうか
 
 
     // Start is called before the first frame update
@@ -46,6 +48,7 @@ public class PlayerAnimationManagement : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _jumpScript = GetComponent<JumpScript>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _inputManager = GetComponent<InputManager>();
 
         //行動可能か？
         _isMove = true;
@@ -70,6 +73,7 @@ public class PlayerAnimationManagement : MonoBehaviour
         _isFryAttack2 = false;
         _isDash = false;
         _isBeatenAnim = false;
+        _isClimb = false;
 
         _isDead = false;
     }
@@ -272,6 +276,7 @@ public class PlayerAnimationManagement : MonoBehaviour
         _animator.SetBool("isDash", _isDash);
         _animator.SetBool("isBeaten", _isBeatenAnim);
         _animator.SetBool("isHover", _isHover);
+        _animator.SetBool("isClimb", _isClimb);
     }
 
     //プレイヤーが行動不能状態から復帰する時の処理。敵に殴られた時のアニメーションイベントから呼ばれる。
@@ -295,8 +300,53 @@ public class PlayerAnimationManagement : MonoBehaviour
     }
 
     /// <summary> 梯子の登り降り </summary>
-    void LadderClimb()
+    void ClimbAnim()
     {
+        //梯子を昇降する時の処理
+        if (_isClimb)
+        {
+            //縦の入力がある時
+            if (_inputManager._inputVertical != 0)
+            {
+                //着地したとき
+                if (_inputManager._inputVertical < 0 && _jumpScript.GetIsGround())
+                {
+                    _isClimb = false;
+                }
+                else
+                {
+                    _animator.Play("Climb");
+                }
+            }
+            //縦の入力がなくなった時の処理
+            else
+            {
 
+            }
+        }
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        //梯子と接触しているときの処理
+        if (collision.tag == "Ladder")
+        {
+            //梯子を登る場合
+            if (_inputManager._inputVertical != 0)
+            {
+                _isClimb = true;
+            }
+        }
+    }
+
+    //コライダーが接触しているときの処理
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        //梯子と接触しているときの処理
+        if (collision.tag == "Ladder")
+        {
+            _isClimb = false;
+        }
+    }
+
 }

@@ -22,19 +22,18 @@ public class E_Stomper : EnemyBase
         //å¸Ç¢ÇƒÇ¢ÇÈï˚å¸Ç÷êiÇﬁ
         if (_isRight)
         {
-            _rigidBody2d.velocity = Vector2.right * _moveSpeed;
+            _spriteRenderer.flipX = _isRight;
+            _rigidBody2d.velocity = new Vector2(1 * _moveSpeed, _rigidBody2d.velocity.y);
         }
         else
         {
-            _rigidBody2d.velocity = Vector2.left * _moveSpeed;
+            _spriteRenderer.flipX = _isRight;
+            _rigidBody2d.velocity = new Vector2(-1 * _moveSpeed, _rigidBody2d.velocity.y);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag=="Brock")
-        {
-            _isRight ^= true;
-        }
+        _isRight ^= true;
     }
 }
