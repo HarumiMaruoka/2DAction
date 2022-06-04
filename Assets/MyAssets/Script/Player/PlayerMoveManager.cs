@@ -172,6 +172,7 @@ public class PlayerMoveManager : MonoBehaviour
             if (_inputManager._inputVertical != 0)
             {
                 //‰º‚É“ü—Í‚µ‚½‚Æ‚«
+                //”ñÚ’nó‘Ô‚È‚ç~‚è‚ê‚é
                 if (_inputManager._inputVertical < 0 && !_jumpScript.GetIsGround())
                 {
                     _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;

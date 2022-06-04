@@ -143,23 +143,14 @@ public class PlayerAnimationManagement : MonoBehaviour
                 _isDash = false;
             }
 
+            if (_inputManager._inputVertical != 0)
+            {
+                _isRunAnim = false;
+                _isDash = false;
+            }
+
             //スライディング
             SlidingAnim();
-
-            //縦向き
-            //ビハインドに向ける処理
-            if (v > 0)
-            {
-                _isBehindAnim = true;
-                _isBehind = false;
-                _isRunAnim = false;
-
-            }
-            else if (!_isBehind)
-            {
-                _isBehind = true;
-                _isBehindAnim = false;
-            }
 
             //ショット mouseButton0 が押されている間実行される
             if (Input.GetButton("Fire1"))
@@ -250,7 +241,8 @@ public class PlayerAnimationManagement : MonoBehaviour
                 _isBeatenAnim = true;
             }
 
-            //スライディング
+            //梯子昇降
+            ClimbAnim();
         }
 
         //倒されたとき
@@ -308,20 +300,28 @@ public class PlayerAnimationManagement : MonoBehaviour
             //縦の入力がある時
             if (_inputManager._inputVertical != 0)
             {
-                //着地したとき
-                if (_inputManager._inputVertical < 0 && _jumpScript.GetIsGround())
+                //昇降中
+                if (_inputManager._inputVertical != 0)
                 {
-                    _isClimb = false;
+                    //Debug.Log("昇降中！");
+                    _isJumpAnim = false;
+                    _isFallAnim = false;
+                    _isClimb = true;
+                    _animator.SetFloat("ClimbSpeed", 1f);
                 }
-                else
+                //着地したとき
+                if (_jumpScript.GetIsGround())
                 {
-                    _animator.Play("Climb");
+                    //Debug.Log("着地！");
+                    _isClimb = false;
                 }
             }
             //縦の入力がなくなった時の処理
             else
             {
-
+                //Debug.Log("梯子アニメーション停止！");
+                //アニメーションを一時停止する
+                _animator.SetFloat("ClimbSpeed", 0f);
             }
         }
     }
@@ -334,7 +334,9 @@ public class PlayerAnimationManagement : MonoBehaviour
             //梯子を登る場合
             if (_inputManager._inputVertical != 0)
             {
+                //Debug.Log("梯子に接触中！");
                 _isClimb = true;
+                _animator.Play("Climb");
             }
         }
     }
@@ -342,10 +344,12 @@ public class PlayerAnimationManagement : MonoBehaviour
     //コライダーが接触しているときの処理
     private void OnTriggerExit2D(Collider2D collision)
     {
-        //梯子と接触しているときの処理
+        //梯子から離れたときの処理
         if (collision.tag == "Ladder")
         {
+            //Debug.Log("梯子から離れた...");
             _isClimb = false;
+            _animator.Play("Idle");
         }
     }
 
