@@ -4652,15 +4652,16 @@ GameObject:
   - component: {fileID: 621943476}
   - component: {fileID: 621943483}
   - component: {fileID: 621943474}
-  - component: {fileID: 621943477}
   - component: {fileID: 621943478}
   - component: {fileID: 621943479}
   - component: {fileID: 621943484}
   - component: {fileID: 621943481}
   - component: {fileID: 621943482}
-  - component: {fileID: 621943486}
   - component: {fileID: 621943485}
+  - component: {fileID: 621943486}
   - component: {fileID: 621943487}
+  - component: {fileID: 621943489}
+  - component: {fileID: 621943480}
   m_Layer: 0
   m_Name: ChibiRobo
   m_TagString: Untagged
@@ -4678,7 +4679,7 @@ Animator:
   m_GameObject: {fileID: 621943473}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 039c2a9928123f345a25d342d9519c52, type: 2}
+  m_Controller: {fileID: 9100000, guid: b735aae5cb413b84a9bfef4d69d818f1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4754,19 +4755,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &621943477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621943473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d566eae6ec7f96409c8eec0fd6d3070, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isHitEnemy: 0
 --- !u!50 &621943478
 Rigidbody2D:
   serializedVersion: 4
@@ -4814,6 +4802,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.19, y: 0.21}
   m_EdgeRadius: 0.1
+--- !u!114 &621943480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621943473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ae27d7cd6504e4681bf2fa207c81db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &621943481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4919,6 +4919,7 @@ MonoBehaviour:
   _climbSpeed: 8
   _decelerationRateX: 0.4
   _slidingSpeed: 8
+  _newImpulse: {x: 0, y: 0}
 --- !u!114 &621943487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4934,6 +4935,18 @@ MonoBehaviour:
   _bulletCoolTime: 0.15
   _bulletPrefab: {fileID: 1761726668855302954, guid: 543bf3b3327461546b54c3f95a0376a4, type: 3}
   _slashCoolTime: 0.35
+--- !u!114 &621943489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621943473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1567d4820d456d47b93e402cecf0842, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &804276883
 GameObject:
   m_ObjectHideFlags: 3

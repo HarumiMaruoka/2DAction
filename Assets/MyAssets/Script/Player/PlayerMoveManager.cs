@@ -42,13 +42,13 @@ public class PlayerMoveManager : MonoBehaviour
     InputManager _inputManager;
     JumpScript _jumpScript;
     SpriteRenderer _spriteRendere;
-    PlayerAnimationManagement _playerAnimationManagement;
+    NewPlayerStateManagement _newPlayerStateManagement;
     PlayerBasicInformation _playerBasicInformation;
     Animator _animator;
 
     //このフレームで加える力
     Vector2 _newForce;
-    Vector2 _newImpulse;
+    public Vector2 _newImpulse;
     Vector2 _newVelocity;
 
     //ジャンプできるか:スペースキーはジャンプとスライディングの機能を兼ねる為
@@ -69,7 +69,7 @@ public class PlayerMoveManager : MonoBehaviour
         _jumpScript = GetComponent<JumpScript>();
         _spriteRendere = GetComponent<SpriteRenderer>();
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
-        _playerAnimationManagement = GetComponent<PlayerAnimationManagement>();
+        _newPlayerStateManagement = GetComponent<NewPlayerStateManagement>();
         _animator = GetComponent<Animator>();
         _gravity = _rigidBody2D.gravityScale;
 
@@ -88,16 +88,15 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Move()
     {
+
         //加える力の初期化
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
-        //プレイヤーが向いている方向を取得
-        _isRigth = !_spriteRendere.flipX;
-
-
-        if (_playerAnimationManagement._isMove && !_playerAnimationManagement._isDead)
+        if (_newPlayerStateManagement._isMove && !_newPlayerStateManagement._isDead)
         {
+            //プレイヤーが向いている方向を取得
+            _isRigth = !_spriteRendere.flipX;
             MoveHorizontal();
             Dash();
             Sliding();
@@ -111,12 +110,15 @@ public class PlayerMoveManager : MonoBehaviour
 
             //Debug.Log(newVelocity);
             //実際に力を加える
+
             _rigidBody2D.AddForce(_newImpulse * 10f, ForceMode2D.Impulse);
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
-            if (Mathf.Approximately(_newImpulse.x, 0f))
+
+            if (Mathf.Approximately(_newImpulse.x, 0f) && Mathf.Approximately(_newImpulse.y, 0f))
             {
                 _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
             }
+
         }
     }
 
@@ -149,7 +151,7 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 _newImpulse += _isRigth ? new Vector2(_slidingSpeed, 0f) : new Vector2(-_slidingSpeed, 0f);
                 _canJump = false;//スライディングする場合はジャンプできない
-                _playerAnimationManagement._isMove = false;
+                _newPlayerStateManagement._isMove = false;
             }
         }
     }
@@ -178,7 +180,7 @@ public class PlayerMoveManager : MonoBehaviour
                     _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;
                 }
                 //上に入力したとき
-                else if(_inputManager._inputVertical > 0)
+                else if (_inputManager._inputVertical > 0)
                 {
                     _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;
                 }
@@ -194,8 +196,8 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Hover()
     {
-        //ホバー中の処理。スライディング中ではないときに実行できる。
-        if (_playerAnimationManagement._isHover)
+        //ホバーの処理。
+        if (_newPlayerStateManagement._playerState == NewPlayerStateManagement.PlayerState.HOVER)
         {
             //ホバー用体力が0より大きければ
             if (_playerBasicInformation._hoverValue > 0f)
@@ -205,7 +207,7 @@ public class PlayerMoveManager : MonoBehaviour
                 _rigidBody2D.velocity = new Vector2(_rigidBody2D.velocity.x, _hoverPower);
             }
         }
-        //ホバーしてないときの処理
+        //ホバーしてないときの処理。
         else
         {
             //体力が最大であれば
@@ -249,7 +251,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary> スライディング終了関数 </summary>
     public void SlidingStop()
     {
-        _playerAnimationManagement._isMove = true;
+        _newPlayerStateManagement._isMove = true;
         _animator.SetTrigger("SlidingOff");
     }
 }

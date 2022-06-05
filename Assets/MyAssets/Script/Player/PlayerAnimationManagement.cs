@@ -36,8 +36,8 @@ public class PlayerAnimationManagement : MonoBehaviour
     bool _isFryAttack2;
     bool _isDash;
     bool _isBeatenAnim;//殴られた時のアニメーション
-    public bool _isHover { get; private set; }//ホバーしているかどうか
-    public bool _isClimb { get; private set; }//梯子を昇降しているかどうか
+    public bool _isHover;//ホバーしているかどうか
+    public bool _isClimb;//梯子を昇降しているかどうか
 
 
     // Start is called before the first frame update
@@ -349,7 +349,6 @@ public class PlayerAnimationManagement : MonoBehaviour
         {
             //Debug.Log("梯子から離れた...");
             _isClimb = false;
-            _animator.Play("Idle");
         }
     }
 

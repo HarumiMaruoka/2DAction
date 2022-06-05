@@ -17,6 +17,8 @@ public class EnemyBase : MonoBehaviour
     protected Transform _playerPos;//player's position
     protected PlayerBasicInformation _player_basic_information;//プレイヤーのライフを減らす用
     protected Rigidbody2D _playersRigidBody2D;
+    PlayerMoveManager _playerMoveManager;
+
 
     //自身のコンポーネント
     protected SpriteRenderer _spriteRenderer;
@@ -40,6 +42,7 @@ public class EnemyBase : MonoBehaviour
         _player_basic_information = player.GetComponent<PlayerBasicInformation>();
         _playerPos = player.GetComponent<Transform>();
         _playersRigidBody2D = player.GetComponent<Rigidbody2D>();
+        _playerMoveManager = player.GetComponent<PlayerMoveManager>();
 
         //自身のコンポーネントを取得
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -104,11 +107,11 @@ public class EnemyBase : MonoBehaviour
         //プレイヤーをノックバックする
         if (_isRight)
         {
-            _playersRigidBody2D.AddForce(Vector2.right * _playerKnockBackPower, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce((Vector2.right + Vector2.up) * _playerKnockBackPower, ForceMode2D.Impulse);
         }
         else
         {
-            _playersRigidBody2D.AddForce(Vector2.left * _playerKnockBackPower, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce((Vector2.left + Vector2.up) * _playerKnockBackPower, ForceMode2D.Impulse);
         }
     }
 
