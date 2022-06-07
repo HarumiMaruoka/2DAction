@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     //Spaceキーの入力
     public bool _inputJumpDown { get; private set; } = false;
     public bool _inputJump { get; private set; } = false;
+    public bool _inputJumpUp { get; private set; } = false;
 
     //マウスの入力
     public bool _inputFire1 { get; private set; } = false;//左クリック
@@ -37,6 +38,7 @@ public class InputManager : MonoBehaviour
 
         _inputJumpDown = Input.GetButtonDown("Jump");
         _inputJump = Input.GetButton("Jump");
+        _inputJumpUp= Input.GetButtonUp("Jump");
 
         _inputFire1 = Input.GetButton("Fire1");
         _inputFire1Up = Input.GetButtonUp("Fire1");

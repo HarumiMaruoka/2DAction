@@ -4660,8 +4660,8 @@ GameObject:
   - component: {fileID: 621943485}
   - component: {fileID: 621943486}
   - component: {fileID: 621943487}
-  - component: {fileID: 621943489}
   - component: {fileID: 621943480}
+  - component: {fileID: 621943489}
   m_Layer: 0
   m_Name: ChibiRobo
   m_TagString: Untagged

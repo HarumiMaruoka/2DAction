@@ -59,6 +59,8 @@ public class PlayerMoveManager : MonoBehaviour
     bool _isClimb = false;
     //重力:梯子を登っているときは重力を0にするため
     float _gravity;
+    //ジャンプしたかどうかの確認
+    public bool _isJump { get; private set; } = false;
 
 
     void Start()
@@ -97,23 +99,24 @@ public class PlayerMoveManager : MonoBehaviour
         {
             //プレイヤーが向いている方向を取得
             _isRigth = !_spriteRendere.flipX;
+
+            //移動処理
             MoveHorizontal();
             Dash();
             Sliding();
             Jump();
             Climb();
             Hover();
+
+            //空中では横移動速度が遅くなる
             if (!_jumpScript.GetIsGround())
             {
                 _newForce.x *= DecelerationRateX;
             }
 
-            //Debug.Log(newVelocity);
             //実際に力を加える
-
             _rigidBody2D.AddForce(_newImpulse * 10f, ForceMode2D.Impulse);
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
-
             if (Mathf.Approximately(_newImpulse.x, 0f) && Mathf.Approximately(_newImpulse.y, 0f))
             {
                 _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
@@ -161,7 +164,13 @@ public class PlayerMoveManager : MonoBehaviour
         //接地かつスペースキーでジャンプ
         if (_jumpScript.GetIsGround() && _inputManager._inputJumpDown && _canJump)
         {
+            Debug.Log("Jump");
             _newImpulse += new Vector2(0f, JumpPower);
+            _isJump = true;
+        }
+        else if (_isJump)
+        {
+            _isJump = false;
         }
     }
 

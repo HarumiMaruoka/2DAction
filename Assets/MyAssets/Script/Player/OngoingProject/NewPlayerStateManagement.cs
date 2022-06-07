@@ -34,6 +34,7 @@ public class NewPlayerStateManagement : MonoBehaviour
     JumpScript _jumpScript;
     Animator _animator;
     PlayerBasicInformation _playerBasicInformation;
+    PlayerMoveManager _playerMoveManager;
     NewAnimationManagement _newAnimationManagement;
     SpriteRenderer _spriteRenderer;
 
@@ -58,6 +59,7 @@ public class NewPlayerStateManagement : MonoBehaviour
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
         _newAnimationManagement = GetComponent<NewAnimationManagement>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _playerMoveManager = GetComponent<PlayerMoveManager>();
 
         _isMove = true;
     }
@@ -154,18 +156,18 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Hover()
     {
-        if ((_playerState == PlayerState.JUMP || _playerState == PlayerState.FALL) && _inputManager._inputJumpDown)
+        if ((_playerState == PlayerState.JUMP || _playerState == PlayerState.FALL)&& !_playerMoveManager._isJump)
         {
-            _isHoverMode = true;
+            if (_inputManager._inputJumpDown)
+            {
+                _isHoverMode = true;
+            }
         }
-        if (_playerState == PlayerState.HOVER && _inputManager._inputJumpDown)
-        {
-            _isHoverMode = true;
-        }
-        else
+        if (_inputManager._inputJumpUp || _jumpScript.GetIsGround())
         {
             _isHoverMode = false;
         }
+
         if (_isHoverMode)
         {
             _playerState = PlayerState.HOVER;
@@ -182,9 +184,9 @@ public class NewPlayerStateManagement : MonoBehaviour
                 _playerState = PlayerState.SLIDING;
             }
         }
-        if (_isSlidingNow)
+        if (_playerState == PlayerState.SLIDING)
         {
-            _playerState = PlayerState.SLIDING;
+            _isSlidingNow = true;
         }
     }
 
