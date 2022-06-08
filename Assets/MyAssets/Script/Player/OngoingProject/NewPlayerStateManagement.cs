@@ -48,7 +48,7 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     bool _isHoverMode;
 
-    bool _isSlidingNow;
+    public bool _isSlidingNow { get; set; }
 
     void Start()
     {
@@ -72,27 +72,31 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void UpdateState()
     {
-        if (_isMove)
+        if (!_isDead)
         {
-            //Idle状態で初期化する
-            //(何もなければプレイヤーはIdle状態)
-            _playerState = PlayerState.IDLE;
+            if (_isMove)
+            {
+                //Idle状態で初期化する
+                //(何もなければプレイヤーはIdle状態)
+                _playerState = PlayerState.IDLE;
 
-            //状態を変更する
-            MoveManage();
-            AttackManage();
-            OtherActionManage();
+                //状態を変更する
+                MoveManage();
+                AttackManage();
+                OtherActionManage();
+            }
+            //スライディングは、_isMoveを扱うので除外
+            Sliding();
         }
     }
 
     void MoveManage()
     {
         Run();
-        Dash();
         Jump();
+        Dash();
         Fall();
         Hover();
-        Sliding();
         Climb();
     }
 
@@ -131,8 +135,7 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Dash()
     {
-        if (_playerState == PlayerState.RUN &&
-            _inputManager._inputLeftShift)
+        if (_playerState == PlayerState.RUN && _inputManager._inputLeftShift)
         {
             _playerState = PlayerState.DASH;
         }
@@ -156,7 +159,7 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Hover()
     {
-        if ((_playerState == PlayerState.JUMP || _playerState == PlayerState.FALL)&& !_playerMoveManager._isJump)
+        if ((_playerState == PlayerState.JUMP || _playerState == PlayerState.FALL) && !_playerMoveManager._isJump)
         {
             if (_inputManager._inputJumpDown)
             {
@@ -176,17 +179,9 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Sliding()
     {
-        //下入力がある時かつ、接地状態で、スペースキーを押すことでスライディング！
-        if (_inputManager._inputVertical < 0 && _jumpScript.GetIsGround())
+        if (_isSlidingNow)
         {
-            if (_inputManager._inputJumpDown)
-            {
-                _playerState = PlayerState.SLIDING;
-            }
-        }
-        if (_playerState == PlayerState.SLIDING)
-        {
-            _isSlidingNow = true;
+            _playerState = PlayerState.SLIDING;
         }
     }
 
@@ -201,25 +196,24 @@ public class NewPlayerStateManagement : MonoBehaviour
                 //昇降中
                 if (_inputManager._inputVertical != 0)
                 {
-                    //Debug.Log("昇降中");
                     _playerState = PlayerState.CLIMB;
                     _newAnimationManagement._ClimbSpeed = 1f;
-                }
-                //着地したとき
-                if (_jumpScript.GetIsGround())
-                {
-                    //Debug.Log("着地！");
-                    _playerState = PlayerState.IDLE;
                 }
             }
             //縦の入力がなくなった時の処理
             else
             {
-                //Debug.Log("梯子アニメーション停止！");
                 //アニメーションを一時停止する
+                _playerState = PlayerState.CLIMB;
                 _newAnimationManagement._ClimbSpeed = 0f;
             }
+            //着地したとき
+            if (_jumpScript.GetIsGround())
+            {
+                _playerState = PlayerState.IDLE;
+            }
         }
+        
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -235,7 +229,7 @@ public class NewPlayerStateManagement : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         //梯子と接触しているときの処理
         if (collision.tag == "Ladder")
@@ -306,5 +300,6 @@ public class NewPlayerStateManagement : MonoBehaviour
     {
         _isHitEnemy = false;
         _isMove = true;
+        _isHoverMode = false;
     }
 }

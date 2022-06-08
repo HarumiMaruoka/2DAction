@@ -70,8 +70,8 @@ public class PlayerAttack : MonoBehaviour
                 if (_inputManager._inputFire2Down)
                 {
                     _slashTwo.SetActive(true);
-                    _slashCoolTimeValueTwo = 0.35f;
-                    _slashCoolTimeValueOne = 0.35f;
+                    _slashCoolTimeValueTwo = _slashCoolTime;
+                    _slashCoolTimeValueOne = _slashCoolTime;
                 }
             }
 
@@ -81,7 +81,7 @@ public class PlayerAttack : MonoBehaviour
                 if (_inputManager._inputFire2Down)
                 {
                     _slashOne.SetActive(true);
-                    _slashCoolTimeValueOne = 0.35f;
+                    _slashCoolTimeValueOne = _slashCoolTime;
                 }
             }
 

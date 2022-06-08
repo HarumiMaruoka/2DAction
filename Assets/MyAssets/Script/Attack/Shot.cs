@@ -76,16 +76,6 @@ public class Shot : MonoBehaviour
     void Update()
     {
         Destroy(this.gameObject,1.5f);
-        //ŠÔ‚Å”j‰ó
-        //if (_destroyTime > 1)
-        //{
-        //    Destroy(this.gameObject);
-        //    Destroy(this,)
-        //}
-        //else
-        //{
-        //    _destroyTime += Time.deltaTime;
-        //}
 
         //“G‚ÆÚG‚µ‚½‚Æ‚«‚Í­‚µ’x‚ç‚¹‚ÄA’e‚ğÁ¸‚³‚¹‚é
         if (_isDeth)

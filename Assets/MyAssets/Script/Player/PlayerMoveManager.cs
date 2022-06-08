@@ -51,7 +51,7 @@ public class PlayerMoveManager : MonoBehaviour
     public Vector2 _newImpulse;
     Vector2 _newVelocity;
 
-    //ジャンプできるか:スペースキーはジャンプとスライディングの機能を兼ねる為
+    /// <summary> ジャンプできるか:スペースキーは、ジャンプとスライディングの機能を兼ねる為 </summary>
     bool _canJump = false;
     //プレイヤーが向いている方向
     bool _isRigth = false;
@@ -90,7 +90,6 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Move()
     {
-
         //加える力の初期化
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
@@ -153,8 +152,9 @@ public class PlayerMoveManager : MonoBehaviour
             if (_inputManager._inputJumpDown)
             {
                 _newImpulse += _isRigth ? new Vector2(_slidingSpeed, 0f) : new Vector2(-_slidingSpeed, 0f);
-                _canJump = false;//スライディングする場合はジャンプできない
+                _canJump = false;
                 _newPlayerStateManagement._isMove = false;
+                _newPlayerStateManagement._isSlidingNow = true;
             }
         }
     }
@@ -164,7 +164,6 @@ public class PlayerMoveManager : MonoBehaviour
         //接地かつスペースキーでジャンプ
         if (_jumpScript.GetIsGround() && _inputManager._inputJumpDown && _canJump)
         {
-            Debug.Log("Jump");
             _newImpulse += new Vector2(0f, JumpPower);
             _isJump = true;
         }
@@ -180,7 +179,7 @@ public class PlayerMoveManager : MonoBehaviour
         if (_isClimb)
         {
             //縦の入力がある時
-            if (_inputManager._inputVertical != 0)
+            if (_inputManager._inputVertical != 0&&!(_inputManager._inputFire1||_inputManager._inputFire2))
             {
                 //下に入力したとき
                 //非接地状態なら降りれる
@@ -261,6 +260,6 @@ public class PlayerMoveManager : MonoBehaviour
     public void SlidingStop()
     {
         _newPlayerStateManagement._isMove = true;
-        _animator.SetTrigger("SlidingOff");
+        _newPlayerStateManagement._isSlidingNow = false;
     }
 }

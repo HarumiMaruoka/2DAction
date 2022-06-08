@@ -4172,8 +4172,6 @@ GameObject:
   - component: {fileID: 461456421}
   - component: {fileID: 461456420}
   - component: {fileID: 461456422}
-  - component: {fileID: 461456424}
-  - component: {fileID: 461456423}
   m_Layer: 0
   m_Name: Ladder(MapGimmick)
   m_TagString: Ladder
@@ -4371,67 +4369,10 @@ TilemapCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 1
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
---- !u!66 &461456423
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461456418}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 461456422}
-    m_ColliderPaths:
-    - - X: 40000000
-        Y: -20000000
-      - X: 40000000
-        Y: 30000000
-      - X: 30000000
-        Y: 30000000
-      - X: 30000000
-        Y: -20000000
-  m_CompositePaths:
-    m_Paths:
-    - - {x: 3.999971, y: -2}
-      - {x: 3.999971, y: 3}
-      - {x: 3, y: 2.999971}
-      - {x: 3.0000293, y: -2}
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.00005
---- !u!50 &461456424
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461456418}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!4 &496660817 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1434580529240209290, guid: 09a109c48f0c44f4c9237c327e364742, type: 3}
@@ -4912,13 +4853,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeedX: 8
-  _moveDashSpeed: 1.4
+  _moveDashSpeed: 2
   _jumpPower: 8
   _hoverPower: 8
   _gasValue: 25
   _climbSpeed: 8
   _decelerationRateX: 0.4
-  _slidingSpeed: 8
+  _slidingSpeed: 10
   _newImpulse: {x: 0, y: 0}
 --- !u!114 &621943487
 MonoBehaviour:
@@ -4991,7 +4932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6043bde05a7fc4cba197d06915c1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: {x: 0, y: 0.4, z: 0}
+  Damping: {x: 0, y: 0, z: 0}
   ShoulderOffset: {x: 0.5, y: -0.4, z: 0}
   VerticalArmLength: 0.4
   CameraSide: 1

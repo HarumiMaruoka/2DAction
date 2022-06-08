@@ -104,6 +104,7 @@ public class EnemyBase : MonoBehaviour
     {
         //プレイヤーのHitPointを減らす
         _player_basic_information._playerHitPoint -= _offensive_Power;
+        _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_isRight)
         {

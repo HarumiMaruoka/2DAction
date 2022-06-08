@@ -42,29 +42,6 @@ public class NewAnimationManagement : MonoBehaviour
         SetAnim();
     }
 
-    void ChangeAnimation()
-    {
-        switch (_newPlayerStateManagement._playerState)
-        {
-            case NewPlayerStateManagement.PlayerState.RUN: _isRun = true; break;
-            case NewPlayerStateManagement.PlayerState.DASH: _isDash = true; break;
-            case NewPlayerStateManagement.PlayerState.JUMP: _isJump = true; break;
-            case NewPlayerStateManagement.PlayerState.HOVER: _isHover = true; break;
-            case NewPlayerStateManagement.PlayerState.FALL: _isFall = true; break;
-            case NewPlayerStateManagement.PlayerState.SLIDING: _isSliding = true; break;
-            case NewPlayerStateManagement.PlayerState.CLIMB: _isClimb = true; break;
-
-            case NewPlayerStateManagement.PlayerState.SHOT: _isShot = true; break;
-            case NewPlayerStateManagement.PlayerState.RUN_SHOT: _isRunShot = true; break;
-            case NewPlayerStateManagement.PlayerState.JUMP_SHOT: _isJumpShot = true; break;
-            case NewPlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true; break;
-            case NewPlayerStateManagement.PlayerState.CLIMB_SHOT: _isClimbShot = true; break;
-
-            case NewPlayerStateManagement.PlayerState.BEATEN: _isBeaten = true; break;
-            case NewPlayerStateManagement.PlayerState.KILLED: _isKilled = true; break;
-        }
-    }
-
     void SetAnimFalse()
     {
         _isRun = false;
@@ -85,6 +62,29 @@ public class NewAnimationManagement : MonoBehaviour
         _isKilled = false;
     }
 
+    void ChangeAnimation()
+    {
+        switch (_newPlayerStateManagement._playerState)
+        {
+            case NewPlayerStateManagement.PlayerState.RUN: _isRun = true; break;
+            case NewPlayerStateManagement.PlayerState.DASH: _isDash = true; break;
+            case NewPlayerStateManagement.PlayerState.JUMP: _isJump = true; break;
+            case NewPlayerStateManagement.PlayerState.HOVER: _isHover = true; break;
+            case NewPlayerStateManagement.PlayerState.FALL: _isFall = true; break;
+            case NewPlayerStateManagement.PlayerState.SLIDING: _isSliding = true; break;
+            case NewPlayerStateManagement.PlayerState.CLIMB: _isClimb = true; break;
+
+            case NewPlayerStateManagement.PlayerState.SHOT: _isShot = true; break;
+            case NewPlayerStateManagement.PlayerState.RUN_SHOT: _isRunShot = true; break;
+            case NewPlayerStateManagement.PlayerState.JUMP_SHOT: _isJumpShot = true; break;
+            case NewPlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true;break;
+            case NewPlayerStateManagement.PlayerState.CLIMB_SHOT: _isClimbShot = true; break;
+
+            case NewPlayerStateManagement.PlayerState.BEATEN: _isBeaten = true; break;
+            case NewPlayerStateManagement.PlayerState.KILLED: _isKilled = true; break;
+        }
+    }
+
     void SetAnim()
     {
         _animator.SetBool("isRun", _isRun);
@@ -100,7 +100,7 @@ public class NewAnimationManagement : MonoBehaviour
         _animator.SetBool("isRunShot", _isRunShot);
         _animator.SetBool("isJumpShot", _isJumpShot);
         _animator.SetBool("isDashShot", _isDashShot);
-        _animator.SetBool("isDashShot", _isClimbShot);
+        _animator.SetBool("isClimbShot", _isClimbShot);
 
         _animator.SetBool("isBeaten", _isBeaten);
         _animator.SetBool("isKilled", _isKilled);

@@ -15,10 +15,6 @@ public class PlayerAnimationManagement : MonoBehaviour
     public bool _isMove { get; set; }//行動不能の時はfalseになる。
     public bool _isHitEnemy;//敵に殴られた時にtrueになる。
 
-    //向いている向き
-    bool _isFront; //前向き
-    bool _isBehind;//後向き
-
     bool isEnd_of_move_rigth;
     bool isEnd_of_move_left;
 
@@ -53,10 +49,6 @@ public class PlayerAnimationManagement : MonoBehaviour
         //行動可能か？
         _isMove = true;
         _isHitEnemy = false;
-
-        //向いている向き
-        _isFront = false;
-        _isBehind = false;
 
         //移動終了判定
         isEnd_of_move_rigth = true;
@@ -303,7 +295,6 @@ public class PlayerAnimationManagement : MonoBehaviour
                 //昇降中
                 if (_inputManager._inputVertical != 0)
                 {
-                    //Debug.Log("昇降中！");
                     _isJumpAnim = false;
                     _isFallAnim = false;
                     _isClimb = true;
@@ -312,14 +303,12 @@ public class PlayerAnimationManagement : MonoBehaviour
                 //着地したとき
                 if (_jumpScript.GetIsGround())
                 {
-                    //Debug.Log("着地！");
                     _isClimb = false;
                 }
             }
             //縦の入力がなくなった時の処理
             else
             {
-                //Debug.Log("梯子アニメーション停止！");
                 //アニメーションを一時停止する
                 _animator.SetFloat("ClimbSpeed", 0f);
             }
@@ -334,7 +323,6 @@ public class PlayerAnimationManagement : MonoBehaviour
             //梯子を登る場合
             if (_inputManager._inputVertical != 0)
             {
-                //Debug.Log("梯子に接触中！");
                 _isClimb = true;
                 _animator.Play("Climb");
             }
@@ -347,7 +335,6 @@ public class PlayerAnimationManagement : MonoBehaviour
         //梯子から離れたときの処理
         if (collision.tag == "Ladder")
         {
-            //Debug.Log("梯子から離れた...");
             _isClimb = false;
         }
     }
