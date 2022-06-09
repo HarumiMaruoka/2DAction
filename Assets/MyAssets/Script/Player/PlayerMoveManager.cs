@@ -21,9 +21,14 @@ public class PlayerMoveManager : MonoBehaviour
     [SerializeField] float _hoverPower;
     public float HoverPower { get => _hoverPower; }
 
-    [Tooltip("ホバー中のガソリン消費")]
-    [SerializeField] float _gasValue;
-    public float GasValue { get => _gasValue; }
+    [Tooltip("ホバー中のガソリン消費量")]
+    [SerializeField] float _gasConsumptionValue;
+    public float GasConsumptionValue { get => _gasConsumptionValue; }
+
+
+    [Tooltip("ホバー用のガソリン回復量")]
+    [SerializeField] float _gasRecoveryValue;
+    public float GasRecoveryValue { get => _gasRecoveryValue; }
 
     [Tooltip("梯子の昇降速度")]
     [SerializeField] float _climbSpeed;
@@ -211,7 +216,7 @@ public class PlayerMoveManager : MonoBehaviour
             if (_playerBasicInformation._hoverValue > 0f)
             {
                 //上昇処理、ガスを消費する
-                _playerBasicInformation._hoverValue -= Time.deltaTime * _gasValue;
+                _playerBasicInformation._hoverValue -= Time.deltaTime * _gasConsumptionValue;
                 _rigidBody2D.velocity = new Vector2(_rigidBody2D.velocity.x, _hoverPower);
             }
         }
@@ -219,14 +224,14 @@ public class PlayerMoveManager : MonoBehaviour
         else
         {
             //体力が最大であれば
-            if (_playerBasicInformation._maxHealthForHover <= _playerBasicInformation._hoverValue)
+            if (_playerBasicInformation.MaxHealthForHover <= _playerBasicInformation._hoverValue)
             {
-                _playerBasicInformation._hoverValue = _playerBasicInformation._maxHealthForHover;
+                _playerBasicInformation._hoverValue = _playerBasicInformation.MaxHealthForHover;
             }
-            //体力が最大ではなければ
+            //体力が最大でなければ
             else
             {
-                _playerBasicInformation._hoverValue += Time.deltaTime * _gasValue;
+                _playerBasicInformation._hoverValue += Time.deltaTime * _gasRecoveryValue;
             }
         }
     }
@@ -253,13 +258,5 @@ public class PlayerMoveManager : MonoBehaviour
             _isClimb = false;
             _rigidBody2D.gravityScale = _gravity;
         }
-    }
-
-    //この関数はアニメーションイベントから呼び出す
-    /// <summary> スライディング終了関数 </summary>
-    public void SlidingStop()
-    {
-        _newPlayerStateManagement._isMove = true;
-        _newPlayerStateManagement._isSlidingNow = false;
     }
 }

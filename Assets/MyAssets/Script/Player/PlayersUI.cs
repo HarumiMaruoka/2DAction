@@ -19,7 +19,7 @@ public class PlayersUI : MonoBehaviour
         _hitPointSlider.maxValue = _playerBasicInformation._maxHitPoint;
         _hitPointSlider.minValue = 0;
         //ホバー用スライダーの初期化
-        _hoverSlider.maxValue = _playerBasicInformation._maxHealthForHover;
+        _hoverSlider.maxValue = _playerBasicInformation.MaxHealthForHover;
         _hoverSlider.minValue = 0;
     }
 

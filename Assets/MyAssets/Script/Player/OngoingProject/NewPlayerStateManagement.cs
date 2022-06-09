@@ -302,4 +302,12 @@ public class NewPlayerStateManagement : MonoBehaviour
         _isMove = true;
         _isHoverMode = false;
     }
+
+    //この関数はアニメーションイベントから呼び出す
+    /// <summary> スライディング終了関数 </summary>
+    public void SlidingStop()
+    {
+        _isMove = true;
+        _isSlidingNow = false;
+    }
 }

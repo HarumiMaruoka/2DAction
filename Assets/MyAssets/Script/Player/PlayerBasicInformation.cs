@@ -18,13 +18,14 @@ public class PlayerBasicInformation : MonoBehaviour
     bool _isGodMode = false;
 
     //ホバー制限
-    [SerializeField] public float _hoverValue;
-    public float _maxHealthForHover { get; } = 300f;
+    public float _hoverValue { get; set; }
+    [Tooltip("最大ガス量"), SerializeField] private float _maxHealthForHover;
+    public float MaxHealthForHover { get => _maxHealthForHover; }
 
     // Start is called before the first frame update
     void Start()
     {
-        _hoverValue = _maxHealthForHover;
+        _hoverValue = MaxHealthForHover;
         //自身のコンポーネントを取得する。
         _newPlayerStateManagement = GetComponent<NewPlayerStateManagement>();
     }

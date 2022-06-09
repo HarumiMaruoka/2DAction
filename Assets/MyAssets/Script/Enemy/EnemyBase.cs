@@ -13,9 +13,9 @@ public class EnemyBase : MonoBehaviour
     protected bool _isRight;
 
     //プレイヤーのコンポーネント
-    GameObject player;
+    GameObject _player;
     protected Transform _playerPos;//player's position
-    protected PlayerBasicInformation _player_basic_information;//プレイヤーのライフを減らす用
+    protected PlayerBasicInformation _playerBasicInformation;//プレイヤーのライフを減らす用
     protected Rigidbody2D _playersRigidBody2D;
     PlayerMoveManager _playerMoveManager;
 
@@ -26,7 +26,8 @@ public class EnemyBase : MonoBehaviour
 
     //色変更用
     bool _isColorChange = false;
-    float _color_change_time = 0;
+    float _colorChangeTimeValue = 0;
+    float _colorChangeTime = 0.1f;
 
     //ノックバック関連
     public bool _isKnockBackNow;//ノックバック中かどうか
@@ -34,15 +35,15 @@ public class EnemyBase : MonoBehaviour
     float _knockBackModeTime = 0f;//ノックバック時間を表す変数
 
     //全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。
-    protected void Enemy_Initialize()
+    protected void EnemyInitialize()
     {
         //各変数の初期化
         //プレイヤーの情報を取得
-        player = GameObject.Find("ChibiRobo");
-        _player_basic_information = player.GetComponent<PlayerBasicInformation>();
-        _playerPos = player.GetComponent<Transform>();
-        _playersRigidBody2D = player.GetComponent<Rigidbody2D>();
-        _playerMoveManager = player.GetComponent<PlayerMoveManager>();
+        _player = GameObject.Find("ChibiRobo");
+        _playerBasicInformation = _player.GetComponent<PlayerBasicInformation>();
+        _playerPos = _player.GetComponent<Transform>();
+        _playersRigidBody2D = _player.GetComponent<Rigidbody2D>();
+        _playerMoveManager = _player.GetComponent<PlayerMoveManager>();
 
         //自身のコンポーネントを取得
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,23 +60,21 @@ public class EnemyBase : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        //色を変える処理
-        if (!Mathf.Approximately(_color_change_time, 0f))
+        //色を変える必要があれば変える
+        if (_isColorChange)
         {
-
-            if (_isColorChange)
-            {
-                _spriteRenderer.color = Color.red;
-                _isColorChange = false;
-            }
-            else if (_color_change_time < 0)
-            {
-                _spriteRenderer.color = new Color(255, 255, 255, 255);
-            }
-            else if (_color_change_time > 0)
-            {
-                _color_change_time -= Time.deltaTime;
-            }
+            _spriteRenderer.color = Color.red;
+            _isColorChange = false;
+        }
+        //色を元に戻す
+        else if (_colorChangeTimeValue < 0)
+        {
+            _spriteRenderer.color = new Color(255, 255, 255, 255);
+        }
+        //クールタイム解消
+        else if (_colorChangeTimeValue > 0)
+        {
+            _colorChangeTimeValue -= Time.deltaTime;
         }
     }
 
@@ -85,14 +84,14 @@ public class EnemyBase : MonoBehaviour
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hit_Point -= damage;
         _isColorChange = true;
-        _color_change_time = 0.1f;
+        _colorChangeTimeValue = _colorChangeTime;
     }
     public void HitPlayerAttadk(int damage, float knockBackTimer)//ノックバックする場合
     {
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hit_Point -= damage;
         _isColorChange = true;
-        _color_change_time = 0.1f;
+        _colorChangeTimeValue = _colorChangeTime;
 
         //ノックバックする。プレイヤーのノックバック力(時間)-エネミーの耐久力(時間)分、Moveを停止する。
         _knockBackModeTime = (knockBackTimer - _tank) > 0f ? (knockBackTimer - _tank) : 0f;
@@ -103,7 +102,7 @@ public class EnemyBase : MonoBehaviour
     public void HitPlayer()
     {
         //プレイヤーのHitPointを減らす
-        _player_basic_information._playerHitPoint -= _offensive_Power;
+        _playerBasicInformation._playerHitPoint -= _offensive_Power;
         _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_isRight)

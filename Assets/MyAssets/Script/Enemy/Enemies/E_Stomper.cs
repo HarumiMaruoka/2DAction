@@ -7,7 +7,7 @@ public class E_Stomper : EnemyBase
     [SerializeField] float _moveSpeed;
     void Start()
     {
-        base.Enemy_Initialize();
+        base.EnemyInitialize();
     }
 
     void Update()
