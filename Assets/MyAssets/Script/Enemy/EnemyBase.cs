@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyBase : MonoBehaviour
 {
     //エネミー共通の基本情報
-    [SerializeField] protected int _hit_Point;//体力
+    [SerializeField] protected int _hitPoint;//体力
     [SerializeField] protected int _offensive_Power;//攻撃力
     [SerializeField] protected Vector2 _playerKnockBackPower;//プレイヤーに対するノックバック力
 
@@ -54,7 +54,7 @@ public class EnemyBase : MonoBehaviour
     protected void NeedEnemyElement()
     {
         //体力がなくなった時の処理
-        if (_hit_Point <= 0)
+        if (_hitPoint <= 0)
         {
             //体力がなくなったら消滅する
             Destroy(this.gameObject);
@@ -82,14 +82,14 @@ public class EnemyBase : MonoBehaviour
     public void HitPlayerAttadk(int damage)//ノックバックしない場合
     {
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
-        _hit_Point -= damage;
+        _hitPoint -= damage;
         _isColorChange = true;
         _colorChangeTimeValue = _colorChangeTime;
     }
     public void HitPlayerAttadk(int damage, float knockBackTimer)//ノックバックする場合
     {
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
-        _hit_Point -= damage;
+        _hitPoint -= damage;
         _isColorChange = true;
         _colorChangeTimeValue = _colorChangeTime;
 
