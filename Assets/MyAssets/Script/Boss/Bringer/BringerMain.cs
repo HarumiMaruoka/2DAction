@@ -5,6 +5,8 @@ using UnityEngine;
 public class BringerMain : BossBase
 {
     //各パラメータ
+    [Tooltip("最初ののクールタイム。xはMinValue、yはMaxValue。"), SerializeField] Vector2 _firstRandomAttackCoolTime = default;
+
     [Tooltip("弱攻撃後のクールタイム。xはMinValue、yはMaxValue。"), SerializeField] Vector2 _lightAttackCoolTime = default;
     [Tooltip("弱攻撃後のクールタイム。xはMinValue、yはMaxValue。"), SerializeField] Vector2 _heavyAttackCoolTime = default;
     [Tooltip("弱攻撃後のクールタイム。xはMinValue、yはMaxValue。"), SerializeField] Vector2 _longRangeAttackCoolTime = default;
@@ -57,6 +59,9 @@ public class BringerMain : BossBase
         {
             //ここにBringer独自の、戦闘開始時の処理を書く。
             Debug.Log("BringerBattleStart!");
+            //最初のクールタイムを設定
+            _coolTimeValue = UnityEngine.Random.Range(_firstRandomAttackCoolTime.x, _firstRandomAttackCoolTime.y);
+            _isCoolTimerStart = true;
         }
     }
 
@@ -72,17 +77,23 @@ public class BringerMain : BossBase
     /// <summary> BossがIdle中の処理 </summary>
     void Idle()
     {
-        StartCoroutine(CoolTime());//クールタイム開始
-        //クールタイムが残っているときの処理
-        if (_isCoolTimeNow)
+        //クールタイム残り時間の処理
+        if (_isCoolTimerStart)
         {
+            Debug.Log("IdleTimerStart");
+            StartCoroutine(CoolTime());//クールタイム開始
             //Idle中は特に何もしない
-            Debug.Log("Idle中");
         }
-        //クールタイム解消時にアタックに移行
+        //Idle中の処理
         else
         {
-            Debug.Log("Idle");
+            //Debug.Log("Idle中");
+        }
+        //クールタイム解消時にアタックに移行
+        if (_isCoolTimeExit)
+        {
+            _isCoolTimeExit = false;
+            Debug.Log("IdleExit");
             StateChangeAttack();
         }
     }
@@ -90,21 +101,27 @@ public class BringerMain : BossBase
     /// <summary> BossがApproach中の処理 </summary>
     void Approach()
     {
-        StartCoroutine(CoolTime());//クールタイム開始
-        //クールタイムが残っているときの処理
-        if (_isCoolTimeNow)
+        //クールタイム残り時間の処理
+        if (_isCoolTimerStart)
+        {
+            Debug.Log("ApproachTimerStart");
+            StartCoroutine(CoolTime());//クールタイム開始
+        }
+        //Approach中の処理
+        else
         {
             //Approach中はプレイヤーに向かって前進する
             _rigidBody2d.velocity = (_playerPos.position.x - transform.position.x) < 0 ?
             new Vector2(_approachSpeed * Time.deltaTime, _rigidBody2d.velocity.y) :
             new Vector2(-_approachSpeed * Time.deltaTime, _rigidBody2d.velocity.y);
 
-            Debug.Log("プレイヤーに向かって前進中");
+            //Debug.Log("プレイヤーに向かって前進中");
         }
         //クールタイム解消時にアタックに移行
-        else
+        if (_isCoolTimeExit)
         {
-            Debug.Log("Approach");
+            _isCoolTimeExit = false;
+            Debug.Log("ApproachExit");
             StateChangeAttack();
         }
     }
@@ -112,21 +129,27 @@ public class BringerMain : BossBase
     /// <summary> BossがRecession中の処理 </summary>
     void Recession()
     {
-        StartCoroutine(CoolTime());//クールタイム開始
-        //クールタイムが残っているときの処理
-        if (_isCoolTimeNow)
+        //クールタイム残り時間の処理
+        if (_isCoolTimerStart)
         {
-            //Recession中はプレイヤーに対して後退する
-            _rigidBody2d.velocity = (_playerPos.position.x - transform.position.x) < 0 ?
-                new Vector2(-_recessionSpeed * Time.deltaTime, _rigidBody2d.velocity.y) :
-                new Vector2(_recessionSpeed * Time.deltaTime, _rigidBody2d.velocity.y);
-
-            Debug.Log("プレイヤーに対して後退中");
+            Debug.Log("RecessionTimerStart");
+            StartCoroutine(CoolTime());//クールタイム開始
         }
-        //クールタイム解消時にアタックに移行
+        //Approach中の処理
         else
         {
-            Debug.Log("Recession");
+            //Approach中はプレイヤーに向かって前進する
+            _rigidBody2d.velocity = (_playerPos.position.x - transform.position.x) < 0 ?
+            new Vector2(-_recessionSpeed * Time.deltaTime, _rigidBody2d.velocity.y) :
+            new Vector2(_recessionSpeed * Time.deltaTime, _rigidBody2d.velocity.y);
+
+            //Debug.Log("プレイヤーに向かって前進中");
+        }
+        //クールタイム解消時にアタックに移行
+        if (_isCoolTimeExit)
+        {
+            _isCoolTimeExit = false;
+            Debug.Log("RecessionExit");
             StateChangeAttack();
         }
     }
@@ -134,56 +157,95 @@ public class BringerMain : BossBase
     /// <summary> BossがLightAttack中の処理 </summary>
     void LightAttack()
     {
-        //LightAttackは、近距離:弱攻撃
-        Debug.Log("弱攻撃攻撃発動");
-        //クールタイム設定
-        _coolTimeValue = UnityEngine.Random.Range(_lightAttackCoolTime.x, _lightAttackCoolTime.y);
-        //ChangeState Nomal
-        StateChangeNomal();
+        if (_isAttackStart)
+        {
+            //LightAttackは、近距離:弱攻撃
+            //ここに弱攻撃中のコードを書く
+
+            //テスト用コード
+            AttackStateExit();
+        }
+        if (_isAttackExit)
+        {
+            //クールタイム設定
+            _coolTimeValue = UnityEngine.Random.Range(_lightAttackCoolTime.x, _lightAttackCoolTime.y);
+            Debug.Log("弱攻撃終了");
+            //ChangeState Nomal
+            StateChangeNomal();
+        }
     }
 
     /// <summary> BossがHeavyAttack中の処理 </summary>
     void HeavyAttack()
     {
-        //HeavyAttackは、近距離:強攻撃
-        Debug.Log("強攻撃発動");
-        //クールタイム設定
-        _coolTimeValue = UnityEngine.Random.Range(_heavyAttackCoolTime.x, _heavyAttackCoolTime.y);
-        //ChangeState Nomal
-        StateChangeNomal();
+        if (_isAttackStart)
+        {
+            //HeavyAttackは、近距離:強攻撃
+            //ここに強攻撃中のコードを書く
+
+            //テスト用コード
+            AttackStateExit();
+        }
+        if (_isAttackExit)
+        {
+            //クールタイム設定
+            _coolTimeValue = UnityEngine.Random.Range(_heavyAttackCoolTime.x, _heavyAttackCoolTime.y);
+            Debug.Log("強攻撃終了");
+            //ChangeState Nomal
+            StateChangeNomal();
+        }
     }
 
     /// <summary> BossがLongRangeAttack中の処理 </summary>
     void LongRangeAttack()
     {
-        //LongRangeAttackは遠距離攻撃
-        Debug.Log("遠距離攻撃発動");
-        //クールタイム設定
-        _coolTimeValue = UnityEngine.Random.Range(_longRangeAttackCoolTime.x, _longRangeAttackCoolTime.y);
-        //ChangeState Nomal
-        StateChangeNomal();
+        if (_isAttackStart)
+        {
+            //LongRangeAttackは遠距離攻撃
+            //ここに遠距離攻撃中のコードを書く
+
+            //テスト用コード
+            AttackStateExit();
+        }
+        if (_isAttackExit)
+        {
+            //クールタイム設定
+            _coolTimeValue = UnityEngine.Random.Range(_longRangeAttackCoolTime.x, _longRangeAttackCoolTime.y);
+            Debug.Log("遠距離攻撃終了");
+            //ChangeState Nomal
+            StateChangeNomal();
+        }
     }
 
     /// <summary> ステートをアタックに移行 </summary>
     void StateChangeAttack()
     {
+        _isAttackStart = true;
         //本物のコード
-        //_nowState = (BossState)UnityEngine.Random.Range((int)BossState.LIGHT_ATTACK, (int)BossState.ATTACK_END);
-
-        //テスト用コード
-        _nowState = BossState.LIGHT_ATTACK;
+        _nowState = (BossState)UnityEngine.Random.Range((int)BossState.LIGHT_ATTACK, (int)BossState.ATTACK_END);
     }
 
     /// <summary> ステートをノーマルに移行 </summary>
     void StateChangeNomal()
     {
+        //本物のコード
         _nowState = (BossState)UnityEngine.Random.Range((int)BossState.IDLE, (int)BossState.NOMAL_END);
     }
 
     IEnumerator CoolTime()
     {
-        _isCoolTimeNow = true;
+        _isCoolTimerStart = false;
+        _isCoolTimeExit = false;
         yield return new WaitForSeconds(_coolTimeValue);
-        _isCoolTimeNow = false;
+        _isCoolTimeExit = true;
+    }
+
+    ///<summary> アタックモードの終了時に呼ばれる。アニメーションイベントから呼び出す。 </summary>
+    public void AttackStateExit()
+    {
+        Debug.Log("AttackExit");
+        _isAttackStart = false;
+        _isAttackExit = true;
+        _isCoolTimerStart = true;
     }
 }

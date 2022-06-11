@@ -44,8 +44,14 @@ public class BossBase : MonoBehaviour
 
     //クールタイム関連
     /// <summary> 現在のクールタイム </summary>
-    protected bool _isCoolTimeNow = false;
+    protected bool _isCoolTimerStart = false;
     [SerializeField] protected float _coolTimeValue = 0f;
+    protected bool _isCoolTimeExit = false;
+
+    //攻撃関連
+    protected bool _isAttackStart = false;
+    protected bool _isAttackExit = false;
+
     /// <summary> ボス攻撃後のクールタイム </summary>
     Dictionary<BossState, float> _bossAttackCoolTime = new Dictionary<BossState, float>();
 
@@ -62,7 +68,7 @@ public class BossBase : MonoBehaviour
     float _knockBackModeTime = 0f;
 
     //自分の状態
-    protected BossState _nowState;
+    public BossState _nowState { get; protected set; }
 
     protected void InitBoss()
     {
