@@ -8,10 +8,10 @@ public class BringerAnimManager : MonoBehaviour
     BringerMain _bringerMain;
     Animator _animator;
 
+
     //各パラメータ
     bool _isIdele = false;
-    bool _isApproach = false;
-    bool _isRecession = false;
+    bool _isWalk = false;
 
     bool _isLightAttack = false;
     bool _isHeavyAttack = false;
@@ -23,6 +23,7 @@ public class BringerAnimManager : MonoBehaviour
     void Start()
     {
         _bringerMain = GetComponent<BringerMain>();
+        _animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -35,8 +36,7 @@ public class BringerAnimManager : MonoBehaviour
     void SetAnimFalse()
     {
         _isIdele = false;
-        _isApproach = false;
-        _isRecession = false;
+        _isWalk = false;
 
         _isLightAttack = false;
         _isHeavyAttack = false;
@@ -49,22 +49,21 @@ public class BringerAnimManager : MonoBehaviour
         switch (_bringerMain._nowState)
         {
             case BringerMain.BossState.IDLE: _isIdele = true; break;
-            case BringerMain.BossState.APPROACH: _isApproach = true; break;
-            case BringerMain.BossState.RECESSION: _isRecession = true; break;
+            case BringerMain.BossState.APPROACH: _animator.SetFloat("WalkSpeed", 1f); _isWalk = true; break;
+            case BringerMain.BossState.RECESSION: _animator.SetFloat("WalkSpeed", -1f); _isWalk = true; break;
 
             case BringerMain.BossState.LIGHT_ATTACK: _isLightAttack = true; break;
             case BringerMain.BossState.HEAVY_ATTACK: _isHeavyAttack = true; break;
             case BringerMain.BossState.LONG_RANGE_ATTACK: _isLongRangeAttack = true; break;
 
-            default: Debug.Log("Bringerに、このステートはありません。"); break;
+            default: Debug.LogError("Bringerに、このステートはありません。"); break;
         }
     }
 
     void SetAnim()
     {
         _animator.SetBool("isIdle", _isIdele);
-        _animator.SetBool("isWalk", _isApproach);
-        _animator.SetBool("isWalk", _isRecession);
+        _animator.SetBool("isWalk", _isWalk);
 
         _animator.SetBool("isLightAttack", _isLightAttack);
         _animator.SetBool("isHeavyAttack", _isHeavyAttack);

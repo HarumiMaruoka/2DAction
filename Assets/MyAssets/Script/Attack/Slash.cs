@@ -42,6 +42,10 @@ public class Slash : MonoBehaviour
         {
             enemy.HitPlayerAttadk(_slashOffensivePower, _knockBackTimer);
         }
+        if (collision.TryGetComponent(out BossBase boss))
+        {
+            boss.HitPlayerAttack(_slashOffensivePower);
+        }
     }
 
     private void OnEnable()

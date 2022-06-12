@@ -97,6 +97,11 @@ public class Shot : MonoBehaviour
             enemy.HitPlayerAttadk(_barrettPower);
             _isDeth = true;
         }
+        if (collision.TryGetComponent(out BossBase boss))
+        {
+            boss.HitPlayerAttack(_barrettPower);
+            _isDeth = true;
+        }
         else if (collision.gameObject.tag == "Ground")//Ground‚ÆÚG‚µ‚½A’e‚ÍÁ¸‚·‚é
         {
             Instantiate(_destroyingEffectPrefab, transform.position, Quaternion.identity);

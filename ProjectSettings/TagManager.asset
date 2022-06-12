@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Ladder
   - Brock
+  - Boss
   layers:
   - Default
   - TransparentFX

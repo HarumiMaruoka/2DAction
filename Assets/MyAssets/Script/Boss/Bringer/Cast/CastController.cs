@@ -35,6 +35,6 @@ public class CastController : MonoBehaviour
     void PlayCast()
     {
         //アニメーション再生
-        _animator.SetTrigger("Cast");
+        _animator.SetTrigger("Spell");
     }
 }

@@ -41,6 +41,7 @@ public class BossBase : MonoBehaviour
     /// <summary> 戦闘中かどうか関連 </summary>
     private bool _previousFrameIsBattle = false;
     private bool _isBattle = false;
+    private bool _isBattleStart = false;
 
     //クールタイム関連
     /// <summary> 現在のクールタイム </summary>
@@ -69,6 +70,7 @@ public class BossBase : MonoBehaviour
 
     //自分の状態
     public BossState _nowState { get; protected set; }
+    [SerializeField] int now;
 
     protected void InitBoss()
     {
@@ -88,14 +90,14 @@ public class BossBase : MonoBehaviour
     /// <summary> 継承先のUpdateで実行すべき関数 </summary>
     protected void CommonUpdateBoss()
     {
+        now = (int)_nowState;
         DoFight();//戦うかどうか
         CommonBattleStart();//戦闘開始時のみ実行
         BattleStart();//独自の戦闘開始時の処理
         CommonBattleExit();//戦闘終了時のみ実行
         BattleExit();//独自の戦闘終了時の処理
-        if (_isBattle)
+        if (_isBattleStart)
         {
-            CangeState();
             UpdateBoss();
         }
     }
@@ -104,38 +106,39 @@ public class BossBase : MonoBehaviour
     void DoFight()
     {
         //前フレームの状態を保存する
-        _previousFrameIsBattle = _isBattle;
+        _previousFrameIsBattle = _isBattleStart;
         //プレイヤーとの距離を測る処理をここに書く
         Vector2 difference = _playerPos.position - transform.position;
+        _spriteRenderer.flipX = difference.x > 0f;
         float diffX = Mathf.Abs(difference.x);
         float diffY = Mathf.Abs(difference.y);
         //距離が一定以上近づいたら_isFightをTrueにする
         if (diffX < 7.5f && diffY < 5f)
         {
-            _isBattle = true;
+            _isBattleStart = true;
         }
         //距離が一定以上離れたら_isFightをFalseにする
-        if (diffX > 15f || diffY > 10f)
+        else if (diffX > 15f || diffY > 10f)
         {
-            _isBattle = false;
+            _isBattleStart = false;
         }
     }
 
-    /// <summary> ボスのステートを、必要に応じて変更する。要 Over ride </summary>
+    /// <summary> ボスのステートを、必要に応じて変更する。オーバーライド可 </summary>
     virtual protected void CangeState() { }
 
-    /// <summary> ボスの処理。要 Over ride </summary>
+    /// <summary> ボスの処理。オーバーライド可 </summary>
     virtual protected void UpdateBoss() { }
 
 
     /// <summary> プレイヤーと接触したときに呼ばれる </summary>
-    void HitPlayer()//プレイヤーの体力を減らし、ノックバックさせる。
+    public void HitPlayer()//プレイヤーの体力を減らし、ノックバックさせる。
     {
         //プレイヤーのHitPointを減らす
         _playerBasicInformation._playerHitPoint -= _offensive_Power;
         _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
-        if (_isRight)
+        if (_spriteRenderer.flipX)
         {
             _playersRigidBody2D.AddForce((Vector2.right + Vector2.up) * _playerKnockBackPower, ForceMode2D.Impulse);
         }
@@ -146,7 +149,7 @@ public class BossBase : MonoBehaviour
     }
 
     /// <summary> プレイヤーの攻撃に接触したときに呼ばれる </summary>
-    void HitPlayerAttack(int damage)//自分の体力を減らす。
+    public void HitPlayerAttack(int damage)//自分の体力を減らす。
     {
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hitPoint -= damage;
@@ -163,31 +166,47 @@ public class BossBase : MonoBehaviour
         _isKnockBackNow = false;
     }
 
-    /// <summary> 戦闘開始時の処理 </summary>
-    protected bool CommonBattleStart()
+    /// <summary> Boss共通の戦闘開始時の処理 </summary>
+    protected void CommonBattleStart()
     {
-        //_isBattleがfalseからtrueになったフレームのみ実行する
-        if (_previousFrameIsBattle == false && _isBattle == true)
+        if (IsBattleStart())
         {
-            //戦闘開始時に実行したい処理をここに書く
-            return true;
+
         }
-        return false;
     }
 
-    /// <summary> 戦闘終了時の処理 </summary>
-    protected bool CommonBattleExit()
+    /// <summary> Boss共通の戦闘終了時の処理 </summary>
+    protected void CommonBattleExit()
     {
-        //_isBattleがtrueからfalseになったフレームのみ実行する
-        if (_previousFrameIsBattle == true && _isBattle == false)
+        if (IsBattleExit())
         {
-            //戦闘終了時に実行したい処理をここに書く
-            return true;
+            _nowState = BossState.IDLE;
         }
-        return false;
     }
 
+    /// <summary> 派生先で独自の戦闘開始の処理をここに書く。オーバーライド可 </summary>
     virtual protected void BattleStart() { }
 
+    /// <summary> 派生先で独自の戦闘終了の処理をここに書く。オーバーライド可 </summary>
     virtual protected void BattleExit() { }
+
+    protected bool IsBattleStart()
+    {
+        //_isBattleがfalseからtrueになったフレームのみ実行する
+        if (_previousFrameIsBattle == false && _isBattleStart == true)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected bool IsBattleExit()
+    {
+        //_isBattleがtrueからfalseになったフレームのみ実行する
+        if (_previousFrameIsBattle == true && _isBattleStart == false)
+        {
+            return true;
+        }
+        return false;
+    }
 }

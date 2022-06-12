@@ -53,6 +53,12 @@ public class PlayerBasicInformation : MonoBehaviour
                 _newPlayerStateManagement._isHitEnemy = true;
                 StartCoroutine(GodMode());
             }
+            if (collision.gameObject.TryGetComponent(out BossBase boss))
+            {
+                boss.HitPlayer();
+                _newPlayerStateManagement._isHitEnemy = true;
+                StartCoroutine(GodMode());
+            }
         }
     }
 
