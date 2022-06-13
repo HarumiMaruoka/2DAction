@@ -68,4 +68,20 @@ public class PlayerBasicInformation : MonoBehaviour
         yield return new WaitForSeconds(_godModeTime);
         _isGodMode = false;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out SpellController spell))
+        {
+            spell.HitPlayer();
+            _newPlayerStateManagement._isHitEnemy = true;
+            StartCoroutine(GodMode());
+        }
+        if (collision.gameObject.TryGetComponent(out BossAttack bossAttack))
+        {
+            bossAttack.HitPlayer();
+            _newPlayerStateManagement._isHitEnemy = true;
+            StartCoroutine(GodMode());
+        }
+    }
 }

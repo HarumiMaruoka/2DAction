@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (!_newPlayerStateManagement._isDead)
+        if (!_newPlayerStateManagement._isDead&& _newPlayerStateManagement._isMove)
         {
             Fire1();
             Fire2();

@@ -14,11 +14,14 @@ public class BringerMain : BossBase
     [Tooltip("接近スピード"), SerializeField] float _approachSpeed;
     [Tooltip("後退スピード"), SerializeField] float _recessionSpeed;
 
-
+    Transform _heavyAttack;
+    Transform _lightAttack;
 
     void Start()
     {
         base.InitBoss();
+        _heavyAttack = transform.GetChild(1);
+        _lightAttack = transform.GetChild(2);
     }
 
     void Update()
@@ -256,5 +259,22 @@ public class BringerMain : BossBase
         _isAttackStart = false;
         _isAttackExit = true;
         _isCoolTimerStart = true;
+    }
+
+    public void OnHeavyAttack()
+    {
+        _heavyAttack.gameObject.SetActive(true);
+    }
+    public void OffHeavyAttack()
+    {
+        _heavyAttack.gameObject.SetActive(false);
+    }
+    public void OnLightAttack()
+    {
+        _lightAttack.gameObject.SetActive(true);
+    }
+    public void OffLightAttack()
+    {
+        _lightAttack.gameObject.SetActive(false);
     }
 }

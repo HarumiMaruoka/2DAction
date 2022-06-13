@@ -69,4 +69,12 @@ public class BringerAnimManager : MonoBehaviour
         _animator.SetBool("isHeavyAttack", _isHeavyAttack);
         _animator.SetBool("isLongRangeAttack", _isLongRangeAttack);
     }
+
+    /// <summary> LRA発動時の処理 </summary>
+    public void StartLRA()
+    {
+        //Spellをアクティブにし、PlaySpellを実行
+        transform.GetChild(0).gameObject.SetActive(true);
+        transform.GetChild(0).GetComponent<SpellController>().PlaySpell();
+    }
 }

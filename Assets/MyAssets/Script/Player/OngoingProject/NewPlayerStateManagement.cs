@@ -72,6 +72,10 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void UpdateState()
     {
+        if (_playerBasicInformation._playerHitPoint <= 0)
+        {
+            _isDead = true;
+        }
         if (!_isDead)
         {
             if (_isMove)
@@ -88,6 +92,7 @@ public class NewPlayerStateManagement : MonoBehaviour
             //スライディングは、_isMoveを扱うので除外
             Sliding();
         }
+        Killed();
     }
 
     void MoveManage()
@@ -121,7 +126,6 @@ public class NewPlayerStateManagement : MonoBehaviour
     void OtherActionManage()
     {
         Beaten();
-        Killed();
     }
 
     void Run()

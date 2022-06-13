@@ -113,12 +113,12 @@ public class BossBase : MonoBehaviour
         float diffX = Mathf.Abs(difference.x);
         float diffY = Mathf.Abs(difference.y);
         //‹——£‚ªˆê’èˆÈã‹ß‚Ã‚¢‚½‚ç_isFight‚ğTrue‚É‚·‚é
-        if (diffX < 7.5f && diffY < 5f)
+        if (diffX < 10f && diffY < 5f)
         {
             _isBattleStart = true;
         }
         //‹——£‚ªˆê’èˆÈã—£‚ê‚½‚ç_isFight‚ğFalse‚É‚·‚é
-        else if (diffX > 15f || diffY > 10f)
+        else if (diffX > 25f || diffY > 10f)
         {
             _isBattleStart = false;
         }
