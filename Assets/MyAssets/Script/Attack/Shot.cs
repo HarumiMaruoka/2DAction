@@ -52,7 +52,7 @@ public class Shot : MonoBehaviour
             _spriteRenderer.flipX = true;
             direction = -1;
         }
-
+        //Shift‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚ç‘¬“x‚ğã‚°‚é
         if (Input.GetButton("Dash"))
         {
             _dashMode *= _dashSpeed;
@@ -70,6 +70,10 @@ public class Shot : MonoBehaviour
         {
             _rigidBody2D.velocity = Vector2.left * _moveSpeed * _dashMode;
         }
+
+        //”­Ë‰¹‚ğÄ¶‚·‚é
+        //GetComponent<AudioSource>().Play();
+        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
     }
 
     // Update is called once per frame

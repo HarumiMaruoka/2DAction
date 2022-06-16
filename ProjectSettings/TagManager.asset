@@ -47,8 +47,14 @@ TagManager:
   - name: lear
     uniqueID: 1808511677
     locked: 0
+  - name: Sky
+    uniqueID: 3584176101
+    locked: 0
   - name: LearBackGround
     uniqueID: 1158612145
+    locked: 0
+  - name: CenterBackGround
+    uniqueID: 3284557341
     locked: 0
   - name: FrontBackGround
     uniqueID: 3203778209

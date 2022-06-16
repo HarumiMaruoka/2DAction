@@ -67,6 +67,20 @@ public class PlayerMoveManager : MonoBehaviour
     //ジャンプしたかどうかの確認
     public bool _isJump { get; private set; } = false;
 
+    //右に何があるか判定用
+    [Tooltip("右に何かがないか判定用"), SerializeField]
+    private Vector3 _overLapBoxOffsetRight;
+    //左に何があるか判定用
+    [Tooltip("左に何かがないか判定用"), SerializeField]
+    private Vector3 _overLapBoxOffsetLeft;
+    //上記のサイズ
+    [Tooltip("上記のサイズ"), SerializeField]
+    private Vector2 _overLapBoxSizeVertical;
+    /// <summary> gizmo表示 </summary>
+    [SerializeField]
+    LayerMask _layerMaskCheckLR;
+    /// <summary> gizmo表示 </summary>
+    [SerializeField] bool _isGizmo = false;
 
     void Start()
     {
@@ -129,12 +143,22 @@ public class PlayerMoveManager : MonoBehaviour
         }
     }
 
+    /// <summary> 横移動の処理 </summary>
     void MoveHorizontal()
     {
         //縦の入力がある時は実行できない
         if (!(_inputManager._inputVertical != 0))
         {
-            _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+            //左移動の処理
+            if (_inputManager._inputHorizontal < 0 && !BodyContactLeft())//左に何もなければ実行できる
+            {
+                _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+            }
+            //右移動の処理
+            if (_inputManager._inputHorizontal > 0 && !BodyContactRight())//右に何もなければ実行できる
+            {
+                _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+            }
         }
     }
 
@@ -184,7 +208,7 @@ public class PlayerMoveManager : MonoBehaviour
         if (_isClimb)
         {
             //縦の入力がある時
-            if (_inputManager._inputVertical != 0&&!(_inputManager._inputFire1||_inputManager._inputFire2))
+            if (_inputManager._inputVertical != 0 && !(_inputManager._inputFire1 || _inputManager._inputFire2))
             {
                 //下に入力したとき
                 //非接地状態なら降りれる
@@ -257,6 +281,53 @@ public class PlayerMoveManager : MonoBehaviour
         {
             _isClimb = false;
             _rigidBody2D.gravityScale = _gravity;
+        }
+    }
+
+    /// <summary> プレイヤーの右に何かあるか </summary>
+    bool BodyContactRight()
+    {
+        //右に何かあるか判定する
+        Collider2D[] collision = Physics2D.OverlapBoxAll(
+            _overLapBoxOffsetRight + transform.position,
+            _overLapBoxSizeVertical,
+            0f,
+            _layerMaskCheckLR);
+        //何かあればtrueを返す
+        if (collision.Length != 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    /// <summary> プレイヤーの左に何かあるか </summary>
+    bool BodyContactLeft()
+    {
+        //左に何かあるか判定する
+        Collider2D[] collision = Physics2D.OverlapBoxAll(
+            _overLapBoxOffsetLeft + transform.position,
+            _overLapBoxSizeVertical,
+            0f,
+            _layerMaskCheckLR);
+        //何かあればtrueを返す
+        if (collision.Length != 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        if (_isGizmo)
+        {
+            //右のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
+            //左のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
         }
     }
 }

@@ -5,9 +5,10 @@ using UnityEngine;
 public class EnemyGenerator : MonoBehaviour
 {
     //player との距離で判定する
-    [SerializeField] Transform _playerTransform;
+    Transform _playerTransform;
     float _diffX = 0f;
     float _diffY = 0f;
+    bool _isGenerat = false;
 
     //生成すべきエネミー
     GameObject _child;
@@ -18,6 +19,7 @@ public class EnemyGenerator : MonoBehaviour
     //Startで子オブジェクトを取得する。
     private void Start()
     {
+        _playerTransform = GameObject.Find("ChibiRobo").transform;
         _child = transform.GetChild(0).gameObject;
     }
 
@@ -27,10 +29,10 @@ public class EnemyGenerator : MonoBehaviour
         _diffX = transform.position.x - _playerTransform.position.x;
         _diffY = transform.position.y - _playerTransform.position.y;
 
-        if (Mathf.Abs(_diffX) < 12.5f && Mathf.Abs(_diffY) < 7f)
+        if (Mathf.Abs(_diffX) < 12.5f && Mathf.Abs(_diffY) < 7f && !_isGenerat)
         {
             _child.SetActive(true);
-            enabled = false;
+            _isGenerat = true;
         }
     }
 
@@ -40,7 +42,7 @@ public class EnemyGenerator : MonoBehaviour
         Gizmos.color = Color.red;
         if (_isGizmo)
         {
-            Gizmos.DrawCube(transform.position, new Vector3(1,1,0));
+            Gizmos.DrawCube(transform.position, new Vector3(1, 1, 0));
         }
     }
 }

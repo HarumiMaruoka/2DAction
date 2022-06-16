@@ -66,5 +66,8 @@ public class SlashTwo : MonoBehaviour
         {
             _capsuleCollider2D.offset = new Vector2(-0.3f, 0.15f);
         }
+
+        //”­Ë‰¹‚ğÄ¶‚·‚é
+        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
     }
 }
