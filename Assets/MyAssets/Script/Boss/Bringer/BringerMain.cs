@@ -32,6 +32,11 @@ public class BringerMain : BossBase
     /// <summary> Bringer独自の、UpdateBoss関数 </summary>
     protected override void UpdateBoss()
     {
+        if (_hitPoint <= 0)
+        {
+            _nowState = BossState.DIE;
+        }
+        _rigidBody2d.velocity = Vector2.zero;
         //Bossのステートを変更する。
         switch (_nowState)
         {
@@ -43,6 +48,7 @@ public class BringerMain : BossBase
             case BossState.HEAVY_ATTACK: HeavyAttack(); break;
             case BossState.LONG_RANGE_ATTACK: LongRangeAttack(); break;
 
+            case BossState.DIE: Die(); break;
             //再抽選するコードをここに書く
             //ifでNomalかAttackに分岐し、処理を変える
             default: Debug.Log("このボスのステートはありません。"); break;
@@ -116,8 +122,8 @@ public class BringerMain : BossBase
             //Debug.Log("前進中");
             //Approach中はプレイヤーに向かって前進する
             _rigidBody2d.velocity = (_playerPos.position.x - transform.position.x) < 0 ?
-            new Vector2(-_approachSpeed * Time.deltaTime * 100f, _rigidBody2d.velocity.y) :
-            new Vector2(_approachSpeed * Time.deltaTime * 100f, _rigidBody2d.velocity.y);
+            new Vector2(-_approachSpeed, _rigidBody2d.velocity.y) :
+            new Vector2(_approachSpeed, _rigidBody2d.velocity.y);
 
             //Debug.Log("プレイヤーに向かって前進中");
         }
@@ -147,8 +153,8 @@ public class BringerMain : BossBase
             //Debug.Log("後進中");
             //Approach中はプレイヤーに向かって前進する
             _rigidBody2d.velocity = (_playerPos.position.x - transform.position.x) < 0 ?
-            new Vector2(_recessionSpeed * Time.deltaTime * 100f, _rigidBody2d.velocity.y) :
-            new Vector2(-_recessionSpeed * Time.deltaTime * 100f, _rigidBody2d.velocity.y);
+            new Vector2(_recessionSpeed, _rigidBody2d.velocity.y) :
+            new Vector2(-_recessionSpeed, _rigidBody2d.velocity.y);
 
             //Debug.Log("プレイヤーに向かって前進中");
         }
@@ -240,8 +246,26 @@ public class BringerMain : BossBase
     /// <summary> ステートをノーマルに移行 </summary>
     void StateChangeNomal()
     {
-        //本物のコード
-        _nowState = (BossState)UnityEngine.Random.Range((int)BossState.IDLE, (int)BossState.NOMAL_END);
+        //半分の確率で前進する
+        int random= UnityEngine.Random.Range(0,2);
+        if (random == 0)
+        {
+            _nowState = BossState.APPROACH;
+        }
+        else if (random == 1)
+        {
+            _nowState = (BossState)UnityEngine.Random.Range((int)BossState.IDLE, (int)BossState.NOMAL_END);
+        }
+        else
+        {
+            Debug.Log("randomはその数値を受け取れません");
+        }
+    }
+
+    void Die()
+    {
+        //Bossが死んだ時の処理をここに書く
+        Destroy(gameObject, 1.0f);
     }
 
     //クールタイムを待つ

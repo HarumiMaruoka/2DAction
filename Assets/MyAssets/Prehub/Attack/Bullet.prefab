@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 15
   _dashSpeed: 1.5
-  _barrettPower: 3
+  _barrettPower: 4
   _destroyingEffectPrefab: {fileID: 4510018626853291725, guid: 963f49bd68015aa4b9b2a4dbbd24efc1, type: 3}
 --- !u!50 &2802080857983260943
 Rigidbody2D:

@@ -15,7 +15,9 @@ public class BossBase : MonoBehaviour
         HEAVY_ATTACK,//‹­UŒ‚
         LONG_RANGE_ATTACK,//‰“‹——£UŒ‚
 
-        ATTACK_END
+        ATTACK_END,
+
+        DIE,//€
     }
 
     [Tooltip("‘Ì—Í"), SerializeField] protected int _hitPoint;

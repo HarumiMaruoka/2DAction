@@ -17,7 +17,7 @@ public class BringerAnimManager : MonoBehaviour
     bool _isHeavyAttack = false;
     bool _isLongRangeAttack = false;
 
-
+    bool _isDie = false;
 
 
     void Start()
@@ -56,6 +56,8 @@ public class BringerAnimManager : MonoBehaviour
             case BringerMain.BossState.HEAVY_ATTACK: _isHeavyAttack = true; break;
             case BringerMain.BossState.LONG_RANGE_ATTACK: _isLongRangeAttack = true; break;
 
+            case BringerMain.BossState.DIE: _isDie = true; break;
+
             default: Debug.LogError("Bringerに、このステートはありません。"); break;
         }
     }
@@ -68,6 +70,8 @@ public class BringerAnimManager : MonoBehaviour
         _animator.SetBool("isLightAttack", _isLightAttack);
         _animator.SetBool("isHeavyAttack", _isHeavyAttack);
         _animator.SetBool("isLongRangeAttack", _isLongRangeAttack);
+
+        _animator.SetBool("isDie", _isDie);
     }
 
     /// <summary> LRA発動時の処理 </summary>
