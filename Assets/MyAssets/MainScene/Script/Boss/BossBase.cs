@@ -62,9 +62,9 @@ public class BossBase : MonoBehaviour
     [Tooltip("戦闘停止までの距離"), SerializeField] private Vector2 _fightStopDistance;
 
     //色変更用
-    bool _isColorChange = false;
-    float _colorChangeTime = 0.1f;
-    float _colorChangeTimeValue = 0;
+    protected bool _isColorChange = false;
+    protected float _colorChangeTime = 0.1f;
+    protected float _colorChangeTimeValue = 0;
 
     /// <summary> ノックバック関連 </summary>
     bool _isKnockBackNow;

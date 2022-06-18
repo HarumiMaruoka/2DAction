@@ -17,6 +17,8 @@ public class BringerMain : BossBase
     Transform _heavyAttack;
     Transform _lightAttack;
 
+    bool _isLRAStart = false;
+
     void Start()
     {
         base.InitBoss();
@@ -32,10 +34,30 @@ public class BringerMain : BossBase
     /// <summary> Bringer独自の、UpdateBoss関数 </summary>
     protected override void UpdateBoss()
     {
+        //体力がなくなった時の処理
         if (_hitPoint <= 0)
         {
+            //体力がなくなったら消滅する
             _nowState = BossState.DIE;
         }
+
+        //色を変える必要があれば変える
+        if (_isColorChange)
+        {
+            _spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            _isColorChange = false;
+        }
+        //色を元に戻す
+        else if (_colorChangeTimeValue < 0)
+        {
+            _spriteRenderer.color = new Color(1, 1, 1, 1);
+        }
+        //クールタイム解消
+        else if (_colorChangeTimeValue > 0)
+        {
+            _colorChangeTimeValue -= Time.deltaTime;
+        }
+
         _rigidBody2d.velocity = Vector2.zero;
         //Bossのステートを変更する。
         switch (_nowState)
@@ -173,11 +195,7 @@ public class BringerMain : BossBase
         //弱攻撃の処理
         if (_isAttackStart)
         {
-            //LightAttackは、近距離:弱攻撃
-            //ここに弱攻撃中のコードを書く
-            //Debug.Log("AttackNow");
-            //テスト用コード
-            //AttackStateExit();
+
         }
         //攻撃終了時の処理
         if (_isAttackExit)
@@ -196,11 +214,7 @@ public class BringerMain : BossBase
         //強攻撃の処理
         if (_isAttackStart)
         {
-            //HeavyAttackは、近距離:強攻撃
-            //ここに強攻撃中のコードを書く
-            //Debug.Log("AttackNow");
-            //テスト用コード
-            //AttackStateExit();
+
         }
         //攻撃終了時の処理
         if (_isAttackExit)
@@ -219,11 +233,13 @@ public class BringerMain : BossBase
         //遠距離攻撃の処理
         if (_isAttackStart)
         {
-            //LongRangeAttackは遠距離攻撃
-            //ここに遠距離攻撃中のコードを書く
-            //Debug.Log("AttackNow");
-            //テスト用コード
-            //AttackStateExit();
+            if (_isLRAStart)
+            {
+                _isLRAStart = false;
+                //Spellをアクティブにし、PlaySpellを実行
+                transform.GetChild(0).gameObject.SetActive(true);
+                transform.GetChild(0).GetComponent<SpellController>().PlaySpell();
+            }
         }
         //攻撃終了時の処理
         if (_isAttackExit)
@@ -241,13 +257,17 @@ public class BringerMain : BossBase
     {
         _isAttackStart = true;
         _nowState = (BossState)UnityEngine.Random.Range((int)BossState.LIGHT_ATTACK, (int)BossState.ATTACK_END);
+        if (_nowState == BossState.LONG_RANGE_ATTACK)
+        {
+            _isLRAStart = true;
+        }
     }
 
     /// <summary> ステートをノーマルに移行 </summary>
     void StateChangeNomal()
     {
         //半分の確率で前進する
-        int random= UnityEngine.Random.Range(0,2);
+        int random = UnityEngine.Random.Range(0, 2);
         if (random == 0)
         {
             _nowState = BossState.APPROACH;
