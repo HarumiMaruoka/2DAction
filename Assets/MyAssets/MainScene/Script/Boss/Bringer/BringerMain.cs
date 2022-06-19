@@ -14,6 +14,8 @@ public class BringerMain : BossBase
     [Tooltip("接近スピード"), SerializeField] float _approachSpeed;
     [Tooltip("後退スピード"), SerializeField] float _recessionSpeed;
 
+    [Header("各Buttonを子に持つキャンバス"), SerializeField] GameObject _bottonCanvas;
+
     Transform _heavyAttack;
     Transform _lightAttack;
 
@@ -39,6 +41,8 @@ public class BringerMain : BossBase
         {
             //体力がなくなったら消滅する
             _nowState = BossState.DIE;
+            //Button群をアクティブにする
+            _bottonCanvas.SetActive(true);
         }
 
         //色を変える必要があれば変える
