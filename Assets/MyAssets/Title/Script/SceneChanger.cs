@@ -9,10 +9,15 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] string _mainSceneName;
     [SerializeField] string _titleSceneName;
 
+    void SceneChangeMain()
+    {
+        SceneManager.LoadScene(_mainSceneName);
+    }
+
     //Mainシーンを読み込む
     public void LoadMainScene()
     {
-        SceneManager.LoadScene(_mainSceneName);
+        Invoke("SceneChangeMain", 1f);
     }
 
     public void LoadTitleScene()
@@ -23,8 +28,8 @@ public class SceneChanger : MonoBehaviour
     public void GameExit()
     {
         //UnityEditor上で終了するときの処理。(ビルド時はコメントアウトする。)
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
         //実行ファイル中での終了処理
-        //UnityEngine.Application.Quit();
+        UnityEngine.Application.Quit();
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewPlayerStateManagement : MonoBehaviour
+public class PlayerStateManagement : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -31,12 +31,12 @@ public class NewPlayerStateManagement : MonoBehaviour
     public PlayerState _playerState { get; private set; } = PlayerState.IDLE;
     InputManager _inputManager;
     Rigidbody2D _rigidBody2D;
-    JumpScript _jumpScript;
     Animator _animator;
     PlayerBasicInformation _playerBasicInformation;
     PlayerMoveManager _playerMoveManager;
-    NewAnimationManagement _newAnimationManagement;
+    AnimationManagement _newAnimationManagement;
     SpriteRenderer _spriteRenderer;
+    AudioSource _hitEnemySound;
 
     bool _isClimbContact = false;
 
@@ -49,17 +49,18 @@ public class NewPlayerStateManagement : MonoBehaviour
     bool _isHoverMode;
 
     public bool _isSlidingNow { get; set; }
+    [Tooltip("スライディングの時間"), SerializeField] float _slidingTime;
 
     void Start()
     {
         _inputManager = GetComponent<InputManager>();
         _rigidBody2D = GetComponent<Rigidbody2D>();
-        _jumpScript = GetComponent<JumpScript>();
         _animator = GetComponent<Animator>();
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
-        _newAnimationManagement = GetComponent<NewAnimationManagement>();
+        _newAnimationManagement = GetComponent<AnimationManagement>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerMoveManager = GetComponent<PlayerMoveManager>();
+        _hitEnemySound = GetComponent<AudioSource>();
 
         _isMove = true;
     }
@@ -75,7 +76,9 @@ public class NewPlayerStateManagement : MonoBehaviour
         if (_playerBasicInformation._playerHitPoint <= 0)
         {
             _isDead = true;
+            _isMove = false;
         }
+
         if (!_isDead)
         {
             if (_isMove)
@@ -88,9 +91,17 @@ public class NewPlayerStateManagement : MonoBehaviour
                 MoveManage();
                 AttackManage();
                 OtherActionManage();
+                Sliding();
             }
-            //スライディングは、_isMoveを扱うので除外
-            Sliding();
+        }
+        //移動できるかどうか
+        if (_isSlidingNow || _isHitEnemy)
+        {
+            _isMove = false;
+        }
+        else
+        {
+            _isMove = true;
         }
         Killed();
     }
@@ -147,7 +158,7 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Jump()
     {
-        if (_rigidBody2D.velocity.y > 0 && !_jumpScript.GetIsGround())//非接地かつ上昇中
+        if (_rigidBody2D.velocity.y > 0 && !_playerMoveManager.GetIsGround())//非接地かつ上昇中
         {
             _playerState = PlayerState.JUMP;
         }
@@ -155,7 +166,7 @@ public class NewPlayerStateManagement : MonoBehaviour
 
     void Fall()
     {
-        if (_rigidBody2D.velocity.y < 0 && !_jumpScript.GetIsGround())//非接地かつ落下中
+        if (_rigidBody2D.velocity.y < 0 && !_playerMoveManager.GetIsGround())//非接地かつ落下中
         {
             _playerState = PlayerState.FALL;
         }
@@ -170,7 +181,7 @@ public class NewPlayerStateManagement : MonoBehaviour
                 _isHoverMode = true;
             }
         }
-        if (_inputManager._inputJumpUp || _jumpScript.GetIsGround())
+        if (_inputManager._inputJumpUp || _playerMoveManager.GetIsGround())
         {
             _isHoverMode = false;
         }
@@ -186,6 +197,7 @@ public class NewPlayerStateManagement : MonoBehaviour
         if (_isSlidingNow)
         {
             _playerState = PlayerState.SLIDING;
+            StartCoroutine(StopProcessing(_slidingTime));
         }
     }
 
@@ -197,12 +209,8 @@ public class NewPlayerStateManagement : MonoBehaviour
             //縦の入力がある時
             if (_inputManager._inputVertical != 0)
             {
-                //昇降中
-                if (_inputManager._inputVertical != 0)
-                {
-                    _playerState = PlayerState.CLIMB;
-                    _newAnimationManagement._ClimbSpeed = 1f;
-                }
+                _playerState = PlayerState.CLIMB;
+                _newAnimationManagement._ClimbSpeed = 1f;
             }
             //縦の入力がなくなった時の処理
             else
@@ -212,12 +220,12 @@ public class NewPlayerStateManagement : MonoBehaviour
                 _newAnimationManagement._ClimbSpeed = 0f;
             }
             //着地したとき
-            if (_jumpScript.GetIsGround())
+            if (_playerMoveManager.GetIsGround())
             {
                 _playerState = PlayerState.IDLE;
             }
         }
-        
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -287,7 +295,6 @@ public class NewPlayerStateManagement : MonoBehaviour
         if (_isHitEnemy)
         {
             _playerState = PlayerState.BEATEN;
-            _isMove = false;
         }
     }
 
@@ -303,15 +310,14 @@ public class NewPlayerStateManagement : MonoBehaviour
     public void ChibiRoboComeback()
     {
         _isHitEnemy = false;
-        _isMove = true;
         _isHoverMode = false;
+        _hitEnemySound.Stop();
     }
 
-    //この関数はアニメーションイベントから呼び出す
-    /// <summary> スライディング終了関数 </summary>
-    public void SlidingStop()
+    IEnumerator StopProcessing(float stopTime)
     {
-        _isMove = true;
+        _isSlidingNow = true;
+        yield return new WaitForSeconds(stopTime);
         _isSlidingNow = false;
     }
 }

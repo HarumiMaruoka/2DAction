@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7564688505063697958}
   - component: {fileID: 500461153554823998}
   - component: {fileID: 3471770462773952682}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Stomper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 68316101
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b37846b9b2cfa2a4baf34a89cd24346e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -109,7 +109,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.22, y: 2.18}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
 --- !u!50 &500461153554823998
 Rigidbody2D:
@@ -144,9 +144,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0603e2f6a548f724593c288822d60e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoint: 10
-  _offensive_Power: 1
-  _playerKnockBackPower: {x: -100, y: 100}
+  _hitPoint: 100
+  _offensive_Power: 10
+  _playerKnockBackPower: {x: 100, y: 100}
   _isKnockBackNow: 0
   _tank: -2
   _moveSpeed: 2
+  _isGizmo: 1
+  _overLapBoxOffsetRight: {x: 1.15, y: 0, z: 0}
+  _overLapBoxOffsetLeft: {x: -1.15, y: 0, z: 0}
+  _overLapBoxSizeVertical: {x: 0.05, y: 1.5}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 127

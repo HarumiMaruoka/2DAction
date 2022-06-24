@@ -10,15 +10,16 @@ TagManager:
   - Ladder
   - Brock
   - Boss
+  - Battery
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy
   - Water
   - UI
   - Ground
-  - 
+  - Player
   - 
   - 
   - 

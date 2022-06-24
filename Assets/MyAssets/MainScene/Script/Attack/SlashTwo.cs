@@ -10,6 +10,11 @@ public class SlashTwo : MonoBehaviour
     [SerializeField] float _knockBackTimer;//ノックバックタイマー
     bool _isRigth;//プレイヤーと同じ方向を向ける用
 
+    [SerializeField] AudioClip _hitSlash;
+    [SerializeField] AudioClip _slash;
+
+    [SerializeField] float _soundVolume;
+
     //プレイヤーのコンポーネント
     Transform _playerPos;
     SpriteRenderer _playerSpriteRendere;
@@ -40,10 +45,12 @@ public class SlashTwo : MonoBehaviour
         //GetComponentのより軽く短い書き方
         if (collision.TryGetComponent(out EnemyBase enemy))
         {
+            AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
             enemy.HitPlayerAttadk(_slashOffensivePower, _knockBackTimer);
         }
         if(collision.TryGetComponent(out BossBase boss))
         {
+            AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
             boss.HitPlayerAttack(_slashOffensivePower);
         }
     }
@@ -68,6 +75,6 @@ public class SlashTwo : MonoBehaviour
         }
 
         //発射音を再生する
-        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+        AudioSource.PlayClipAtPoint(_slash, transform.position, _soundVolume);
     }
 }

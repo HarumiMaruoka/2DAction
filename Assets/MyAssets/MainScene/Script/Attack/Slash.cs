@@ -8,7 +8,12 @@ public class Slash : MonoBehaviour
     [SerializeField] int _slashOffensivePower;//エネミーに対する攻撃力
     [SerializeField] Vector2 _knockBackPower;//ノックバックパワー
     [SerializeField] float _knockBackTimer;//ノックバックタイマー
+
+    [SerializeField] AudioClip _hitSlash;
+    [SerializeField] AudioClip _slash;
     bool _isRigth;//プレイヤーと同じ方向を向ける用
+
+    [SerializeField] float _soundVolume;
 
     //プレイヤーのコンポーネント
     Transform _playerPos;
@@ -37,13 +42,14 @@ public class Slash : MonoBehaviour
     //敵と接触したときに行う処理
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //GetComponentのより軽く短い書き方
         if (collision.TryGetComponent(out EnemyBase enemy))
         {
+            AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
             enemy.HitPlayerAttadk(_slashOffensivePower, _knockBackTimer);
         }
         if (collision.TryGetComponent(out BossBase boss))
         {
+            AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
             boss.HitPlayerAttack(_slashOffensivePower);
         }
     }
@@ -68,6 +74,6 @@ public class Slash : MonoBehaviour
         }
 
         //発射音を再生する
-        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+        AudioSource.PlayClipAtPoint(_slash, transform.position, _soundVolume);
     }
 }

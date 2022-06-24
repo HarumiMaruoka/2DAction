@@ -10,8 +10,12 @@ public class PlayerBasicInformation : MonoBehaviour
     [SerializeField] public int _maxHitPoint = 3;//最大HP
     [SerializeField] public int _playerHitPoint = 3;//現在のHP
 
+    AudioSource _hitEnemySound;
+
+    [Header("Botton群"), SerializeField] GameObject _botton;
+
     //各コンポーネント
-    NewPlayerStateManagement _newPlayerStateManagement;
+    PlayerStateManagement _newPlayerStateManagement;
 
     //無敵関連(ヒット後の無敵時間とか)
     float _godModeTime = 1.5f;
@@ -27,7 +31,8 @@ public class PlayerBasicInformation : MonoBehaviour
     {
         _hoverValue = MaxHealthForHover;
         //自身のコンポーネントを取得する。
-        _newPlayerStateManagement = GetComponent<NewPlayerStateManagement>();
+        _newPlayerStateManagement = GetComponent<PlayerStateManagement>();
+        _hitEnemySound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -37,6 +42,7 @@ public class PlayerBasicInformation : MonoBehaviour
         if (_playerHitPoint < 1)
         {
             _newPlayerStateManagement._isDead = true;
+            _botton.SetActive(true);
         }
     }
 
@@ -44,19 +50,21 @@ public class PlayerBasicInformation : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         //無敵状態であれば攻撃を受けない
-        if (!_isGodMode)
+        if (!_isGodMode && !_newPlayerStateManagement._isDead)
         {
             //Enemyと接触したらEnemyのHitPlayer関数を実行する
             if (collision.gameObject.TryGetComponent(out EnemyBase enemy))
             {
                 enemy.HitPlayer();
                 _newPlayerStateManagement._isHitEnemy = true;
+                _hitEnemySound.Play();
                 StartCoroutine(GodMode());
             }
             if (collision.gameObject.TryGetComponent(out BossBase boss))
             {
                 boss.HitPlayer();
                 _newPlayerStateManagement._isHitEnemy = true;
+                _hitEnemySound.Play();
                 StartCoroutine(GodMode());
             }
         }
@@ -69,19 +77,31 @@ public class PlayerBasicInformation : MonoBehaviour
         _isGodMode = false;
     }
 
+    //ボスと接触したときの処理
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out SpellController spell))
+        if (!_isGodMode && !_newPlayerStateManagement._isDead)
         {
-            spell.HitPlayer();
-            _newPlayerStateManagement._isHitEnemy = true;
-            StartCoroutine(GodMode());
-        }
-        if (collision.gameObject.TryGetComponent(out BossAttack bossAttack))
-        {
-            bossAttack.HitPlayer();
-            _newPlayerStateManagement._isHitEnemy = true;
-            StartCoroutine(GodMode());
+            if (collision.gameObject.TryGetComponent(out SpellController spell))
+            {
+                spell.HitPlayer();
+                _newPlayerStateManagement._isHitEnemy = true;
+                _hitEnemySound.Play();
+                StartCoroutine(GodMode());
+            }
+            if (collision.gameObject.TryGetComponent(out BossAttack bossAttack))
+            {
+                bossAttack.HitPlayer();
+                _newPlayerStateManagement._isHitEnemy = true;
+                _hitEnemySound.Play();
+                StartCoroutine(GodMode());
+            }
+            //バッテリーと接触したときの処理
+            if (collision.gameObject.tag == "Battery")
+            {
+                _playerHitPoint = _maxHitPoint;
+                AudioSource.PlayClipAtPoint(collision.gameObject.GetComponent<AudioSource>().clip, transform.position);
+            }
         }
     }
 }

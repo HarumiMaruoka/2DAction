@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0af712693b2984b920e089765db061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoint: 50
-  _offensive_Power: 1
+  _hitPoint: 15
+  _offensive_Power: 3
   _playerKnockBackPower: {x: 50, y: 50}
   _isKnockBackNow: 0
   _tank: 0

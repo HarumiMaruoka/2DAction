@@ -45,15 +45,14 @@ public class PlayerMoveManager : MonoBehaviour
     //コンポーネント
     Rigidbody2D _rigidBody2D;
     InputManager _inputManager;
-    JumpScript _jumpScript;
     SpriteRenderer _spriteRendere;
-    NewPlayerStateManagement _newPlayerStateManagement;
+    PlayerStateManagement _playerStateManagement;
     PlayerBasicInformation _playerBasicInformation;
     Animator _animator;
 
     //このフレームで加える力
     Vector2 _newForce;
-    public Vector2 _newImpulse;
+    Vector2 _newImpulse;
     Vector2 _newVelocity;
 
     /// <summary> ジャンプできるか:スペースキーは、ジャンプとスライディングの機能を兼ねる為 </summary>
@@ -82,15 +81,24 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary> gizmo表示 </summary>
     [SerializeField] bool _isGizmo = false;
 
+    //Jump関連
+    [SerializeField]
+    private Vector2 _overLapBoxCenter;
+    [SerializeField]
+    private Vector2 _overLapBoxSize;
+    [SerializeField]
+    LayerMask _layerMaskGround;
+
+    float _groundCheckPositionY = -0.725f;
+
     void Start()
     {
         //コンポーネントの初期化
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _inputManager = GetComponent<InputManager>();
-        _jumpScript = GetComponent<JumpScript>();
         _spriteRendere = GetComponent<SpriteRenderer>();
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
-        _newPlayerStateManagement = GetComponent<NewPlayerStateManagement>();
+        _playerStateManagement = GetComponent<PlayerStateManagement>();
         _animator = GetComponent<Animator>();
         _gravity = _rigidBody2D.gravityScale;
 
@@ -113,7 +121,7 @@ public class PlayerMoveManager : MonoBehaviour
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
-        if (_newPlayerStateManagement._isMove && !_newPlayerStateManagement._isDead)
+        if (_playerStateManagement._isMove && !_playerStateManagement._isDead)
         {
             //プレイヤーが向いている方向を取得
             _isRigth = !_spriteRendere.flipX;
@@ -127,7 +135,7 @@ public class PlayerMoveManager : MonoBehaviour
             Hover();
 
             //空中では横移動速度が遅くなる
-            if (!_jumpScript.GetIsGround())
+            if (!GetIsGround())
             {
                 _newForce.x *= DecelerationRateX;
             }
@@ -146,9 +154,6 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary> 横移動の処理 </summary>
     void MoveHorizontal()
     {
-        //縦の入力がある時は実行できない
-        if (!(_inputManager._inputVertical != 0))
-        {
             //左移動の処理
             if (_inputManager._inputHorizontal < 0 && !BodyContactLeft())//左に何もなければ実行できる
             {
@@ -159,7 +164,6 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
             }
-        }
     }
 
     void Dash()
@@ -175,15 +179,14 @@ public class PlayerMoveManager : MonoBehaviour
     {
         _canJump = true;
         //接地かつSキーで実行可能
-        if (_inputManager._inputVertical < 0 && _jumpScript.GetIsGround())
+        if (_inputManager._inputVertical < 0 && GetIsGround())
         {
             //上記条件をクリアしたうえで、スペースキーが押された場合スライディングする！
             if (_inputManager._inputJumpDown)
             {
                 _newImpulse += _isRigth ? new Vector2(_slidingSpeed, 0f) : new Vector2(-_slidingSpeed, 0f);
-                _canJump = false;
-                _newPlayerStateManagement._isMove = false;
-                _newPlayerStateManagement._isSlidingNow = true;
+                _canJump = false;//ジャンプは実行しない
+                _playerStateManagement._isSlidingNow = true;//現在スライディング中であることを表す
             }
         }
     }
@@ -191,10 +194,10 @@ public class PlayerMoveManager : MonoBehaviour
     void Jump()
     {
         //接地かつスペースキーでジャンプ
-        if (_jumpScript.GetIsGround() && _inputManager._inputJumpDown && _canJump)
+        if (GetIsGround() && _inputManager._inputJumpDown && _canJump)
         {
             _newImpulse += new Vector2(0f, JumpPower);
-            _isJump = true;
+            _isJump = true;//このフレームはジャンプであることを表す。この変数が存在する理由:ホバーしてしまう為。
         }
         else if (_isJump)
         {
@@ -212,7 +215,7 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 //下に入力したとき
                 //非接地状態なら降りれる
-                if (_inputManager._inputVertical < 0 && !_jumpScript.GetIsGround())
+                if (_inputManager._inputVertical < 0 && !GetIsGround())
                 {
                     _rigidBody2D.velocity = Vector2.up * ClimbSpeed * _inputManager._inputVertical;
                 }
@@ -234,7 +237,7 @@ public class PlayerMoveManager : MonoBehaviour
     void Hover()
     {
         //ホバーの処理。
-        if (_newPlayerStateManagement._playerState == NewPlayerStateManagement.PlayerState.HOVER)
+        if (_playerStateManagement._playerState == PlayerStateManagement.PlayerState.HOVER)
         {
             //ホバー用体力が0より大きければ
             if (_playerBasicInformation._hoverValue > 0f)
@@ -319,6 +322,26 @@ public class PlayerMoveManager : MonoBehaviour
         return false;
     }
 
+    public bool GetIsGround()
+    {
+        _overLapBoxCenter = transform.position + new Vector3(0f, _groundCheckPositionY, 0);
+        Collider2D[] collision = Physics2D.OverlapBoxAll(
+            _overLapBoxCenter,
+            _overLapBoxSize,
+            0f,
+            _layerMaskGround);
+
+        if (collision.Length != 0)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -328,6 +351,8 @@ public class PlayerMoveManager : MonoBehaviour
             Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
             //左のgizmo
             Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
+
+            Gizmos.DrawCube(_overLapBoxCenter, _overLapBoxSize);
         }
     }
 }

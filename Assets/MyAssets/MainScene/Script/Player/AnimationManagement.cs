@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewAnimationManagement : MonoBehaviour
+public class AnimationManagement : MonoBehaviour
 {
     Animator _animator;
-    NewPlayerStateManagement _newPlayerStateManagement;
+    PlayerStateManagement _newPlayerStateManagement;
 
     //Move
     bool _isRun;
@@ -31,7 +31,7 @@ public class NewAnimationManagement : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _newPlayerStateManagement = GetComponent<NewPlayerStateManagement>();
+        _newPlayerStateManagement = GetComponent<PlayerStateManagement>();
     }
 
     // Update is called once per frame
@@ -66,22 +66,22 @@ public class NewAnimationManagement : MonoBehaviour
     {
         switch (_newPlayerStateManagement._playerState)
         {
-            case NewPlayerStateManagement.PlayerState.RUN: _isRun = true; break;
-            case NewPlayerStateManagement.PlayerState.DASH: _isDash = true; break;
-            case NewPlayerStateManagement.PlayerState.JUMP: _isJump = true; break;
-            case NewPlayerStateManagement.PlayerState.HOVER: _isHover = true; break;
-            case NewPlayerStateManagement.PlayerState.FALL: _isFall = true; break;
-            case NewPlayerStateManagement.PlayerState.SLIDING: _isSliding = true; break;
-            case NewPlayerStateManagement.PlayerState.CLIMB: _isClimb = true; break;
+            case PlayerStateManagement.PlayerState.RUN: _isRun = true; break;
+            case PlayerStateManagement.PlayerState.DASH: _isDash = true; break;
+            case PlayerStateManagement.PlayerState.JUMP: _isJump = true; break;
+            case PlayerStateManagement.PlayerState.HOVER: _isHover = true; break;
+            case PlayerStateManagement.PlayerState.FALL: _isFall = true; break;
+            case PlayerStateManagement.PlayerState.SLIDING: _isSliding = true; break;
+            case PlayerStateManagement.PlayerState.CLIMB: _isClimb = true; break;
 
-            case NewPlayerStateManagement.PlayerState.SHOT: _isShot = true; break;
-            case NewPlayerStateManagement.PlayerState.RUN_SHOT: _isRunShot = true; break;
-            case NewPlayerStateManagement.PlayerState.JUMP_SHOT: _isJumpShot = true; break;
-            case NewPlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true;break;
-            case NewPlayerStateManagement.PlayerState.CLIMB_SHOT: _isClimbShot = true; break;
+            case PlayerStateManagement.PlayerState.SHOT: _isShot = true; break;
+            case PlayerStateManagement.PlayerState.RUN_SHOT: _isRunShot = true; break;
+            case PlayerStateManagement.PlayerState.JUMP_SHOT: _isJumpShot = true; break;
+            case PlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true;break;
+            case PlayerStateManagement.PlayerState.CLIMB_SHOT: _isClimbShot = true; break;
 
-            case NewPlayerStateManagement.PlayerState.BEATEN: _isBeaten = true; break;
-            case NewPlayerStateManagement.PlayerState.KILLED: _isKilled = true; break;
+            case PlayerStateManagement.PlayerState.BEATEN: _isBeaten = true; break;
+            case PlayerStateManagement.PlayerState.KILLED: _isKilled = true; break;
         }
     }
 

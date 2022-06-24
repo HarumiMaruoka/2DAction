@@ -9,9 +9,15 @@ public class Shot : MonoBehaviour
     [SerializeField] float _dashSpeed;//ダッシュ時の移動速度
     [SerializeField] int _barrettPower;//弾の攻撃力
 
+    [SerializeField] AudioClip _hitShot;
+    [SerializeField] AudioClip shot;
+
     bool _isRigth;//プレイヤーが向いている方向を向く
     float _dethTimer;//敵に当たったら、タイマースタート。
     float _dashMode;//プレイヤーが歩いているときは、1が入る。
+
+    [SerializeField] float _hitEnemySoundVolume;
+    [SerializeField] float _soundVolume;
 
     //プレイヤーのコンポーネント
     SpriteRenderer _playersSpriteRendere;
@@ -73,7 +79,7 @@ public class Shot : MonoBehaviour
 
         //発射音を再生する
         //GetComponent<AudioSource>().Play();
-        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+        AudioSource.PlayClipAtPoint(shot, transform.position, _soundVolume);
     }
 
     // Update is called once per frame
@@ -98,11 +104,13 @@ public class Shot : MonoBehaviour
     {
         if (collision.TryGetComponent(out EnemyBase enemy))//敵に接触したときの処理
         {
+            AudioSource.PlayClipAtPoint(_hitShot, transform.position, _hitEnemySoundVolume);
             enemy.HitPlayerAttadk(_barrettPower);
             _isDeth = true;
         }
         if (collision.TryGetComponent(out BossBase boss))
         {
+            AudioSource.PlayClipAtPoint(_hitShot, transform.position, _hitEnemySoundVolume);
             boss.HitPlayerAttack(_barrettPower);
             _isDeth = true;
         }

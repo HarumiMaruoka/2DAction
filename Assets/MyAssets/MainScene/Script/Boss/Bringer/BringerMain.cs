@@ -48,7 +48,7 @@ public class BringerMain : BossBase
         //色を変える必要があれば変える
         if (_isColorChange)
         {
-            _spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f, 1f);
+            _spriteRenderer.color = Color.gray;
             _isColorChange = false;
         }
         //色を元に戻す
@@ -112,9 +112,11 @@ public class BringerMain : BossBase
         //クールタイム開始の処理
         if (_isCoolTimerStart)
         {
+            _rigidBody2d.velocity = new Vector2(0f, _rigidBody2d.velocity.y);
             //Debug.Log("IdleStart");
             _isCoolTimeExit = false;
             _isAttackExit = false;
+
             StartCoroutine(CoolTime());
         }
         //Idle中の処理
@@ -270,19 +272,22 @@ public class BringerMain : BossBase
     /// <summary> ステートをノーマルに移行 </summary>
     void StateChangeNomal()
     {
-        //半分の確率で前進する
-        int random = UnityEngine.Random.Range(0, 2);
-        if (random == 0)
+
+        int random = UnityEngine.Random.Range(0, 10);
+        //10分の2でボスステートをIdleに移行
+        if (random < 2)
+        {
+            _nowState = BossState.IDLE;
+        }
+        //10分の6でボスステートをApproachに移行
+        else if (random < 9)
         {
             _nowState = BossState.APPROACH;
         }
-        else if (random == 1)
-        {
-            _nowState = (BossState)UnityEngine.Random.Range((int)BossState.IDLE, (int)BossState.NOMAL_END);
-        }
+        //10分の2でボスステートをRecessionに移行
         else
         {
-            Debug.Log("randomはその数値を受け取れません");
+            _nowState = BossState.RECESSION;
         }
     }
 
