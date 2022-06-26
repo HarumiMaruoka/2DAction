@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     //インスタンスを生成
     private static GameManager _instance;
 
-    //インスタンスを取得
+    //インスタンスをカプセル化
     public static GameManager Instance
     {
         get
@@ -24,26 +24,23 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (_audioSource == null)
-        {
-            _audioSource = GetComponent<AudioSource>();
-            if (_audioSource == null)
-            {
-                Debug.LogError("ゲームマネージャーにAudioSource Componentをアタッチしてください!");
-            }
-        }
+        //このスクリプトがアタッチされたオブジェクトは、シーンを跨いでもデストロイされないようにする。
+        DontDestroyOnLoad(gameObject);
+
+        //BGM管理用変数を初期化
+        //_bgm = GetComponent<AudioSource>();
+        //if (_bgm == null)
+        //{
+        //    Debug.LogError("ゲームマネージャーにAudioSource Componentをアタッチしてください!");
+        //}
     }
 
-    AudioSource _audioSource;
 
+    //あとでBGMManagerに書く
     /// <summary> BGMを切り替える </summary>
-    void ChangeBGM()
-    {
-        //そのシーンのBGMを取得
-        AudioSource bgm = GameObject.Find("BGMManager").GetComponent<AudioSource>();
-        if (bgm == null)
-        {
-            Debug.LogError("このエリアには、BGMが設定されていません!");
-        }
-    }
+    //public void ChangeBGM(AudioClip newAudio)
+    //{
+    //    _bgm.clip = newAudio;
+    //    _bgm.Play();
+    //}
 }
