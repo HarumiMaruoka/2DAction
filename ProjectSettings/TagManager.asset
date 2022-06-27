@@ -11,6 +11,7 @@ TagManager:
   - Brock
   - Boss
   - Battery
+  - ExitMenu
   layers:
   - Default
   - TransparentFX
@@ -80,4 +81,7 @@ TagManager:
     locked: 0
   - name: front
     uniqueID: 3880679505
+    locked: 0
+  - name: UI
+    uniqueID: 1859231039
     locked: 0
