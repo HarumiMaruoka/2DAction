@@ -4,6 +4,15 @@ using UnityEngine;
 
 abstract public class Item
 {
+    //コンストラクタ
+    public Item(ItemID id,string name,ItemType type,int effectSize,string explanatoryText)
+    {
+        _myID = id;
+        _name = name;
+        _myType = type;
+        _myEffectSize = effectSize;
+        _myExplanatoryText = explanatoryText;
+    }
     //アイテムの基底クラス:各アイテムはこのクラスを継承する
     public enum ItemID
     {
@@ -14,16 +23,24 @@ abstract public class Item
 
     public enum ItemType
     {
-        KEY,
+        HEAL,
         POWER_UP,
-        RECOVERY,
         MINUS_ITEM,
+        KEY,
 
         ITEM_TYPE_END
     }
 
-    ItemID _myID;
-    ItemType _myType;
+    /// <summary> このアイテムのID </summary>
+    public ItemID _myID { get; }
+    /// <summary> このアイテムの名前 </summary>
+    public string _name { get; }
+    /// <summary> このアイテムの種類 </summary>
+    public ItemType _myType { get; }
+    /// <summary> このアイテムの効果量 </summary>
+    public int _myEffectSize { get; }
+    /// <summary> このアイテムの説明文 </summary>
+    public string _myExplanatoryText { get; }
 
     /// <summary> アイテムを使用する:継承先で内容を定義する。 </summary>
     virtual public void UseItem() { }

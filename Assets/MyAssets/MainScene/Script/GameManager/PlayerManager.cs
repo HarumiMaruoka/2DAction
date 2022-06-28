@@ -21,16 +21,20 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    //Item情報の格納先
-    struct ItemManager
+    /// <summary> アイテムの所持数 </summary>
+    int[] _itemHaveVolume = new int[(int)Item.ItemID.ITEM_ID_END];
+    public int[] ItemHaveVolume
     {
-        /// <summary> アイテム情報の格納先 </summary>
-        public static Item[] _itemDefinition;
-        /// <summary> アイテムの所持数 </summary>
-        public static int[] _itemHaveVolume;
+        get
+        {
+            return _itemHaveVolume;
+        }
     }
-    //アイテム管理用変数
-    ItemManager[] _item = new ItemManager[(int)Item.ItemID.ITEM_ID_END];
+
+    public void SetItemHaveVolume(int index,int value)
+    {
+        _itemHaveVolume[index] = value;
+    }
 
     //装備情報の格納先
 
