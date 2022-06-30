@@ -5,7 +5,7 @@ using UnityEngine;
 abstract public class Item
 {
     //コンストラクタ
-    public Item(ItemID id,string name,ItemType type,int effectSize,string explanatoryText)
+    public Item(ItemID id, string name, ItemType type, int effectSize, string explanatoryText)
     {
         _myID = id;
         _name = name;
@@ -16,7 +16,14 @@ abstract public class Item
     //アイテムの基底クラス:各アイテムはこのクラスを継承する
     public enum ItemID
     {
+        ITEM_ID_00,
         ITEM_ID_01,
+        ITEM_ID_02,
+        ITEM_ID_03,
+        ITEM_ID_04,
+        ITEM_ID_05,
+        ITEM_ID_06,
+        ITEM_ID_07,
 
         ITEM_ID_END
     }

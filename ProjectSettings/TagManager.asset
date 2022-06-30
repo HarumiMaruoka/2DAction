@@ -12,6 +12,7 @@ TagManager:
   - Boss
   - Battery
   - ExitMenu
+  - ItemDrawContent
   layers:
   - Default
   - TransparentFX

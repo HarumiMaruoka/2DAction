@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class GameManager : MonoBehaviour
 
     /// <summary> アイテムデータが入ったファイルのパス </summary>
     [SerializeField] string _itemCSVPath;
+    [SerializeField] string _itemJSONPath;
     /// <summary> アイテムデータベース </summary>
     Item[] _itemData = new Item[(int)Item.ItemID.ITEM_ID_END];
+    public Item[] ItemData { get => _itemData; }
 
     //インスタンスをカプセル化
     public static GameManager Instance
@@ -29,10 +32,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
+        //もしインスタンスが設定されていなかったら自身を代入する
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        //もう既に存在する場合は、このオブジェクトを破棄する。
+        else if (_instance != null)
+        {
+            Destroy(this);
+        }
         //このスクリプトがアタッチされたオブジェクトは、シーンを跨いでもデストロイされないようにする。
         DontDestroyOnLoad(gameObject);
+        LoadItemCSV();
+    }
+
+    private void Start()
+    {
+        
 
         //BGM管理用変数を初期化
         //_bgm = GetComponent<AudioSource>();
@@ -40,6 +59,11 @@ public class GameManager : MonoBehaviour
         //{
         //    Debug.LogError("ゲームマネージャーにAudioSource Componentをアタッチしてください!");
         //}
+    }
+
+    private void Update()
+    {
+
     }
 
     //あとでBGMManagerに書く
@@ -75,10 +99,15 @@ public class GameManager : MonoBehaviour
                 default: Debug.LogError("設定されていないItemTypeです。"); break;
             }
 
-            //個数を取得する
-
+            //JSONファイルから所持数を取得する
 
             index++;
+        }
+
+        foreach (var str in _itemData)
+        {
+            if (str != null)
+                Debug.Log(str._myID + " : " + str._name + " : " + str._myType + " : " + str._myEffectSize + " : " + str._myExplanatoryText);
         }
     }
 

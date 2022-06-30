@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary> アイテムウィンドウを管理するクラス </summary>
 public class ItemMenuWindowManager : MonoBehaviour
 {
+    //表示するアイテムのフィルター
     public enum ItemFilter
     {
         ALL,
@@ -15,35 +17,40 @@ public class ItemMenuWindowManager : MonoBehaviour
 
         ITEM_FILTER_END
     }
-
-    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
-    GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
-
     //アイテムフィルター
     ItemFilter _beforeItemFilter;//前フレーム選択していたアイテムフィルター
     ItemFilter _currentItemFilter;//現在のフレームで選択しているアイテムフィルター
 
-    //現在選択しているアイテムのインデックス
+    /// <summary> アイテムボタンのプレハブ </summary>
+    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
+    /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
+    GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
+
+    /// <summary> 前フレームに選択していたアイテムのID(index) </summary>
     int _beforeItemIndex;
+    /// <summary> 現在選択しているアイテムのID(index) </summary>
     int _currentItemIndex;
 
-
-
-
+    //初期化処理
     void Start()
     {
+        //アイテムボタンをインスタンシエイトする準備の処理。
         if (_itemButtonPrefab == null)
         {
             Debug.LogError("アイテムボタンのプレハブがアサインされていません。");
         }
-        //必要なものを、子としてインスタンシエイトしておく。
+        GameObject _itemContent = GameObject.FindGameObjectWithTag("ItemDrawContent");
+        if (_itemContent == null)
+        {
+            Debug.LogError("ItemDrawContentのタグが付いた、オブジェクトの取得に失敗しました。");
+        }
+        //アイテムボタンをScrollViewの、Contentの子としてインスタンシエイトしておく。
         for (int i = 0; i < (int)Item.ItemID.ITEM_ID_END; i++)
         {
-            _items[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, gameObject.transform);
+            _items[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent.transform);
 
-            //テキストをセットする
-            Text itemText = _items[i].transform.GetChild(0).gameObject.GetComponent<Text>();
-            itemText.text = "ここにアイテムの名前と個数を入れる。名前と個数の間にはたくさんSpaceを入れる";
+            //ItemDataをセットする
+            _items[i].GetComponent<ItemButtonTextManager>().SetItemData(GameManager.Instance.ItemData[i]);
         }
     }
 

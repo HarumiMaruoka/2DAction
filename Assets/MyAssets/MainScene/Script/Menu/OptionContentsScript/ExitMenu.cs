@@ -12,11 +12,4 @@ public class ExitMenu : MonoBehaviour
         //ビルドしたゲームを終了する場合の処理(エディター実行中はコメントアウトする)
         //Application.Quit();
     }
-
-    //ゲームを終了しない
-    public void CancelExit()
-    {
-        //メニュー画面に戻る
-        gameObject.SetActive(false);
-    }
 }
