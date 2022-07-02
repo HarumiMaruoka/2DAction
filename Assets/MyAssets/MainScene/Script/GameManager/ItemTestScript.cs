@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestScript : MonoBehaviour
+/// <summary> ただのアイテム所持数を変化させる為だけのクラス。(テスト用) </summary>
+public class ItemTestScript : MonoBehaviour
 {
     void Start()
     {
@@ -14,15 +15,15 @@ public class TestScript : MonoBehaviour
 
     }
 
+    /// <summary> 特定のIDのアイテムを1つ増やす。 </summary>
     public void PlusItem(int itemID)
     {
         PlayerManager.Instance.Set_ItemNumberOfPossessions(itemID, 1);
-        Debug.Log("アイテムID : " + itemID + "の現在の個数は" + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[itemID] + "です。");
     }
 
+    /// <summary> 特定のIDのアイテムを1つ減らす。 </summary>
     public void MinusItem(int itemID)
     {
         PlayerManager.Instance.Set_ItemNumberOfPossessions(itemID, -1);
-        Debug.Log("アイテムID : " + itemID + "の現在の個数は" + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[itemID] + "です。");
     }
 }

@@ -26369,8 +26369,8 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "\u8AAC\u660E\u6587"
 --- !u!222 &478846423
@@ -46884,6 +46884,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemButtonPrefab: {fileID: 372235170206443278, guid: d071659a17a43504184296f7e8b9d3f0, type: 3}
+  _eventSystem: {fileID: 1216641984}
+  _ItemExplanatoryText: {fileID: 478846422}
 --- !u!1 &1123925854
 GameObject:
   m_ObjectHideFlags: 0
@@ -50874,6 +50876,14 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4271132077866417712, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
+      propertyPath: _heavyAttackCoolTime.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4271132077866417712, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
+      propertyPath: _lightAttackCoolTime.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4271132077866417712, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
       propertyPath: _firstRandomAttackCoolTime.y
       value: 3
       objectReference: {fileID: 0}
@@ -52106,7 +52116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2059683973
 RectTransform:
   m_ObjectHideFlags: 0

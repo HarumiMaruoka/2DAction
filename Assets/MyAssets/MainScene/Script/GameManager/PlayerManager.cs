@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 
+//このクラスでは今のところ、アイテムの所持数と装備数を管理する
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] string _itemFilePath;
@@ -11,7 +12,8 @@ public class PlayerManager : MonoBehaviour
     //このクラスはシングルトンパターンを使用したものである。
     //インスタンスを生成
     private static PlayerManager _instance;
-    //インスタンスを読み取り専用かつインスタンスがなければインスタンスを生成し保存する
+
+    //インスタンスをは読み取り専用
     public static PlayerManager Instance
     {
         get
@@ -32,13 +34,8 @@ public class PlayerManager : MonoBehaviour
     }
     [SerializeField] ItemNumberOfPossessions _itemVolume;
 
-    public ItemNumberOfPossessions ItemVolume
-    {
-        get
-        {
-            return _itemVolume;
-        }
-    }
+    public ItemNumberOfPossessions ItemVolume { get => _itemVolume; }
+
     private void Awake()
     {
         //もしインスタンスが設定されていなかったら自身を代入する
@@ -51,6 +48,8 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        //配列分の領域を確保する。
         _itemVolume._itemNumberOfPossessions = new int[(int)Item.ItemID.ITEM_ID_END];
     }
 
@@ -58,10 +57,11 @@ public class PlayerManager : MonoBehaviour
     {
         //このオブジェクトは、シーンを跨いでもデストロイしない。
         DontDestroyOnLoad(gameObject);
-        // アイテム所持数を、保存しているファイルのパスを取得。
+        // アイテム所持数を、保存しているファイルのパスを取得しファイルを開く。
         _itemFilePath = Path.Combine(Application.persistentDataPath, "ItemNumberOfPossessionsFile.json");
+        // アイテム所持数を、ファイルから取得する。
         OnLoad_ItemNumberOfPossessions(_itemFilePath);
-        Debug.Log("初期化成功");
+        Debug.Log("PlayerManagerの初期化に成功しました。");
     }
 
     private void Update()
@@ -93,8 +93,6 @@ public class PlayerManager : MonoBehaviour
         ItemVolume._itemNumberOfPossessions[itemID] += volume;
     }
 
-    //装備情報の格納先
-
     /// <summary> アイテムの所持数をファイルからロード </summary>
     void OnLoad_ItemNumberOfPossessions(string filePath)
     {
@@ -108,7 +106,6 @@ public class PlayerManager : MonoBehaviour
             //処理を抜ける
             return;
         }
-
         // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をセット。
         _itemVolume = JsonUtility.FromJson<ItemNumberOfPossessions>(File.ReadAllText(filePath));
     }

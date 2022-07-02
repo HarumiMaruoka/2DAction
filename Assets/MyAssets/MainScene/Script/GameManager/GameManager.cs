@@ -77,18 +77,23 @@ public class GameManager : MonoBehaviour
     /// <summary> アイテムデータをファイルから読み込む </summary>
     void LoadItemCSV()
     {
-        int index = 0;
-        bool isFirstLine = true;
+        //ファイルをロードするのに必要な初期化
+        int index = 0;//インデックスの初期化
+        bool isFirstLine = true;//一行目かどうかを判断するBooleanの初期化
+
         //CSVファイルからアイテムデータを読み込み、配列に保存する
         StreamReader sr = new StreamReader(@_itemCSVPath);//ファイルを開く
         while (!sr.EndOfStream)// 末尾まで繰り返す
         {
             string[] values = sr.ReadLine().Split(',');//一行読み込み区切って保存する
-            if (isFirstLine)//最初の行(ヘッダーの行)はスキップする
+
+            //最初の行(ヘッダーの行)はスキップする
+            if (isFirstLine)
             {
                 isFirstLine = false;
                 continue;
             }
+
             //種類別で生成し保存する
             switch (values[2])
             {
@@ -97,18 +102,8 @@ public class GameManager : MonoBehaviour
                 case "MinusItem": _itemData[index] = new MinusItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.MINUS_ITEM, int.Parse(values[3]), values[4]); break;
                 case "KeyItem": _itemData[index] = new KeyItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.KEY, int.Parse(values[3]), values[4]); break;
                 default: Debug.LogError("設定されていないItemTypeです。"); break;
-            }
-
-            //JSONファイルから所持数を取得する
-
+            }            
             index++;
         }
-
-        foreach (var str in _itemData)
-        {
-            if (str != null)
-                Debug.Log(str._myID + " : " + str._name + " : " + str._myType + " : " + str._myEffectSize + " : " + str._myExplanatoryText);
-        }
     }
-
 }

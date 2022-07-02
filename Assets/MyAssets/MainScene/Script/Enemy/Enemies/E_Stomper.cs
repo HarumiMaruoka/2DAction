@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Enemy:Stomperのスクリプト
 public class E_Stomper : EnemyBase
 {
     [SerializeField] float _moveSpeed;
@@ -47,12 +48,10 @@ public class E_Stomper : EnemyBase
 
         if (BodyContactLeft())
         {
-            Debug.Log("右に進め");
             _isRight = true;
         }
         else if(BodyContactRight())
         {
-            Debug.Log("左に進め");
             _isRight = false;
         }
     }

@@ -291,13 +291,14 @@ public class BringerMain : BossBase
         }
     }
 
+    //Bringerが倒されたときの処理
     void Die()
     {
         //Bossが死んだ時の処理をここに書く
         Destroy(gameObject, 1.0f);
     }
 
-    //クールタイムを待つ
+    //(アタック後の)クールタイムを待つ
     IEnumerator CoolTime()
     {
         _isCoolTimerStart = false;
@@ -305,7 +306,7 @@ public class BringerMain : BossBase
         _isCoolTimeExit = true;
     }
 
-    ///<summary> アタックモードの終了時に呼ばれる。アニメーションイベントから呼び出す。 </summary>
+    ///<summary> アタックモードの終了時に呼ばれる。アニメーションイベントから呼び出す。各フラグの初期化処理を行う。 </summary>
     public void AttackStateExit()
     {
         //Debug.Log("AttackExit");
@@ -314,6 +315,7 @@ public class BringerMain : BossBase
         _isCoolTimerStart = true;
     }
 
+    //アタック関連のメソッド。アニメーションイベントから呼び出す。
     public void OnHeavyAttack()
     {
         _heavyAttack.gameObject.SetActive(true);

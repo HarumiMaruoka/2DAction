@@ -11,6 +11,7 @@ public class ItemButtonTextManager : MonoBehaviour
     Text _itemVolumText;
     //Ç±ÇÃButtonÇ™éùÇ¬Item
     Item _myItem;
+    public Item MyItem { get => _myItem; }
 
     int _beforeItemVolume;
     int _nowItemVolume;
@@ -38,7 +39,7 @@ public class ItemButtonTextManager : MonoBehaviour
         _nowItemVolume = PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
-            Update_ItemVolume();
+            //Update_ItemVolume();
         }
         _beforeItemVolume = _nowItemVolume;
     }
@@ -53,6 +54,9 @@ public class ItemButtonTextManager : MonoBehaviour
     /// <summary> èäéùêîÇçXêVÇ∑ÇÈÅB </summary>
     public void Update_ItemVolume()
     {
-        _itemVolumText.text = " Å~ " + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+        if (_itemVolumText != null)
+        {
+            _itemVolumText.text = " Å~ " + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+        }
     }
 }

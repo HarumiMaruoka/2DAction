@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary> アイテムウィンドウを管理するクラス </summary>
@@ -25,15 +26,30 @@ public class ItemMenuWindowManager : MonoBehaviour
     [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
     /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
     GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
+    //
+    [SerializeField] EventSystem _eventSystem;
 
     /// <summary> 前フレームに選択していたアイテムのID(index) </summary>
     int _beforeItemIndex;
     /// <summary> 現在選択しているアイテムのID(index) </summary>
     int _currentItemIndex;
 
+    //説明文のテキスト
+    [SerializeField] Text _ItemExplanatoryText;
+
     //初期化処理
     void Start()
     {
+        //nullチェック
+        if (_ItemExplanatoryText == null)
+        {
+            Debug.LogError("説明文のテキストをアサインしてください");
+        }
+        if (_eventSystem == null)
+        {
+            Debug.LogError("EventSystemをアサインしてください");
+        }
+
         //アイテムボタンをインスタンシエイトする準備の処理。
         if (_itemButtonPrefab == null)
         {
@@ -52,11 +68,31 @@ public class ItemMenuWindowManager : MonoBehaviour
             //ItemDataをセットする
             _items[i].GetComponent<ItemButtonTextManager>().SetItemData(GameManager.Instance.ItemData[i]);
         }
+
+        _eventSystem.SetSelectedGameObject(_items[0]);
+
+        //select on up と down を設定する 汚いのであとで直す
+        Navigation navigation = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation;
+        navigation.mode = Navigation.Mode.Explicit;
+        navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>();
+        navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_01].GetComponent<Button>();
+        _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation = navigation;
+        //select on up と down を設定する
+        navigation = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation;
+        navigation.mode = Navigation.Mode.Explicit;
+        navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>();
+        navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 2].GetComponent<Button>();
+        _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation = navigation;
     }
 
     void Update()
     {
+        UpdateItemWindow();
+    }
 
+    private void OnEnable()
+    {
+        _eventSystem.SetSelectedGameObject(_items[0]);
     }
 
     /// <summary> アイテムウィンドウの更新関数 </summary>
@@ -73,6 +109,13 @@ public class ItemMenuWindowManager : MonoBehaviour
             _beforeItemIndex != _currentItemIndex)
         {
 
+        }
+        //現在選択されているボタンを取得
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        //説明文を設定
+        if (go != null && go.GetComponent<ItemButtonTextManager>() != null)
+        {
+            _ItemExplanatoryText.text = go.GetComponent<ItemButtonTextManager>().MyItem._myExplanatoryText;
         }
 
         //現在フレームの状態を保存
