@@ -47654,6 +47654,7 @@ GameObject:
   - component: {fileID: 1175650179}
   - component: {fileID: 1175650180}
   - component: {fileID: 1175650181}
+  - component: {fileID: 1175650182}
   m_Layer: 5
   m_Name: Content
   m_TagString: ItemDrawContent
@@ -47677,7 +47678,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1175650180
@@ -47720,6 +47721,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1175650182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175650178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd8f2521f9e463846b13cd99fab73583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lineHeight: 81
 --- !u!4 &1182971266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3569868872720573178, guid: 09a109c48f0c44f4c9237c327e364742, type: 3}
