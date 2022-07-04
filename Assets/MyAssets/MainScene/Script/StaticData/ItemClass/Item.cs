@@ -24,6 +24,31 @@ abstract public class Item
         ITEM_ID_05,
         ITEM_ID_06,
         ITEM_ID_07,
+        ITEM_ID_08,
+        ITEM_ID_09,
+        ITEM_ID_10,
+
+        ITEM_ID_11,
+        ITEM_ID_12,
+        ITEM_ID_13,
+        ITEM_ID_14,
+        ITEM_ID_15,
+        ITEM_ID_16,
+        ITEM_ID_17,
+        ITEM_ID_18,
+        ITEM_ID_19,
+        ITEM_ID_20,
+
+        ITEM_ID_21,
+        ITEM_ID_22,
+        ITEM_ID_23,
+        ITEM_ID_24,
+        ITEM_ID_25,
+        ITEM_ID_26,
+        ITEM_ID_27,
+        ITEM_ID_28,
+        ITEM_ID_29,
+        ITEM_ID_30,
 
         ITEM_ID_END
     }
@@ -50,5 +75,8 @@ abstract public class Item
     public string _myExplanatoryText { get; }
 
     /// <summary> アイテムを使用する:継承先で内容を定義する。 </summary>
-    virtual public void UseItem() { }
+    virtual public void UseItem()
+    {
+        Debug.Log($"これはアイテム共通の処理 : アイテムNo.{_myID}を使用。"); 
+    }
 }

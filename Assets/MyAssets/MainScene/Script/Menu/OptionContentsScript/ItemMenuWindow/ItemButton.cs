@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemButtonTextManager : MonoBehaviour
+public class ItemButton : MonoBehaviour
 {
     //アイテム名のテキスト
     Text _itemNameText;
     //個数のテキスト
     Text _itemVolumText;
+
     //このButtonが持つItem
     Item _myItem;
     public Item MyItem { get => _myItem; }
@@ -58,5 +59,10 @@ public class ItemButtonTextManager : MonoBehaviour
         {
             _itemVolumText.text = " × " + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
         }
+    }
+
+    public void Use_ThisItem()
+    {
+        GameManager.Instance.ItemData[(int)MyItem._myID].UseItem();
     }
 }

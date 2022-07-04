@@ -18,28 +18,50 @@ public class ItemMenuWindowManager : MonoBehaviour
 
         ITEM_FILTER_END
     }
+
+    //このクラスで使用する変数
+
     //アイテムフィルター
-    ItemFilter _beforeItemFilter;//前フレーム選択していたアイテムフィルター
-    ItemFilter _currentItemFilter;//現在のフレームで選択しているアイテムフィルター
+    /// <summary> 前フレーム選択していたアイテムフィルター </summary>
+    ItemFilter _beforeItemFilter;
+    /// <summary> 現在のフレームで選択しているアイテムフィルター </summary>
+    ItemFilter _currentItemFilter;
 
-    /// <summary> アイテムボタンのプレハブ </summary>
-    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
-    /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
-    GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
-    //
-    [SerializeField] EventSystem _eventSystem;
-
+    //選択しているアイテムのID
     /// <summary> 前フレームに選択していたアイテムのID(index) </summary>
     int _beforeItemIndex;
     /// <summary> 現在選択しているアイテムのID(index) </summary>
     int _currentItemIndex;
 
-    //説明文のテキスト
+    //各プレハブ
+    /// <summary> アイテムボタンのプレハブ </summary>
+    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
+
+
+    //配列類
+    /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
+    GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
+    /// <summary> アイテムアイコンのイメージ </summary>
+    Sprite[] _sprites = new Sprite[(int)Item.ItemID.ITEM_ID_END];
+
+    //アサインすべきオブジェクト
+    /// <summary> 説明文のテキスト </summary>
     [SerializeField] Text _ItemExplanatoryText;
+    /// <summary> アイコンのイメージ </summary>
+    [SerializeField] Image _itemIconImage;
+    /// <summary> イベントシステム </summary>
+    [SerializeField] EventSystem _eventSystem;
+
+    //インスペクタから設定すべき値
+    [Header("アイテムアイコンが格納されたフォルダのパス:resource以下名"), SerializeField] string _folderPath;
+
 
     //初期化処理
     void Start()
     {
+        //アイテムのアイコン画像を取得
+        _sprites = Resources.LoadAll<Sprite>(_folderPath);
+
         //nullチェック
         if (_ItemExplanatoryText == null)
         {
@@ -66,7 +88,7 @@ public class ItemMenuWindowManager : MonoBehaviour
             _items[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent.transform);
 
             //ItemDataをセットする
-            _items[i].GetComponent<ItemButtonTextManager>().SetItemData(GameManager.Instance.ItemData[i]);
+            _items[i].GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
         }
 
         _eventSystem.SetSelectedGameObject(_items[0]);
@@ -111,11 +133,13 @@ public class ItemMenuWindowManager : MonoBehaviour
 
         }
         //現在選択されているボタンを取得
-        GameObject go = EventSystem.current.currentSelectedGameObject;
-        //説明文を設定
-        if (go != null && go.GetComponent<ItemButtonTextManager>() != null)
+        GameObject nowSelectItem = EventSystem.current.currentSelectedGameObject;
+
+        //説明文と画像を設定
+        if (nowSelectItem != null && nowSelectItem.TryGetComponent<ItemButton>(out ItemButton item))
         {
-            _ItemExplanatoryText.text = go.GetComponent<ItemButtonTextManager>().MyItem._myExplanatoryText;
+            _ItemExplanatoryText.text = item.MyItem._myExplanatoryText;
+            _itemIconImage.sprite = _sprites[(int)item.MyItem._myID];
         }
 
         //現在フレームの状態を保存

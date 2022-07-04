@@ -8,7 +8,6 @@ public class BringerAnimManager : MonoBehaviour
     BringerMain _bringerMain;
     Animator _animator;
 
-
     //各パラメータ
     bool _isIdele = false;
     bool _isWalk = false;
