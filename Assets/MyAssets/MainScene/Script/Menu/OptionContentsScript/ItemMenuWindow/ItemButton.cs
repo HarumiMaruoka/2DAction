@@ -61,6 +61,8 @@ public class ItemButton : MonoBehaviour
         }
     }
 
+
+    /// <summary> ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚çÀs‚·‚é </summary>
     public void Use_ThisItem()
     {
         GameManager.Instance.ItemData[(int)MyItem._myID].UseItem();
