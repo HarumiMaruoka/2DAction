@@ -22,9 +22,9 @@ public class PlayerWeaponManage : MonoBehaviour
 
     //弾に関してはオブジェクトプール？を使用する
     //弾の格納先
-    [SerializeField] int _maxBullet { get; }
+    [Header("弾の最大数"), SerializeField] int _maxBullet;
 
-    GameObject[] _nomalShotBullet = new GameObject[_maxBullet];
+    GameObject[] _nomalShotBullet;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class PlayerWeaponManage : MonoBehaviour
 
     void Start()
     {
-        
+        _nomalShotBullet = new GameObject[_maxBullet];
     }
 
     void Update()
