@@ -7,12 +7,9 @@ using System.Linq;
 //このクラスでは今のところ、アイテムの所持数と装備数を管理する
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] string _itemFilePath;
-
     //このクラスはシングルトンパターンを使用したものである。
     //インスタンスを生成
     private static PlayerManager _instance;
-
     //インスタンスをは読み取り専用
     public static PlayerManager Instance
     {
@@ -26,6 +23,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    //アイテム所持数の保存先
+    [SerializeField] string _itemFilePath;
+
     /// <summary> アイテムの所持数 </summary>
     [System.Serializable]
     public struct ItemNumberOfPossessions
@@ -33,8 +33,31 @@ public class PlayerManager : MonoBehaviour
         public int[] _itemNumberOfPossessions;
     }
     [SerializeField] ItemNumberOfPossessions _itemVolume;
-
     public ItemNumberOfPossessions ItemVolume { get => _itemVolume; }
+
+
+    /// <summary> 所持している装備の情報 </summary>
+    /// 装備に関する処理をここに書く
+
+    /// <summary> 所持している主要なアイテムの情報 </summary>
+    /// 所持している主要なアイテムの情報に関する処理をここに書く
+
+
+    //各パラメータ
+    [Header("プレイヤーの最大体力"), SerializeField] public float _maxPlayerHealthPoint;
+    public float MaxPlayerHealthPoint { get => _maxPlayerHealthPoint; }
+
+    [Header("プレイヤーの体力"), SerializeField] float _playerHealthPoint;
+    public float PlayerHealthPoint { get => _playerHealthPoint; set { Debug.Log("プレイヤーの体力の値を変更しました"); _playerHealthPoint = value; } }
+
+    [Header("プレイヤーの攻撃力"), SerializeField] float _playerOffensivePower;
+    public float PlayerOffensivePower { get => _playerOffensivePower; set { Debug.Log("攻撃力の値を変更しました"); _playerOffensivePower = value; } }
+
+    [Header("プレイヤーの防御力"), SerializeField] float _playerDefensePower;
+    public float PlayerDefensePower { get => _playerDefensePower; set { Debug.Log("防御力の値を変更しました"); _playerDefensePower = value; } }
+
+    /// <summary> プレイヤーが向いている方向 </summary>
+    [SerializeField] public bool _isRight { get; private set; }
 
     private void Awake()
     {
@@ -64,8 +87,19 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("PlayerManagerの初期化に成功しました。");
     }
 
+    //Updateではテストでアイテム所持数をセーブしたりロードしたりする処理を書いている。
     private void Update()
     {
+        //プレイヤーが向いている方向を保存する
+        if (Input.GetAxisRaw("Horizontal") < 0)
+        {
+            _isRight = true;
+        }
+        if (Input.GetAxisRaw("Horizontal") > 0)
+        {
+            _isRight = false;
+        }
+
         //Kキー押下でアイテム所持数をセーブする
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -101,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         if (!File.Exists(filePath))
         {
             //ここにファイルが無い場合の処理を書く
-            Debug.Log("アイテム所持数を保存するファイルが見つかりません。");
+            Debug.Log("アイテム所持数を保存しているファイルが見つかりません。");
 
             //処理を抜ける
             return;
@@ -110,6 +144,7 @@ public class PlayerManager : MonoBehaviour
         _itemVolume = JsonUtility.FromJson<ItemNumberOfPossessions>(File.ReadAllText(filePath));
     }
 
+    /// <summary> アイテムの所持数をファイルにセーブ </summary>
     void OnSave_ItemNumberOfPossessions(string filePath)
     {
         Debug.Log("アイテム所持数をセーブします！");

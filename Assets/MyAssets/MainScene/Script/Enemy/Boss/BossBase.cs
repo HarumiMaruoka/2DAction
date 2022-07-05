@@ -137,7 +137,7 @@ public class BossBase : MonoBehaviour
     public void HitPlayer()//プレイヤーの体力を減らし、ノックバックさせる。
     {
         //プレイヤーのHitPointを減らす
-        _playerBasicInformation._playerHitPoint -= _offensive_Power;
+        PlayerManager.Instance.PlayerHealthPoint -= _offensive_Power;
         _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_spriteRenderer.flipX)

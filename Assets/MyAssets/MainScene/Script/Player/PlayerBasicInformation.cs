@@ -39,7 +39,7 @@ public class PlayerBasicInformation : MonoBehaviour
     void Update()
     {
         //player の体力がなくなったら消滅する
-        if (_playerHitPoint < 1)
+        if (PlayerManager.Instance.PlayerHealthPoint < 1)
         {
             _newPlayerStateManagement._isDead = true;
             _botton.SetActive(true);
@@ -99,7 +99,7 @@ public class PlayerBasicInformation : MonoBehaviour
             //バッテリーと接触したときの処理
             if (collision.gameObject.tag == "Battery")
             {
-                _playerHitPoint = _maxHitPoint;
+                PlayerManager.Instance.PlayerHealthPoint = PlayerManager.Instance.MaxPlayerHealthPoint;
                 AudioSource.PlayClipAtPoint(collision.gameObject.GetComponent<AudioSource>().clip, transform.position);
             }
         }

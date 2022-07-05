@@ -14,6 +14,6 @@ public class HealItem : Item
     public override void UseItem()
     {
         base.UseItem();
-        Debug.Log($"UseHealItem");
+        Debug.Log($"Use HealItem");
     }
 }

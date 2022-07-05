@@ -16,7 +16,7 @@ public class PlayersUI : MonoBehaviour
         _playerBasicInformation = GetComponent<PlayerBasicInformation>();
 
         //HP用スライダー
-        _hitPointSlider.maxValue = _playerBasicInformation._maxHitPoint;
+        _hitPointSlider.maxValue = PlayerManager.Instance.MaxPlayerHealthPoint;
         _hitPointSlider.minValue = 0;
         //ホバー用スライダーの初期化
         _hoverSlider.maxValue = _playerBasicInformation.MaxHealthForHover;
@@ -25,7 +25,7 @@ public class PlayersUI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _hitPointSlider.value = _playerBasicInformation._playerHitPoint;
+        _hitPointSlider.value = PlayerManager.Instance.PlayerHealthPoint;
         _hoverSlider.value = _playerBasicInformation._hoverValue;
     }
 

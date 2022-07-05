@@ -73,7 +73,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     void UpdateState()
     {
-        if (_playerBasicInformation._playerHitPoint <= 0)
+        if (PlayerManager.Instance.PlayerHealthPoint <= 0)
         {
             _isDead = true;
             _isMove = false;

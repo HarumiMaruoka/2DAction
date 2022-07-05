@@ -81,7 +81,7 @@ public class SpellController : MonoBehaviour
     public void HitPlayer()//プレイヤーの体力を減らし、ノックバックさせる。
     {
         //プレイヤーのHitPointを減らす
-        _playerBasicInformation._playerHitPoint -= _offensivePower;
+        PlayerManager.Instance.PlayerHealthPoint -= _offensivePower;
         _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_spriteRenderer.flipX)
