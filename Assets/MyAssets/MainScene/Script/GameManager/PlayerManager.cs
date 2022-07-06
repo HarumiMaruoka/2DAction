@@ -118,7 +118,7 @@ public class PlayerManager : MonoBehaviour
     public void Set_ItemNumberOfPossessions(int itemID, int volume)
     {
         //インデックスが正しいか判定
-        if (itemID <= 0 || itemID >= (int)Item.ItemID.ITEM_ID_END)
+        if (itemID < (int)Item.ItemID.ITEM_ID_00 || itemID >= (int)Item.ItemID.ITEM_ID_END)
         {
             //インデックスが場外なら処理を抜ける
             Debug.LogError("無効なアイテムIDです。");

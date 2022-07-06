@@ -7,14 +7,16 @@ using UnityEngine.UI;
 /// <summary> アイテムウィンドウを管理するクラス </summary>
 public class ItemMenuWindowManager : MonoBehaviour
 {
+    [System.Serializable]
     //表示するアイテムのフィルター
     public enum ItemFilter
     {
-        ALL,
         HEAL,
         POWER_UP,
         MINUS_ITEM,
         KEY,
+
+        ALL,
 
         ITEM_FILTER_END
     }
@@ -44,6 +46,13 @@ public class ItemMenuWindowManager : MonoBehaviour
     /// <summary> アイテムアイコンのイメージ </summary>
     Sprite[] _sprites = new Sprite[(int)Item.ItemID.ITEM_ID_END];
 
+    //フィルターのボタン類
+    GameObject _allFilterButton;
+    GameObject _healFilterButton;
+    GameObject _powerUpFilterButton;
+    GameObject _minusItemFilterButton;
+    GameObject _keyFilterButton;
+
     //アサインすべきオブジェクト
     /// <summary> 説明文のテキスト </summary>
     [SerializeField] Text _ItemExplanatoryText;
@@ -59,6 +68,15 @@ public class ItemMenuWindowManager : MonoBehaviour
     //初期化処理
     void Start()
     {
+        //アイテムフィルター
+        _currentItemFilter = ItemFilter.ALL;
+
+        if ((_allFilterButton = GameObject.FindGameObjectWithTag("ItemFilterALL"))==null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: ALL Button");
+        if ((_healFilterButton = GameObject.FindGameObjectWithTag("ItemFilterHEAL"))==null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: HEAL Button");
+        if ((_powerUpFilterButton = GameObject.FindGameObjectWithTag("ItemFilterPOWER_UP"))== null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: POWER_UP Button");
+        if ((_minusItemFilterButton = GameObject.FindGameObjectWithTag("ItemFilterMINUS_ITEM")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: MINUS_ITEM Button");
+        if ((_keyFilterButton = GameObject.FindGameObjectWithTag("ItemFilterKEY")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: KEY Button");
+
         //アイテムのアイコン画像を取得
         _sprites = Resources.LoadAll<Sprite>(_folderPath);
 
@@ -93,6 +111,8 @@ public class ItemMenuWindowManager : MonoBehaviour
 
         _eventSystem.SetSelectedGameObject(_items[0]);
 
+
+        //ボタンのキー入力の偏移先の指定処理。
         //select on up と down を設定する 汚いのであとで直す
         Navigation navigation = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation;
         navigation.mode = Navigation.Mode.Explicit;
@@ -105,6 +125,9 @@ public class ItemMenuWindowManager : MonoBehaviour
         navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>();
         navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 2].GetComponent<Button>();
         _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation = navigation;
+
+        //各ボタンの偏移先を設定する。最初はALLの設定
+        Change_ItemFilter(ItemFilter.ALL);
     }
 
     void Update()
@@ -114,7 +137,11 @@ public class ItemMenuWindowManager : MonoBehaviour
 
     private void OnEnable()
     {
+        //初期選択オブジェクトを指定
         _eventSystem.SetSelectedGameObject(_items[0]);
+        //アイテムフィルターはオール
+        Change_ItemFilter(ItemFilter.ALL);
+        _currentItemFilter = ItemFilter.ALL;
     }
 
     /// <summary> アイテムウィンドウの更新関数 </summary>
@@ -126,12 +153,9 @@ public class ItemMenuWindowManager : MonoBehaviour
         InputRight();
         InputLeft();
 
-        //必要があれば(前フレームと現在のフレームで選択しているものが違えば)更新する
-        if (_beforeItemFilter != _currentItemFilter ||
-            _beforeItemIndex != _currentItemIndex)
-        {
+        //必要であれば、アイテムフィルターを更新する。
+        Update_ItemFilter();
 
-        }
         //現在選択されているボタンを取得
         GameObject nowSelectItem = EventSystem.current.currentSelectedGameObject;
 
@@ -167,6 +191,105 @@ public class ItemMenuWindowManager : MonoBehaviour
 
     /// <summary> 左の入力 </summary>
     void InputLeft()
+    {
+
+    }
+
+    /// <summary> アイテムを種類別で表示する </summary>
+    void Update_ItemFilter()
+    {
+        //最初の要素を頭にする
+        bool firstObj = true;
+
+        //前と今のフィルターが違えば更新する
+        if (_beforeItemFilter != _currentItemFilter)
+        {
+            //全て表示する場合
+            if (_currentItemFilter == ItemFilter.ALL)
+            {
+                foreach (var item in _items)
+                {
+                    //頭の要素をSelectedGameObjectに指定する。
+                    if (firstObj)
+                    {
+                        firstObj = false;
+                        _eventSystem.SetSelectedGameObject(item);
+                    }
+                    item.SetActive(true);
+                }
+            }
+            //一部表示する場合
+            else
+            {
+                foreach (var item in _items)
+                {
+                    if ((int)item.GetComponent<ItemButton>().MyItem._myType == (int)_currentItemFilter)
+                    {
+                        //頭の要素をSelectedGameObjectに指定する。
+                        if (firstObj)
+                        {
+                            firstObj = false;
+                            _eventSystem.SetSelectedGameObject(item);
+                        }
+                        item.SetActive(true);
+                    }
+                    else
+                    {
+                        item.SetActive(false);
+                    }
+                }
+            }
+        }
+        _beforeItemFilter = _currentItemFilter;
+    }
+
+    //アイテムボタンの偏移先を決める処理
+    void Set_ItemButtonShiftDestination(Button currentButton, Button up, Button down, Button left, Button right)
+    {
+        //ナビゲーションを取得
+        Navigation navigation = currentButton.navigation;
+        //モードを変更
+        navigation.mode = Navigation.Mode.Explicit;
+        //偏移先を指定
+        navigation.selectOnUp = up;
+        navigation.selectOnDown = down;
+        navigation.selectOnLeft = left;
+        navigation.selectOnRight = right;
+        //ナビゲーションをセット
+        currentButton.navigation = navigation;
+    }
+
+    /// <summary> アイテムフィルターが、切り替わった時に行うべき処理。 </summary>
+    /// <param name="itemFilter"> このフィルターに合わせた設定を行う。 </param>
+    void Change_ItemFilter(ItemFilter itemFilter)
+    {
+        switch (itemFilter)
+        {
+
+        }
+    }
+
+    void Set_ItemFilter_ALL()
+    {
+
+    }
+
+    void Set_ItemFilter_HEAL()
+    {
+
+    }
+
+    void Set_ItemFilter_POWERUP()
+    {
+
+    }
+
+    void Set_ItemFilter_MINUSITEM()
+    {
+
+    }
+
+    void Set_ItemFilter_KEY()
     {
 
     }

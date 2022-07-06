@@ -40,7 +40,7 @@ public class ItemButton : MonoBehaviour
         _nowItemVolume = PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
-            //Update_ItemVolume();
+            Update_ItemVolume();
         }
         _beforeItemVolume = _nowItemVolume;
     }

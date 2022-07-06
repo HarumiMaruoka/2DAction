@@ -13,6 +13,11 @@ TagManager:
   - Battery
   - ExitMenu
   - ItemDrawContent
+  - ItemFilterALL
+  - ItemFilterHEAL
+  - ItemFilterPOWER_UP
+  - ItemFilterMINUS_ITEM
+  - ItemFilterKEY
   layers:
   - Default
   - TransparentFX
