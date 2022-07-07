@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -71,9 +72,9 @@ public class ItemMenuWindowManager : MonoBehaviour
         //アイテムフィルター
         _currentItemFilter = ItemFilter.ALL;
 
-        if ((_allFilterButton = GameObject.FindGameObjectWithTag("ItemFilterALL"))==null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: ALL Button");
-        if ((_healFilterButton = GameObject.FindGameObjectWithTag("ItemFilterHEAL"))==null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: HEAL Button");
-        if ((_powerUpFilterButton = GameObject.FindGameObjectWithTag("ItemFilterPOWER_UP"))== null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: POWER_UP Button");
+        if ((_allFilterButton = GameObject.FindGameObjectWithTag("ItemFilterALL")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: ALL Button");
+        if ((_healFilterButton = GameObject.FindGameObjectWithTag("ItemFilterHEAL")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: HEAL Button");
+        if ((_powerUpFilterButton = GameObject.FindGameObjectWithTag("ItemFilterPOWER_UP")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: POWER_UP Button");
         if ((_minusItemFilterButton = GameObject.FindGameObjectWithTag("ItemFilterMINUS_ITEM")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: MINUS_ITEM Button");
         if ((_keyFilterButton = GameObject.FindGameObjectWithTag("ItemFilterKEY")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: KEY Button");
 
@@ -114,20 +115,21 @@ public class ItemMenuWindowManager : MonoBehaviour
 
         //ボタンのキー入力の偏移先の指定処理。
         //select on up と down を設定する 汚いのであとで直す
-        Navigation navigation = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation;
-        navigation.mode = Navigation.Mode.Explicit;
-        navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>();
-        navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_01].GetComponent<Button>();
-        _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation = navigation;
-        //select on up と down を設定する
-        navigation = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation;
-        navigation.mode = Navigation.Mode.Explicit;
-        navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>();
-        navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 2].GetComponent<Button>();
-        _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation = navigation;
+        //Navigation navigation = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation;
+        //navigation.mode = Navigation.Mode.Explicit;
+        //navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>();
+        //navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_01].GetComponent<Button>();
+        //_items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation = navigation;
+        ////select on up と down を設定する
+        //navigation = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation;
+        //navigation.mode = Navigation.Mode.Explicit;
+        //navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>();
+        //navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 2].GetComponent<Button>();
+        //_items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation = navigation;
+
 
         //各ボタンの偏移先を設定する。最初はALLの設定
-        Change_ItemFilter(ItemFilter.ALL);
+        Set_ItemButtonShiftDestination(ItemFilter.ALL, _items);
     }
 
     void Update()
@@ -140,7 +142,7 @@ public class ItemMenuWindowManager : MonoBehaviour
         //初期選択オブジェクトを指定
         _eventSystem.SetSelectedGameObject(_items[0]);
         //アイテムフィルターはオール
-        Change_ItemFilter(ItemFilter.ALL);
+        Set_ItemButtonShiftDestination(ItemFilter.ALL, _items);
         _currentItemFilter = ItemFilter.ALL;
     }
 
@@ -171,31 +173,51 @@ public class ItemMenuWindowManager : MonoBehaviour
         _beforeItemIndex = _currentItemIndex;
     }
 
-    /// <summary> 上の入力 </summary>
+    /// <summary> 上の入力があった時の処理 </summary>
     void InputAbove()
     {
 
     }
 
-    /// <summary> 下の入力 </summary>
+    /// <summary> 下の入力があった時の処理 </summary>
     void InputBelow()
     {
 
     }
 
-    /// <summary> 右の入力 </summary>
+    /// <summary> 右の入力があった時の処理 </summary>
     void InputRight()
     {
-
+        //右の入力を検知
+        if (Input.GetButtonDown("Horizontal_Right"))
+        {
+            Debug.Log("Right");
+            //ここにアイテムフィルターを変更する処理を書く
+            _currentItemFilter = _currentItemFilter + 1;
+            if (_currentItemFilter >= ItemFilter.ITEM_FILTER_END)
+            {
+                _currentItemFilter = ItemFilter.HEAL;
+            }
+        }
     }
 
-    /// <summary> 左の入力 </summary>
+    /// <summary> 左の入力があった時の処理 </summary>
     void InputLeft()
     {
-
+        //左の入力を検知
+        if (Input.GetButtonDown("Horizontal_Left"))
+        {
+            Debug.Log("Left");
+            //ここにアイテムフィルターを変更する処理を書く
+            _currentItemFilter = _currentItemFilter - 1;
+            if (_currentItemFilter < ItemFilter.HEAL)
+            {
+                _currentItemFilter = ItemFilter.ALL;
+            }
+        }
     }
 
-    /// <summary> アイテムを種類別で表示する </summary>
+    /// <summary> アイテムを種類別で表示する。そのフィルターに係るアイテムボタンのみアクティブにする。それ以外は非アクティブにする。 </summary>
     void Update_ItemFilter()
     {
         //最初の要素を頭にする
@@ -204,7 +226,10 @@ public class ItemMenuWindowManager : MonoBehaviour
         //前と今のフィルターが違えば更新する
         if (_beforeItemFilter != _currentItemFilter)
         {
-            //全て表示する場合
+            //一時リストを作成 : ボタンの偏移先を設定するよう。
+            List<GameObject> temporaryList = new List<GameObject>();
+
+            //全て表示する場合の処理
             if (_currentItemFilter == ItemFilter.ALL)
             {
                 foreach (var item in _items)
@@ -218,7 +243,8 @@ public class ItemMenuWindowManager : MonoBehaviour
                     item.SetActive(true);
                 }
             }
-            //一部表示する場合
+
+            //一部だけ表示する場合(フィルターにかけるときの処理)
             else
             {
                 foreach (var item in _items)
@@ -232,6 +258,7 @@ public class ItemMenuWindowManager : MonoBehaviour
                             _eventSystem.SetSelectedGameObject(item);
                         }
                         item.SetActive(true);
+                        temporaryList.Add(item);
                     }
                     else
                     {
@@ -239,12 +266,20 @@ public class ItemMenuWindowManager : MonoBehaviour
                     }
                 }
             }
+            //ボタンの設定を更新する
+            if (_currentItemFilter != ItemFilter.ALL) { Set_ItemButtonShiftDestination(_currentItemFilter, temporaryList); }
+            else { Set_ItemButtonShiftDestination(ItemFilter.ALL, _items); }
         }
         _beforeItemFilter = _currentItemFilter;
     }
 
-    //アイテムボタンの偏移先を決める処理
-    void Set_ItemButtonShiftDestination(Button currentButton, Button up, Button down, Button left, Button right)
+    /// <summary> アイテムボタンの偏移先を決める処理 </summary>
+    /// <param name="currentButton"> 設定するボタン </param>
+    /// <param name="up">    上に設定するボタン </param>
+    /// <param name="down">  下に設定するボタン </param>
+    /// <param name="left">  左に設定するボタン </param>
+    /// <param name="right"> 右に設定するボタン </param>
+    void Set_ItemButtonShiftDestinationHelper(Button currentButton, Button up, Button down, Button left, Button right)
     {
         //ナビゲーションを取得
         Navigation navigation = currentButton.navigation;
@@ -259,38 +294,95 @@ public class ItemMenuWindowManager : MonoBehaviour
         currentButton.navigation = navigation;
     }
 
-    /// <summary> アイテムフィルターが、切り替わった時に行うべき処理。 </summary>
-    /// <param name="itemFilter"> このフィルターに合わせた設定を行う。 </param>
-    void Change_ItemFilter(ItemFilter itemFilter)
-    {
-        switch (itemFilter)
-        {
 
+    GameObject leftButton;
+    GameObject rightButton;
+    /// <summary> アイテムボタンの偏移先を決める処理 </summary>
+    void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, List<GameObject> itemButton)
+    {
+        if (itemButton[0] != null)
+        {
+            //フィルター(横)の遷移先を設定する
+            switch (_currentItemFilter)
+            {
+                case ItemFilter.ALL: leftButton = _keyFilterButton; rightButton = _healFilterButton; break;
+                case ItemFilter.HEAL: leftButton = _allFilterButton; rightButton = _powerUpFilterButton; break;
+                case ItemFilter.POWER_UP: leftButton = _healFilterButton; rightButton = _minusItemFilterButton; break;
+                case ItemFilter.MINUS_ITEM: leftButton = _powerUpFilterButton; rightButton = _keyFilterButton; break;
+                case ItemFilter.KEY: leftButton = _minusItemFilterButton; rightButton = _allFilterButton; break;
+            }
+
+            //縦の偏移先を設定する
+            //先頭を設定
+            Set_ItemButtonShiftDestinationHelper(
+                itemButton[0].GetComponent<Button>(),
+                itemButton[itemButton.Count - 1].GetComponent<Button>(),
+                itemButton[1].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
+
+            //中を設定
+            for (int i = 1; i < itemButton.Count - 1; i++)
+            {
+                Set_ItemButtonShiftDestinationHelper(
+                itemButton[i].GetComponent<Button>(),
+                itemButton[i - 1].GetComponent<Button>(),
+                itemButton[i + 1].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
+            }
+
+            //末尾を設定
+            Set_ItemButtonShiftDestinationHelper(
+                itemButton[itemButton.Count - 1].GetComponent<Button>(),
+                itemButton[itemButton.Count - 2].GetComponent<Button>(),
+                itemButton[0].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
         }
     }
-
-    void Set_ItemFilter_ALL()
+    //オーバーロードする(行数は多くなるが、ToListするより実行効率は良いかと)
+    void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, GameObject[] itemButton)
     {
+        if (itemButton[0] != null)
+        {
+            //フィルター(横)の遷移先を設定する
+            switch (_currentItemFilter)
+            {
+                case ItemFilter.ALL: leftButton = _keyFilterButton; rightButton = _healFilterButton; break;
+                case ItemFilter.HEAL: leftButton = _allFilterButton; rightButton = _powerUpFilterButton; break;
+                case ItemFilter.POWER_UP: leftButton = _healFilterButton; rightButton = _minusItemFilterButton; break;
+                case ItemFilter.MINUS_ITEM: leftButton = _powerUpFilterButton; rightButton = _keyFilterButton; break;
+                case ItemFilter.KEY: leftButton = _minusItemFilterButton; rightButton = _allFilterButton; break;
+            }
 
-    }
+            //縦の偏移先を設定する
+            //先頭を設定
+            Set_ItemButtonShiftDestinationHelper(
+                itemButton[0].GetComponent<Button>(),
+                itemButton[itemButton.Length - 1].GetComponent<Button>(),
+                itemButton[1].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
 
-    void Set_ItemFilter_HEAL()
-    {
+            //中を設定
+            for (int i = 1; i < itemButton.Length - 1; i++)
+            {
+                Set_ItemButtonShiftDestinationHelper(
+                itemButton[i].GetComponent<Button>(),
+                itemButton[i - 1].GetComponent<Button>(),
+                itemButton[i + 1].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
+            }
 
-    }
-
-    void Set_ItemFilter_POWERUP()
-    {
-
-    }
-
-    void Set_ItemFilter_MINUSITEM()
-    {
-
-    }
-
-    void Set_ItemFilter_KEY()
-    {
-
+            //末尾を設定
+            Set_ItemButtonShiftDestinationHelper(
+                itemButton[itemButton.Length - 1].GetComponent<Button>(),
+                itemButton[itemButton.Length - 2].GetComponent<Button>(),
+                itemButton[0].GetComponent<Button>(),
+                leftButton.GetComponent<Button>(),
+                rightButton.GetComponent<Button>());
+        }
     }
 }
