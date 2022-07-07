@@ -139,11 +139,9 @@ public class ItemMenuWindowManager : MonoBehaviour
 
     private void OnEnable()
     {
-        //初期選択オブジェクトを指定
-        _eventSystem.SetSelectedGameObject(_items[0]);
-        //アイテムフィルターはオール
-        Set_ItemButtonShiftDestination(ItemFilter.ALL, _items);
+        Update_ItemFilter();
         _currentItemFilter = ItemFilter.ALL;
+        _eventSystem.SetSelectedGameObject(_items[0]);
     }
 
     /// <summary> アイテムウィンドウの更新関数 </summary>
@@ -191,7 +189,6 @@ public class ItemMenuWindowManager : MonoBehaviour
         //右の入力を検知
         if (Input.GetButtonDown("Horizontal_Right"))
         {
-            Debug.Log("Right");
             //ここにアイテムフィルターを変更する処理を書く
             _currentItemFilter = _currentItemFilter + 1;
             if (_currentItemFilter >= ItemFilter.ITEM_FILTER_END)
@@ -207,7 +204,6 @@ public class ItemMenuWindowManager : MonoBehaviour
         //左の入力を検知
         if (Input.GetButtonDown("Horizontal_Left"))
         {
-            Debug.Log("Left");
             //ここにアイテムフィルターを変更する処理を書く
             _currentItemFilter = _currentItemFilter - 1;
             if (_currentItemFilter < ItemFilter.HEAL)
@@ -233,7 +229,13 @@ public class ItemMenuWindowManager : MonoBehaviour
             if (_currentItemFilter == ItemFilter.ALL)
             {
                 foreach (var item in _items)
-                {
+                { 
+                    //所持数が0ならスキップする
+                    if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0)
+                    {
+                        item.SetActive(false);
+                        continue;
+                    }
                     //頭の要素をSelectedGameObjectに指定する。
                     if (firstObj)
                     {
@@ -241,6 +243,7 @@ public class ItemMenuWindowManager : MonoBehaviour
                         _eventSystem.SetSelectedGameObject(item);
                     }
                     item.SetActive(true);
+                    temporaryList.Add(item);
                 }
             }
 
@@ -251,6 +254,12 @@ public class ItemMenuWindowManager : MonoBehaviour
                 {
                     if ((int)item.GetComponent<ItemButton>().MyItem._myType == (int)_currentItemFilter)
                     {
+                        //所持数が0ならスキップする
+                        if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0) 
+                        {
+                            item.SetActive(false);
+                            continue;
+                        }
                         //頭の要素をSelectedGameObjectに指定する。
                         if (firstObj)
                         {
@@ -267,8 +276,10 @@ public class ItemMenuWindowManager : MonoBehaviour
                 }
             }
             //ボタンの設定を更新する
-            if (_currentItemFilter != ItemFilter.ALL) { Set_ItemButtonShiftDestination(_currentItemFilter, temporaryList); }
-            else { Set_ItemButtonShiftDestination(ItemFilter.ALL, _items); }
+             Set_ItemButtonShiftDestination(_currentItemFilter, temporaryList);
+
+            //ボタンの色を更新する
+            Change_FilterButtonColor();
         }
         _beforeItemFilter = _currentItemFilter;
     }
@@ -297,9 +308,10 @@ public class ItemMenuWindowManager : MonoBehaviour
 
     GameObject leftButton;
     GameObject rightButton;
-    /// <summary> アイテムボタンの偏移先を決める処理 </summary>
+    /// <summary> アイテムボタンの偏移先を決める処理。 : 要素が0または1個の時の処理を考える必要有り。 </summary>
     void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, List<GameObject> itemButton)
     {
+        if (itemButton.Count <= 1) { return; }
         if (itemButton[0] != null)
         {
             //フィルター(横)の遷移先を設定する
@@ -344,6 +356,7 @@ public class ItemMenuWindowManager : MonoBehaviour
     //オーバーロードする(行数は多くなるが、ToListするより実行効率は良いかと)
     void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, GameObject[] itemButton)
     {
+        if (itemButton.Length <= 1) { return; }
         if (itemButton[0] != null)
         {
             //フィルター(横)の遷移先を設定する
@@ -383,6 +396,25 @@ public class ItemMenuWindowManager : MonoBehaviour
                 itemButton[0].GetComponent<Button>(),
                 leftButton.GetComponent<Button>(),
                 rightButton.GetComponent<Button>());
+        }
+    }
+
+    /// <summary> 現在のフィルターの色を変える。 </summary>
+    void Change_FilterButtonColor()
+    {
+        _allFilterButton.GetComponent<Image>().color = Color.white;
+        _healFilterButton.GetComponent<Image>().color = Color.white;
+        _powerUpFilterButton.GetComponent<Image>().color = Color.white;
+        _minusItemFilterButton.GetComponent<Image>().color = Color.white;
+        _keyFilterButton.GetComponent<Image>().color = Color.white;
+
+        switch (_currentItemFilter)
+        {
+            case ItemFilter.ALL: _allFilterButton.GetComponent<Image>().color = Color.cyan; break;
+            case ItemFilter.HEAL: _healFilterButton.GetComponent<Image>().color = Color.cyan; break;
+            case ItemFilter.POWER_UP: _powerUpFilterButton.GetComponent<Image>().color = Color.cyan; break;
+            case ItemFilter.MINUS_ITEM: _minusItemFilterButton.GetComponent<Image>().color = Color.cyan; break;
+            case ItemFilter.KEY: _keyFilterButton.GetComponent<Image>().color = Color.cyan; break;
         }
     }
 }
