@@ -50,14 +50,27 @@ public class PlayerManager : MonoBehaviour
     [Header("プレイヤーの体力"), SerializeField] float _playerHealthPoint;
     public float PlayerHealthPoint { get => _playerHealthPoint; set { Debug.Log("プレイヤーの体力の値を変更しました"); _playerHealthPoint = value; } }
 
-    [Header("プレイヤーの攻撃力"), SerializeField] float _playerOffensivePower;
-    public float PlayerOffensivePower { get => _playerOffensivePower; set { Debug.Log("攻撃力の値を変更しました"); _playerOffensivePower = value; } }
+    [Header("プレイヤーの最大スタミナ"), SerializeField] float _playerMaxStamina;
+    public float PlayerMaxStamina { get => _playerMaxStamina; set => _playerMaxStamina = value; }
+
+    [Header("プレイヤーのスタミナ"), SerializeField] float _playerStamina;
+    public float PlayerStamina { get => _playerStamina; set => _playerStamina = value; }
+
+    [Header("プレイヤーの近距離攻撃力"), SerializeField] float _playerOffensivePower_ShortDistance;
+    public float PlayerOffensivePower_ShortDistance { get => _playerOffensivePower_ShortDistance; set { Debug.Log("攻撃力の値を変更しました"); _playerOffensivePower_ShortDistance = value; } }
+
+    [Header("プレイヤーの遠距離攻撃力"), SerializeField] float _playerOffensivePower_LongDistance;
+    public float PlayerOffensivePower_LongDistance { get => _playerOffensivePower_LongDistance; set { Debug.Log("攻撃力の値を変更しました"); _playerOffensivePower_LongDistance = value; } }
 
     [Header("プレイヤーの防御力"), SerializeField] float _playerDefensePower;
     public float PlayerDefensePower { get => _playerDefensePower; set { Debug.Log("防御力の値を変更しました"); _playerDefensePower = value; } }
 
+    [Header("プレイヤーの移動力"), SerializeField] float _playerMoveSpeed;
+    public float PlayerMoveSpeed { get => _playerMoveSpeed; set { Debug.Log("プレイヤーの移動力の値を変更しました"); _playerMoveSpeed = value; } }
+
+
     /// <summary> プレイヤーが向いている方向 </summary>
-    [SerializeField] public bool _isRight { get; private set; }
+    public bool _isRight { get; private set; }
 
     private void Awake()
     {

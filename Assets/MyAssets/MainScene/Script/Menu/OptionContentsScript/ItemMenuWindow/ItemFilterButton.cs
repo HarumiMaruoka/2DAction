@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class ItemFilterButton : MonoBehaviour
 {
-    //自分のフィルター
-    [SerializeField] ItemMenuWindowManager.ItemFilter _myItemFilter;
+    ItemMenuWindowManager.ItemFilter _myItemFilter;
+    ItemMenuWindowManager _itemMenuWindowManager;
 
     /// <summary> アイテムフィルターをセットする </summary>
-    public void Set_ItemFilter()
+    public void Set_ItemFilter(ItemMenuWindowManager.ItemFilter itemFilter)
     {
-
+        _myItemFilter = itemFilter;
     }
 
     void Start()
     {
-
+        _itemMenuWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<ItemMenuWindowManager>();
     }
 
-    void Update()
+    public void OnClick_FilterUpdate()
     {
-
+        _itemMenuWindowManager.Set_CurrentFilter(_myItemFilter);
     }
 }

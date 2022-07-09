@@ -18,6 +18,7 @@ TagManager:
   - ItemFilterPOWER_UP
   - ItemFilterMINUS_ITEM
   - ItemFilterKEY
+  - ToolWindow
   layers:
   - Default
   - TransparentFX

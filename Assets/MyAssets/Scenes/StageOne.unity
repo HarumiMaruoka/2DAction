@@ -28408,8 +28408,12 @@ MonoBehaviour:
     _itemNumberOfPossessions: 
   _maxPlayerHealthPoint: 100
   _playerHealthPoint: 100
-  _playerOffensivePower: 0
+  _playerMaxStamina: 0
+  _playerStamina: 0
+  _playerOffensivePower_ShortDistance: 0
+  _playerOffensivePower_LongDistance: 0
   _playerDefensePower: 0
+  _playerMoveSpeed: 0
 --- !u!1 &821420099
 GameObject:
   m_ObjectHideFlags: 0
@@ -46431,7 +46435,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 883883012}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 883883014}
+        m_TargetAssemblyTypeName: ItemFilterButton, Assembly-CSharp
+        m_MethodName: OnClick_FilterUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &883883012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46482,7 +46498,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62b1edf53e11245a6ee92eec0e3c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myItemFilter: 1
 --- !u!1 &895768692
 GameObject:
   m_ObjectHideFlags: 0
@@ -46825,7 +46840,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 946752102}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 946752104}
+        m_TargetAssemblyTypeName: ItemFilterButton, Assembly-CSharp
+        m_MethodName: OnClick_FilterUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &946752102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46876,7 +46903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62b1edf53e11245a6ee92eec0e3c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myItemFilter: 4
 --- !u!1 &955370034
 GameObject:
   m_ObjectHideFlags: 0
@@ -47476,7 +47502,7 @@ GameObject:
   - component: {fileID: 1095970366}
   m_Layer: 0
   m_Name: Tool
-  m_TagString: Untagged
+  m_TagString: ToolWindow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49743,7 +49769,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1383433555}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1383433557}
+        m_TargetAssemblyTypeName: ItemFilterButton, Assembly-CSharp
+        m_MethodName: OnClick_FilterUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1383433555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49794,7 +49832,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62b1edf53e11245a6ee92eec0e3c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myItemFilter: 0
 --- !u!1 &1393695908
 GameObject:
   m_ObjectHideFlags: 0
@@ -51601,7 +51638,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1626395667}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1626395669}
+        m_TargetAssemblyTypeName: ItemFilterButton, Assembly-CSharp
+        m_MethodName: OnClick_FilterUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1626395667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51652,7 +51701,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62b1edf53e11245a6ee92eec0e3c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myItemFilter: 3
 --- !u!1001 &1663601756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52891,7 +52939,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1884285953}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1884285955}
+        m_TargetAssemblyTypeName: ItemFilterButton, Assembly-CSharp
+        m_MethodName: OnClick_FilterUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1884285953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52942,7 +53002,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af62b1edf53e11245a6ee92eec0e3c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myItemFilter: 2
 --- !u!1 &1888323724
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
 {
     //コンポーネント
     InputManager _inputManager;
-    PlayerStateManagement _newPlayerStateManagement;
+    PlayerStateManagement _playerStateManagement;
 
     //バレット関連
     [SerializeField] float _bulletCoolTime = 0.15f;
@@ -23,7 +23,7 @@ public class PlayerAttack : MonoBehaviour
     void Start()
     {
         _inputManager = GetComponent<InputManager>();
-        _newPlayerStateManagement = GetComponent<PlayerStateManagement>();
+        _playerStateManagement = GetComponent<PlayerStateManagement>();
         _slashOne = transform.GetChild(0).gameObject;
         _slashTwo = transform.GetChild(1).gameObject;
     }
@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (!_newPlayerStateManagement._isDead && _newPlayerStateManagement._isMove)
+        if (!_playerStateManagement._isDead && _playerStateManagement._isMove)
         {
             Fire1();
             Fire2();
@@ -41,7 +41,7 @@ public class PlayerAttack : MonoBehaviour
     void Fire1()
     {
         //左クリックでショット
-        if (!(_newPlayerStateManagement._playerState == PlayerStateManagement.PlayerState.HOVER))//ホバー中は打てない
+        if (!(_playerStateManagement._playerState == PlayerStateManagement.PlayerState.HOVER))//ホバー中は打てない
         {
             if (_bulletCoolTimeValue < 0f)
             {
@@ -61,7 +61,7 @@ public class PlayerAttack : MonoBehaviour
     void Fire2()
     {
         //右クリックでスラッシュ
-        if (!(_newPlayerStateManagement._playerState == PlayerStateManagement.PlayerState.HOVER))//ホバー中も打てない
+        if (!(_playerStateManagement._playerState == PlayerStateManagement.PlayerState.HOVER))//ホバー中も打てない
         {
             //二撃目発動が発動できるなら発動する
             if (_slashCoolTimeValueTwo < 0f && _slashCoolTimeValueOne > 0f)
