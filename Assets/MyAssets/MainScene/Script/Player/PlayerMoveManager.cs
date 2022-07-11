@@ -145,7 +145,8 @@ public class PlayerMoveManager : MonoBehaviour
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
             if (Mathf.Approximately(_newImpulse.x, 0f) && Mathf.Approximately(_newImpulse.y, 0f))
             {
-                _rigidBody2D.velocity = new Vector2(_newVelocity.x, _rigidBody2D.velocity.y);
+                _newVelocity *= PlayerManager.Instance.PlayerMoveSpeed;
+                _rigidBody2D.velocity = (Vector2.right * _newVelocity)+(Vector2.up * _rigidBody2D.velocity.y);
             }
 
         }
@@ -154,16 +155,16 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary> 横移動の処理 </summary>
     void MoveHorizontal()
     {
-            //左移動の処理
-            if (_inputManager._inputHorizontal < 0 && !BodyContactLeft())//左に何もなければ実行できる
-            {
-                _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
-            }
-            //右移動の処理
-            if (_inputManager._inputHorizontal > 0 && !BodyContactRight())//右に何もなければ実行できる
-            {
-                _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
-            }
+        //左移動の処理
+        if (_inputManager._inputHorizontal < 0 && !BodyContactLeft())//左に何もなければ実行できる
+        {
+            _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+        }
+        //右移動の処理
+        if (_inputManager._inputHorizontal > 0 && !BodyContactRight())//右に何もなければ実行できる
+        {
+            _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
+        }
     }
 
     void Dash()

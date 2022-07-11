@@ -70,7 +70,8 @@ public class PlayerManager : MonoBehaviour
 
 
     /// <summary> ƒvƒŒƒCƒ„[‚ªŒü‚¢‚Ä‚¢‚é•ûŒü </summary>
-    public bool _isRight { get; private set; }
+    private bool _isRight;
+    public bool IsRight { get => _isRight; }
 
     private void Awake()
     {

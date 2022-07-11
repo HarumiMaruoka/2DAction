@@ -102,10 +102,10 @@ public class ItemMenuWindowManager : MonoBehaviour
         {
             Debug.LogError("アイテムボタンのプレハブがアサインされていません。");
         }
-        GameObject _itemContent = GameObject.FindGameObjectWithTag("ItemDrawContent");
+        GameObject _itemContent = GameObject.FindGameObjectWithTag("ItemDrawContentALL");
         if (_itemContent == null)
         {
-            Debug.LogError("ItemDrawContentのタグが付いた、オブジェクトの取得に失敗しました。");
+            Debug.LogError("ItemDrawContentALLのタグが付いた、オブジェクトの取得に失敗しました。");
         }
         //アイテムボタンをScrollViewの、Contentの子としてインスタンシエイトしておく。
         for (int i = 0; i < (int)Item.ItemID.ITEM_ID_END; i++)

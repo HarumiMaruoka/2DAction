@@ -27,7 +27,7 @@ public class NomalShotBullet : PlayerWeaponBase
     private void OnEnable()
     {
         Vector2 dir = Vector2.zero;
-        if (PlayerManager.Instance._isRight)
+        if (PlayerManager.Instance.IsRight)
         {
             dir = Vector2.right;
         }

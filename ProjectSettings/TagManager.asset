@@ -12,13 +12,17 @@ TagManager:
   - Boss
   - Battery
   - ExitMenu
-  - ItemDrawContent
   - ItemFilterALL
   - ItemFilterHEAL
   - ItemFilterPOWER_UP
   - ItemFilterMINUS_ITEM
   - ItemFilterKEY
   - ToolWindow
+  - ItemDrawContentALL
+  - ItemDrawContentHeal
+  - ItemDrawContentPowerUp
+  - ItemDrawContentMinus
+  - ItemDrawContentKey
   layers:
   - Default
   - TransparentFX

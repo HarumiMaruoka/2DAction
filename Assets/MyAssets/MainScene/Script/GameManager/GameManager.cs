@@ -51,28 +51,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
 
-        //BGM管理用変数を初期化
-        //_bgm = GetComponent<AudioSource>();
-        //if (_bgm == null)
-        //{
-        //    Debug.LogError("ゲームマネージャーにAudioSource Componentをアタッチしてください!");
-        //}
     }
 
     private void Update()
     {
 
     }
-
-    //あとでBGMManagerに書く
-    /// <summary> BGMを切り替える </summary>
-    //public void ChangeBGM(AudioClip newAudio)
-    //{
-    //    _bgm.clip = newAudio;
-    //    _bgm.Play();
-    //}
 
     /// <summary> アイテムデータをファイルから読み込む </summary>
     void LoadItemCSV()

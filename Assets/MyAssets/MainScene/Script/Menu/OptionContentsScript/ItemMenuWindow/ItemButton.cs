@@ -37,6 +37,10 @@ public class ItemButton : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerManager.Instance == null)
+        {
+            Debug.Log("aaa");
+        }
         _nowItemVolume = PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
