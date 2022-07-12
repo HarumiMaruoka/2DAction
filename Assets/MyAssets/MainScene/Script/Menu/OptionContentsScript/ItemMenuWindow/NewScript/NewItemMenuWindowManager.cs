@@ -16,7 +16,6 @@ public class NewItemMenuWindowManager : MonoBehaviour
         MINUS_ITEM,
         KEY,
 
-
         ITEM_FILTER_END
     }
 
@@ -28,6 +27,14 @@ public class NewItemMenuWindowManager : MonoBehaviour
     ItemFilter _currentItemFilter = ItemFilter.ALL;
     /// <summary> このクラスを初期化したかどうか </summary>
     bool _whetherInitialized;
+    /// <summary> コンテントの子の配列 </summary>
+    ItemButton[][] _contentChildren;
+    //=====コンテントの子となるボタン達=====//
+    ItemButton[] _contentALLChildren;
+    ItemButton[] _contentHealChildren;
+    ItemButton[] _contentPowerUpChildren;
+    ItemButton[] _contentMinusChildren;
+    ItemButton[] _contentKeyChildren;
 
 
     //=========配列類=========//
@@ -40,17 +47,7 @@ public class NewItemMenuWindowManager : MonoBehaviour
     //=====フィルターのボタン類=====//
     [Header("フィルターボタン"), SerializeField] GameObject[] _filters;
     //=====各ボタンの親となるコンテント=====//
-    [SerializeField] GameObject _itemContent_ALL;
-    [SerializeField] GameObject _itemContent_Heal;
-    [SerializeField] GameObject _itemContent_PowerUp;
-    [SerializeField] GameObject _itemContent_Minus;
-    [SerializeField] GameObject _itemContent_Key;
-    //=====コンテントの子となるボタン達=====//
-    ItemButton[] _contentALLChildren;
-    ItemButton[] _contentHealChildren;
-    ItemButton[] _contentPowerUpChildren;
-    ItemButton[] _contentMinusChildren;
-    ItemButton[] _contentKeyChildren;
+    [Header("コンテントの配列"), SerializeField] GameObject[] _contents;
     /// <summary> アイテムボタンのプレハブ </summary>
     [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
     /// <summary> 説明文のテキスト </summary>
@@ -59,9 +56,13 @@ public class NewItemMenuWindowManager : MonoBehaviour
     [SerializeField] Image _itemIconImage;
     /// <summary> イベントシステム </summary>
     [SerializeField] EventSystem _eventSystem;
+    /// <summary>  </summary>
+    [SerializeField] ScrollRect _contentParent;
 
     //=====インスペクタから設定すべき値=====//
     [Header("アイテムアイコンが格納されたフォルダのパス:resource以下名"), SerializeField] string _folderPath;
+    [Header("フィルターボタンの通常色"), SerializeField] Color _filterButton_NomalColor;
+    [Header("フィルターボタンの選択時の色"), SerializeField] Color _filterButton_SelectedColor;
 
     //=====仮の入れ物=====//
     GameObject temporaryObject;
@@ -71,13 +72,14 @@ public class NewItemMenuWindowManager : MonoBehaviour
     {
         //このクラスを初期化する。
         _whetherInitialized = Initialize_ThisClass();
-        ItemButton[][] obj = { _contentALLChildren, _contentHealChildren, _contentPowerUpChildren, _contentMinusChildren, _contentKeyChildren };
-        SetALL_ItemButtonShiftDestination(_filters, obj);
     }
 
     void Update()
     {
-
+        if (_whetherInitialized)
+        {
+            Update_Filter();
+        }
     }
 
     /// <summary> 道具画面がアクティブになった時の処理 </summary>
@@ -86,6 +88,46 @@ public class NewItemMenuWindowManager : MonoBehaviour
 
     }
 
+    //=========フィルター変更に関する処理=========//
+    /// <summary> フィルター変更処理 </summary>
+    void Update_Filter()
+    {
+        //フィルターを左にシフトする
+        if (Input.GetButtonDown("Horizontal_Left"))
+        {
+            _currentItemFilter--;
+            if (_currentItemFilter < 0)
+            {
+                _currentItemFilter = (ItemFilter)_filters.Length - 1;
+            }
+        }
+        //フィルターを右にシフトする
+        if (Input.GetButtonDown("Horizontal_Right"))
+        {
+            _currentItemFilter++;
+            if (_currentItemFilter > (ItemFilter)_filters.Length - 1)
+            {
+                _currentItemFilter = 0;
+            }
+        }
+        if (_beforeItemFilter != _currentItemFilter)
+        {
+            //=====フィルターの更新処理=====//
+            //コンテントを入れ替える
+            _contentParent.content = _contents[(int)_currentItemFilter].GetComponent<RectTransform>();
+            //古いコンテントを非アクティブにして、新しいコンテントをアクティブにする。
+            _contents[(int)_currentItemFilter].SetActive(true);
+            _contents[(int)_beforeItemFilter].SetActive(false);
+            //選択中のオブジェクトを変更する
+            _eventSystem.SetSelectedGameObject(_contentChildren[(int)_currentItemFilter][0].gameObject);
+            //ボタンの色を変える
+            _filters[(int)_beforeItemFilter].GetComponent<Image>().color = _filterButton_NomalColor;
+            _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
+        }
+        _beforeItemFilter = _currentItemFilter;
+    }
+
+    //======アイテムの偏移先を設定する関連======//
     /// <summary> アイテムボタンの偏移先を設定する。 </summary>
     /// <param name="currentButton"> 設定するボタン </param>
     /// <param name="up">    上に設定するボタン </param>
@@ -111,32 +153,36 @@ public class NewItemMenuWindowManager : MonoBehaviour
     /// <param name="itemButton"> アイテムボタンの配列 </param>
     void SetALL_ItemButtonShiftDestination(GameObject[] filters, ItemButton[][] itemButton)
     {
+        //外側のアイテムのインデックス
         int itemIndex = 0;
-        for (int filterIndex = 0; filterIndex < filters.Length - 1; filterIndex++)
+        //外側のループ : フィルターごとの偏移先を設定する。
+        for (int filterIndex = 0; filterIndex < filters.Length; filterIndex++)
         {
+            //内側のアイテムのインデックス
             int itemIndexIndex = 0;
+            //内側のループ : アイテムごとの偏移先を設定する。
             foreach (var item in itemButton[itemIndex])
             {
+                //左右上下のボタンを取得。
                 int fiL = LargeOrSmall(filterIndex - 1, filters.Length - 1, 0);
                 int fiR = LargeOrSmall(filterIndex + 1, filters.Length - 1, 0);
                 int iiU = LargeOrSmall(itemIndexIndex - 1, itemButton[itemIndex].Length - 1, 0);
                 int iiD = LargeOrSmall(itemIndexIndex + 1, itemButton[itemIndex].Length - 1, 0);
 
+                //偏移先を設定。
                 Set_ItemButtonShiftDestinationHelper(
                     itemButton[filterIndex][itemIndexIndex], //カレント
                     itemButton[filterIndex][iiU],       //Up
                     itemButton[filterIndex][iiD],       //Down
                     filters[fiL],                       //Left
                     filters[fiR]);                      //Right
-
-                Debug.Log(iiD);
-
+                //インデックスを更新
                 itemIndexIndex++;
             }
+            //インデックスを更新
             itemIndex++;
         }
     }
-
     /// <summary> 受け取った値の大小を比較し、最大値より大きければ最小値を返し、最小値より小さければ最大値を返す。 </summary>
     /// <param name="value"> 比較すべき値 </param>
     /// <param name="maxValue"> 最大値 </param>
@@ -170,7 +216,12 @@ public class NewItemMenuWindowManager : MonoBehaviour
         //コンテントの子を取得する
         Set_ContentChildren();
 
-        //各ボタンの偏移先を設定するコードをここに書く。
+        //コンテントの偏移先を設定する。
+        _contentChildren = new ItemButton[][] { _contentALLChildren, _contentHealChildren, _contentPowerUpChildren, _contentMinusChildren, _contentKeyChildren };
+        SetALL_ItemButtonShiftDestination(_filters, _contentChildren);
+
+        //フィルターボタンの色を変更する
+        _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
 
         return true;
     }
@@ -187,22 +238,24 @@ public class NewItemMenuWindowManager : MonoBehaviour
         if (_filters[(int)ItemFilter.MINUS_ITEM] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: MINUS_ITEM Button"); return false; }
         if (_filters[(int)ItemFilter.KEY] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: KEY Button"); return false; }
 
-        if (_itemContent_ALL == null) { Debug.LogError("アイテムコンテントALLをアサインしてください。"); return false; }
-        if (_itemContent_Heal == null) { Debug.LogError("アイテムコンテントHealをアサインしてください。"); return false; }
-        if (_itemContent_PowerUp == null) { Debug.LogError("アイテムコンテントPowerUpをアサインしてください。"); return false; }
-        if (_itemContent_Minus == null) { Debug.LogError("アイテムコンテントMinusをアサインしてください。"); return false; }
-        if (_itemContent_Key == null) { Debug.LogError("アイテムコンテントKeyをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.ALL] == null) { Debug.LogError("アイテムコンテントALLをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.HEAL] == null) { Debug.LogError("アイテムコンテントHealをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.POWER_UP] == null) { Debug.LogError("アイテムコンテントPowerUpをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.MINUS_ITEM] == null) { Debug.LogError("アイテムコンテントMinusをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.KEY] == null) { Debug.LogError("アイテムコンテントKeyをアサインしてください。"); return false; }
+
+        if (_contentParent == null) { Debug.LogError("ScrollViewのScrollRectをアサインしてください。"); return false; }
 
         return true;
     }
     /// <summary> フィルターボタンに情報を設定する。 </summary>
     void Set_FilterButton()
     {
-        _filters[(int)ItemFilter.ALL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemMenuWindowManager.ItemFilter.ALL);
-        _filters[(int)ItemFilter.HEAL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemMenuWindowManager.ItemFilter.HEAL);
-        _filters[(int)ItemFilter.POWER_UP].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemMenuWindowManager.ItemFilter.POWER_UP);
-        _filters[(int)ItemFilter.MINUS_ITEM].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemMenuWindowManager.ItemFilter.MINUS_ITEM);
-        _filters[(int)ItemFilter.KEY].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemMenuWindowManager.ItemFilter.KEY);
+        _filters[(int)ItemFilter.ALL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.ALL);
+        _filters[(int)ItemFilter.HEAL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.HEAL);
+        _filters[(int)ItemFilter.POWER_UP].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.POWER_UP);
+        _filters[(int)ItemFilter.MINUS_ITEM].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
+        _filters[(int)ItemFilter.KEY].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
     }
     /// <summary> アイテムボタンに情報を設定する。 </summary>
     void Set_ItemButton()
@@ -211,17 +264,17 @@ public class NewItemMenuWindowManager : MonoBehaviour
         for (int i = 0; i < (int)Item.ItemID.ITEM_ID_END; i++)
         {
             //ALLコンテントの子としてインスタンシエイトする。
-            _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent_ALL.transform);
+            _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.ALL].transform);
             //データをセット
             _itemButtons[i].GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
 
             //各コンテントに子としてインスタンシエイトする。
             switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
             {
-                case Item.ItemType.HEAL: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent_Heal.transform); break;
-                case Item.ItemType.POWER_UP: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent_PowerUp.transform); break;
-                case Item.ItemType.MINUS_ITEM: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent_Minus.transform); break;
-                case Item.ItemType.KEY: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent_Key.transform); break;
+                case Item.ItemType.HEAL: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
+                case Item.ItemType.POWER_UP: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
+                case Item.ItemType.MINUS_ITEM: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
+                case Item.ItemType.KEY: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
             }
             //データをセット
             temporaryObject.GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
@@ -230,10 +283,15 @@ public class NewItemMenuWindowManager : MonoBehaviour
     /// <summary> コンテントの子を取得し、変数に保存する。 </summary>
     void Set_ContentChildren()
     {
-        _contentALLChildren = _itemContent_ALL.GetComponentsInChildren<ItemButton>();
-        _contentHealChildren = _itemContent_Heal.GetComponentsInChildren<ItemButton>();
-        _contentPowerUpChildren = _itemContent_PowerUp.GetComponentsInChildren<ItemButton>();
-        _contentMinusChildren = _itemContent_Minus.GetComponentsInChildren<ItemButton>();
-        _contentKeyChildren = _itemContent_Key.GetComponentsInChildren<ItemButton>();
+        _contentALLChildren = _contents[(int)ItemFilter.ALL].GetComponentsInChildren<ItemButton>();
+        _contentHealChildren = _contents[(int)ItemFilter.HEAL].GetComponentsInChildren<ItemButton>();
+        _contentPowerUpChildren = _contents[(int)ItemFilter.POWER_UP].GetComponentsInChildren<ItemButton>();
+        _contentMinusChildren = _contents[(int)ItemFilter.MINUS_ITEM].GetComponentsInChildren<ItemButton>();
+        _contentKeyChildren = _contents[(int)ItemFilter.KEY].GetComponentsInChildren<ItemButton>();
+    }
+
+    public void Set_CurrentFillter(ItemFilter itemFilter)
+    {
+        _currentItemFilter = itemFilter;
     }
 }

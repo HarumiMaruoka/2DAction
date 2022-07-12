@@ -24668,7 +24668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &44964594
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25851,7 +25851,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &382632073
 RectTransform:
   m_ObjectHideFlags: 0
@@ -46414,7 +46414,7 @@ GameObject:
   - component: {fileID: 883883014}
   m_Layer: 5
   m_Name: ItemFilter_PowerUp
-  m_TagString: ItemFilterPOWER_UP
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46819,7 +46819,7 @@ GameObject:
   - component: {fileID: 946752104}
   m_Layer: 5
   m_Name: ItemFilter_All
-  m_TagString: ItemFilterALL
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47614,16 +47614,20 @@ MonoBehaviour:
   - {fileID: 883883009}
   - {fileID: 1884285950}
   - {fileID: 1626395664}
-  _itemContent_ALL: {fileID: 1175650178}
-  _itemContent_Heal: {fileID: 44964593}
-  _itemContent_PowerUp: {fileID: 1934831439}
-  _itemContent_Minus: {fileID: 1480564847}
-  _itemContent_Key: {fileID: 382632072}
+  _contents:
+  - {fileID: 1175650178}
+  - {fileID: 44964593}
+  - {fileID: 1934831439}
+  - {fileID: 1480564847}
+  - {fileID: 382632072}
   _itemButtonPrefab: {fileID: 372235170206443278, guid: d071659a17a43504184296f7e8b9d3f0, type: 3}
   _ItemExplanatoryText: {fileID: 553987505}
   _itemIconImage: {fileID: 1543710357}
   _eventSystem: {fileID: 1216641984}
+  _contentParent: {fileID: 380073474}
   _folderPath: icon\
+  _filterButton_NomalColor: {r: 1, g: 1, b: 1, a: 1}
+  _filterButton_SelectedColor: {r: 0.65490454, g: 1, b: 0.3150943, a: 1}
 --- !u!1 &1123925854
 GameObject:
   m_ObjectHideFlags: 0
@@ -48432,7 +48436,7 @@ GameObject:
   - component: {fileID: 1175650182}
   m_Layer: 5
   m_Name: Content_ALL
-  m_TagString: ItemDrawContentALL
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49698,7 +49702,7 @@ GameObject:
   - component: {fileID: 1383433557}
   m_Layer: 5
   m_Name: ItemFilter_Heal
-  m_TagString: ItemFilterHEAL
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50955,7 +50959,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1480564848
 RectTransform:
   m_ObjectHideFlags: 0
@@ -51662,7 +51666,7 @@ GameObject:
   - component: {fileID: 1626395669}
   m_Layer: 5
   m_Name: ItemFilter_Key
-  m_TagString: ItemFilterKEY
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52884,7 +52888,7 @@ GameObject:
   - component: {fileID: 1884285955}
   m_Layer: 5
   m_Name: ItemFilter_MinusI
-  m_TagString: ItemFilterMINUS_ITEM
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53153,7 +53157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1934831440
 RectTransform:
   m_ObjectHideFlags: 0

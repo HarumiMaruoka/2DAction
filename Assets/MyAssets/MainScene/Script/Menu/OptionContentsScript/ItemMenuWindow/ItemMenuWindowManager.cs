@@ -78,11 +78,11 @@ public class ItemMenuWindowManager : MonoBehaviour
         if ((_minusItemFilterButton = GameObject.FindGameObjectWithTag("ItemFilterMINUS_ITEM")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: MINUS_ITEM Button");
         if ((_keyFilterButton = GameObject.FindGameObjectWithTag("ItemFilterKEY")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: KEY Button");
 
-        _allFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.ALL);
-        _healFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.HEAL);
-        _powerUpFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.POWER_UP);
-        _minusItemFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
-        _keyFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
+        //_allFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.ALL);
+        //_healFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.HEAL);
+        //_powerUpFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.POWER_UP);
+        //_minusItemFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
+        //_keyFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
 
         //アイテムのアイコン画像を取得
         _sprites = Resources.LoadAll<Sprite>(_folderPath);
