@@ -55,7 +55,7 @@ abstract public class Item
 
     public enum ItemType
     {
-        HEAL,
+        HEAL = 1,
         POWER_UP,
         MINUS_ITEM,
         KEY,
@@ -77,6 +77,6 @@ abstract public class Item
     /// <summary> アイテムを使用する:継承先で内容を定義する。 </summary>
     virtual public void UseItem()
     {
-        Debug.Log($"これはアイテム共通の処理 : アイテムNo.{_myID}を使用。"); 
+        Debug.Log($"これはアイテム共通の処理 : アイテムNo.{_myID}を使用。");
     }
 }

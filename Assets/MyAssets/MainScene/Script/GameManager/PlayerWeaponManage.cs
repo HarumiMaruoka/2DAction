@@ -20,6 +20,9 @@ public class PlayerWeaponManage : MonoBehaviour
         }
     }
 
+    //プライベートなコンストラクタを定義する
+    private PlayerWeaponManage() { }
+
     //弾に関してはオブジェクトプール？を使用する
     //弾の格納先
     [Header("弾の最大数"), SerializeField] int _maxBullet;

@@ -8,16 +8,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     //このクラスはシングルトンパターンを使用したものである。
-
     //インスタンスを生成
     private static GameManager _instance;
-
-    /// <summary> アイテムデータが入ったファイルのパス </summary>
-    [SerializeField] string _itemCSVPath;
-    [SerializeField] string _itemJSONPath;
-    /// <summary> アイテムデータベース </summary>
-    Item[] _itemData = new Item[(int)Item.ItemID.ITEM_ID_END];
-    public Item[] ItemData { get => _itemData; }
 
     //インスタンスをカプセル化
     public static GameManager Instance
@@ -31,6 +23,15 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+    //プライベートなコンストラクタを定義する
+    private GameManager() { }
+
+    /// <summary> アイテムデータが入ったファイルのパス </summary>
+    [SerializeField] string _itemCSVPath;
+    [SerializeField] string _itemJSONPath;
+    /// <summary> アイテムデータベース </summary>
+    Item[] _itemData = new Item[(int)Item.ItemID.ITEM_ID_END];
+    public Item[] ItemData { get => _itemData; }
 
     private void Awake()
     {

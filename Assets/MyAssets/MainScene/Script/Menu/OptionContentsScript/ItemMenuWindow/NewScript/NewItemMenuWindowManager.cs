@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,6 +111,7 @@ public class NewItemMenuWindowManager : MonoBehaviour
                 _currentItemFilter = 0;
             }
         }
+        //必要であればフィルターを更新する
         if (_beforeItemFilter != _currentItemFilter)
         {
             //=====フィルターの更新処理=====//
@@ -119,7 +121,7 @@ public class NewItemMenuWindowManager : MonoBehaviour
             _contents[(int)_currentItemFilter].SetActive(true);
             _contents[(int)_beforeItemFilter].SetActive(false);
             //選択中のオブジェクトを変更する
-            _eventSystem.SetSelectedGameObject(_contentChildren[(int)_currentItemFilter][0].gameObject);
+            Set_SelectedItemButton_ActiveTop(_contentChildren[(int)_currentItemFilter]);
             //ボタンの色を変える
             _filters[(int)_beforeItemFilter].GetComponent<Image>().color = _filterButton_NomalColor;
             _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
@@ -197,8 +199,70 @@ public class NewItemMenuWindowManager : MonoBehaviour
         //どちらでもなければそのまま返す。
         else return value;
     }
+    /// <summary> 上下のボタンの偏移先を繋げる </summary>
+    /// <param name="upperButton"> 上のボタン </param>
+    /// <param name="underButton"> 下のボタン </param>
+    void ConnectButton_Vertical(Button currentButton, Button upperButton, Button underButton)
+    {
+        //上ボタンのナビゲーションを取得
+        Navigation navigation = currentButton.navigation;
+        //上のボタンを設定
+        navigation.selectOnUp = upperButton;
+        //下のボタンを設定
+        navigation.selectOnDown = underButton;
+        //ナビゲーションをセット
+        currentButton.navigation = navigation;
+    }
+    /// <summary> アクティブなアイテムの偏移先を設定する。 </summary>
+    /// <param name="item"> アイテムの2次元リスト </param>
+    void SetALL_ActiveItem_ShiftDestination(List<List<ItemButton>> item)
+    {
+        //順番に偏移先を設定する。
+        for (int i = 0; i < item.Count; i++)
+        {
+            for (int j = 0; j < item[i].Count; j++)
+            {
+                ConnectButton_Vertical(item[i][j].GetComponent<Button>(),
+                    item[i][LargeOrSmall(j - 1, item[i].Count - 1, 0)].GetComponent<Button>(),
+                    item[i][LargeOrSmall(j + 1, item[i].Count - 1, 0)].GetComponent<Button>());
+            }
+        }
+    }
+    /// <summary> アクティブな一番上のアイテムボタンを選択状態にする。 </summary>
+    /// <param name="item"> 走査する配列 </param>
+    void Set_SelectedItemButton_ActiveTop(ItemButton[] item)
+    {
+        foreach (var i in item)
+        {
+            //アクティブなボタンを見つけたら、そのボタンをセレクテッドボタンに設定し、ループを抜ける。
+            if (i.gameObject.activeSelf)
+            {
+                _eventSystem.SetSelectedGameObject(i.gameObject);
+                break;
+            }
+        }
+    }
+    /// <summary> 上下を繋げる </summary>
+    /// <param name="item"> 間のアイテムボタン </param>
+    void Connect_TargetButton(ItemButton item)
+    {
+        //間のナビゲーションから上下のボタンを取得
+        Navigation navigation = item.GetComponent<Button>().navigation;
+        var up = navigation.selectOnUp;
+        var down = navigation.selectOnDown;
+        Navigation upNavigation = up.navigation;
+        Navigation downNavigation = down.navigation;
 
-    //==========このクラスの初期化関連==========//
+        //偏移先を設定
+        upNavigation.selectOnDown = down;
+        downNavigation.selectOnUp = up;
+
+        //ナビゲーションをセット
+        up.navigation = upNavigation;
+        down.navigation = downNavigation;
+    }
+
+    //==========クラス初期化関連==========//
     /// <summary> このクラスを初期化する。 </summary>
     /// <returns>成功したらtrueを返す。</returns>
     bool Initialize_ThisClass()
@@ -219,6 +283,11 @@ public class NewItemMenuWindowManager : MonoBehaviour
         //コンテントの偏移先を設定する。
         _contentChildren = new ItemButton[][] { _contentALLChildren, _contentHealChildren, _contentPowerUpChildren, _contentMinusChildren, _contentKeyChildren };
         SetALL_ItemButtonShiftDestination(_filters, _contentChildren);
+
+        //ここに所持数が0個のアイテムを非アクティブにする処理を書く
+        Set_ActiveFalse_UnNeedItemALL(_contentChildren);
+
+        SetALL_ActiveItem_ShiftDestination(Get_ActiveItemButton(_contentChildren));
 
         //フィルターボタンの色を変更する
         _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
@@ -289,9 +358,106 @@ public class NewItemMenuWindowManager : MonoBehaviour
         _contentMinusChildren = _contents[(int)ItemFilter.MINUS_ITEM].GetComponentsInChildren<ItemButton>();
         _contentKeyChildren = _contents[(int)ItemFilter.KEY].GetComponentsInChildren<ItemButton>();
     }
+    /// <summary> 所持数0のアイテムを全て非アクティブにする </summary>
+    void Set_ActiveFalse_UnNeedItemALL(ItemButton[][] item)
+    {
+        for (int i = 0; i < item.Length; i++)
+        {
+            for (int j = 0; j < item[i].Length; j++)
+            {
+                //所持数が0かどうか判定する。
+                //0個であれば非アクティブにする
+                if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                {
+                    item[i][j].gameObject.SetActive(false);
+                }
+                //そうでなければアクティブにする
+                else
+                {
+                    item[i][j].gameObject.SetActive(true);
+                }
+            }
+        }
+    }
 
+    //=========便利な関数群=========//
+    /// <summary> アクティブなボタンの配列を取得する </summary>
+    /// <param name="item"> 検索するアイテムボタン群 </param>
+    /// <returns> アクティブなボタンのリスト </returns>
+    List<List<ItemButton>> Get_ActiveItemButton(ItemButton[][] item)
+    {
+        List<List<ItemButton>> itemButtons = new List<List<ItemButton>>();
+
+        //ここにアクティブなボタンを保存する処理を書く
+        int index = 0;
+        foreach (var i in item)
+        {
+            itemButtons.Add(new List<ItemButton>());
+            foreach (var j in i)
+            {
+                if (j.gameObject.activeSelf)
+                {
+                    itemButtons[index].Add(j);
+                }
+            }
+            index++;
+        }
+
+        return itemButtons;
+    }
+    /// <summary> 指定されたアイテムを非アクティブにする </summary>
+    void Set_ActiveFalse_UnNeedItem(ItemButton item)
+    {
+        item.gameObject.SetActive(false);
+    }
+    /// <summary> そのフィルターの一番上のアクティブなアイテムボタンを取得する </summary>
+    ItemButton Get_TopActiveObject(ItemFilter filter)
+    {
+        foreach (var item in _contentChildren[(int)filter])
+        {
+            if (item.gameObject.activeSelf) return item;
+        }
+        return null;
+    }
+
+    //=========他のクラスから呼び出すメソッド=========//
+    /// <summary> フィルターを変更する </summary>
+    /// <param name="itemFilter"> 新しいフィルター </param>
     public void Set_CurrentFillter(ItemFilter itemFilter)
     {
         _currentItemFilter = itemFilter;
+    }
+    /// <summary> アイテムの所持数が0になった時の処理 </summary>
+    public void ShouldDo_HaveItemZero(ItemButton item, Item.ItemID ID, ItemFilter filter)
+    {
+        //一番上のアクティブなボタンを取得
+        ItemButton itemTop = Get_TopActiveObject(_currentItemFilter);
+        //ALLにいるボタンを非アクティブにし、上下の偏移先を設定する。
+        _contentALLChildren[(int)ID].gameObject.SetActive(false);
+        Connect_TargetButton(_contentALLChildren[(int)ID]);
+        //フィルターにいるボタンを非アクティブにし、上下の偏移先を設定する。
+        item.gameObject.SetActive(false);
+        Connect_TargetButton(item);
+        //selectedオブジェクトを変更する
+        //対象のボタンが一番上であれば、一つ下をselectオブジェクトにする。
+
+        try
+        {
+            //if (item == _contentChildren[(int)_currentItemFilter][(int)ID])
+            //(表示上の(アクティブな))コンテントの一番上なら、一つ下のアイテムをセレクテッドオブジェクトに指定する
+            if (itemTop == item)
+            {
+                _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnDown.gameObject);
+            }
+            //それ以外ならセレクテッドオブジェクトを一つ上のボタンにする
+            else
+            {
+                _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnUp.gameObject);
+            }
+        }
+        catch (IndexOutOfRangeException e)
+        {
+            Debug.Log("そのコンテントは空です。");
+        }
     }
 }

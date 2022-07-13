@@ -22,6 +22,8 @@ public class PlayerManager : MonoBehaviour
             return _instance;
         }
     }
+    //プライベートなコンストラクタを定義する
+    private PlayerManager() { }
 
     //アイテム所持数の保存先
     [SerializeField] string _itemFilePath;
@@ -36,10 +38,10 @@ public class PlayerManager : MonoBehaviour
     public ItemNumberOfPossessions ItemVolume { get => _itemVolume; }
 
 
-    /// <summary> 所持している装備の情報 </summary>
+    // <summary> 所持している装備の情報 </summary>
     /// 装備に関する処理をここに書く
 
-    /// <summary> 所持している主要なアイテムの情報 </summary>
+    // <summary> 所持している主要なアイテムの情報 </summary>
     /// 所持している主要なアイテムの情報に関する処理をここに書く
 
 
@@ -126,7 +128,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    /// <summary>　特定のアイテムの情報を変更 </summary>
+    /// <summary>　特定のアイテムの所持数を変更 </summary>
     /// <param name="itemID"> 変更するアイテムのID </param>
     /// <param name="value"> 変更する数 </param>
     public void Set_ItemNumberOfPossessions(int itemID, int volume)
