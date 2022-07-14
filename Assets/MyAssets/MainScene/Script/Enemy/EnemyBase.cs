@@ -102,7 +102,7 @@ public class EnemyBase : MonoBehaviour
     public void HitPlayer()
     {
         //プレイヤーのHitPointを減らす
-        PlayerManager.Instance.PlayerHealthPoint -= _offensive_Power;
+        PlayerStatusManager.Instance.PlayerHealthPoint -= _offensive_Power;
         _playersRigidBody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_isRight)

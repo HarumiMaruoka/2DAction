@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeaponManage : MonoBehaviour
+public class PlayerPartsManager : PlayerPartsMavagerBase
 {
-    //このクラスはシングルトンパターンを使用したものである。
+    //=======シングルトン関係=======//
     //インスタンスを生成
-    private static PlayerWeaponManage _instance;
+    private static PlayerPartsManager _instance;
     //インスタンスをは読み取り専用
-    public static PlayerWeaponManage Instance
+    public static PlayerPartsManager Instance
     {
         get
         {
@@ -19,15 +19,21 @@ public class PlayerWeaponManage : MonoBehaviour
             return _instance;
         }
     }
-
     //プライベートなコンストラクタを定義する
-    private PlayerWeaponManage() { }
+    private PlayerPartsManager() { }
 
-    //弾に関してはオブジェクトプール？を使用する
+    [Header("所持できるパーツの最大数"), SerializeField] int _maxHaveValue;
+    /// <summary> 所持できるパーツの最大数 </summary>
+    public int MaxHaveValue { get => _maxHaveValue; }
+    /// <summary> 現在所持しているパーツの配列 </summary>
+    Equipment[] _havePartsList;
+
+    //メモ : 弾に関してはオブジェクトプールを使用する。
     //弾の格納先
     [Header("弾の最大数"), SerializeField] int _maxBullet;
-
     GameObject[] _nomalShotBullet;
+
+
 
     private void Awake()
     {
@@ -41,6 +47,7 @@ public class PlayerWeaponManage : MonoBehaviour
         {
             Destroy(this);
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()

@@ -367,7 +367,7 @@ public class NewItemMenuWindowManager : MonoBehaviour
             {
                 //所持数が0かどうか判定する。
                 //0個であれば非アクティブにする
-                if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
                 {
                     item[i][j].gameObject.SetActive(false);
                 }
@@ -432,32 +432,21 @@ public class NewItemMenuWindowManager : MonoBehaviour
     {
         //一番上のアクティブなボタンを取得
         ItemButton itemTop = Get_TopActiveObject(_currentItemFilter);
-        //ALLにいるボタンを非アクティブにし、上下の偏移先を設定する。
-        _contentALLChildren[(int)ID].gameObject.SetActive(false);
-        Connect_TargetButton(_contentALLChildren[(int)ID]);
-        //フィルターにいるボタンを非アクティブにし、上下の偏移先を設定する。
+        //受け取ったボタンを非アクティブにし、上下の偏移先を設定する。
         item.gameObject.SetActive(false);
         Connect_TargetButton(item);
         //selectedオブジェクトを変更する
         //対象のボタンが一番上であれば、一つ下をselectオブジェクトにする。
 
-        try
+        //コンテントの一番上なら、一つ下のアイテムをセレクテッドオブジェクトに指定する
+        if (itemTop == item)
         {
-            //if (item == _contentChildren[(int)_currentItemFilter][(int)ID])
-            //(表示上の(アクティブな))コンテントの一番上なら、一つ下のアイテムをセレクテッドオブジェクトに指定する
-            if (itemTop == item)
-            {
-                _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnDown.gameObject);
-            }
-            //それ以外ならセレクテッドオブジェクトを一つ上のボタンにする
-            else
-            {
-                _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnUp.gameObject);
-            }
+            _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnDown.gameObject);
         }
-        catch (IndexOutOfRangeException e)
+        //それ以外ならセレクテッドオブジェクトを一つ上のボタンにする
+        else
         {
-            Debug.Log("そのコンテントは空です。");
+            _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnUp.gameObject);
         }
     }
 }

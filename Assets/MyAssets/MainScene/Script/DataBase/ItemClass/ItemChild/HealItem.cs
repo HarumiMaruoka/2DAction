@@ -16,7 +16,13 @@ public class HealItem : Item
         base.UseItem();
 
         Debug.Log($"Use HealItem : itemID {_myID}");
+        if (PlayerStatusManager.Instance.PlayerMaxHealthPoint < PlayerStatusManager.Instance.PlayerHealthPoint + _myEffectSize)
+        {
+            PlayerStatusManager.Instance.PlayerHealthPoint = PlayerStatusManager.Instance.PlayerMaxHealthPoint;
+        }
+        else
+        {
+            PlayerStatusManager.Instance.PlayerHealthPoint += _myEffectSize;
+        }
     }
-
-
 }

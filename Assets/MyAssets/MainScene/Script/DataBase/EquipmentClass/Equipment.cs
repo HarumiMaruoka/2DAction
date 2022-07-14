@@ -19,7 +19,7 @@ abstract public class Equipment
     /// <param name="defensePower_RiseValue"> 防御力の増加量 </param>
     /// <param name="moveSpeed_RiseValue"> 移動速度の上昇量 </param>
     /// <param name="endurance_RiseValue"> 耐久力 </param>
-    public Equipment(EquipmentID id, EquipmentType type, string name, float specialEffects = 0f,
+    public Equipment(EquipmentID id, EquipmentType type, string name, EquipmentRarity rarity, float specialEffects = 0f,
         float maxHealthPoint_RiseValue = 0f, float maxStamina_RiseValue = 0f,
         float offensivePower_ShortDistance_RiseValue = 0f, float offensivePower_LongDistance_RiseValue = 0f,
         float defensePower_RiseValue = 0f, float moveSpeed_RiseValue = 0f, float endurance_RiseValue = 0f)
@@ -27,6 +27,7 @@ abstract public class Equipment
         _myID = id;
         _myType = type;
         _myName = name;
+        _myRarity = rarity;
 
         _specialEffects = specialEffects;
 
@@ -62,10 +63,15 @@ abstract public class Equipment
         PARTS_TYPE_END
     }
 
+    /// <summary> パーツのレアリティ </summary>
+    public enum EquipmentRarity { A,B,C,D,E}
+
     /// <summary> この装備のID </summary>
     public EquipmentID _myID { get; }
     /// <summary> この装備の種類 </summary>
     public EquipmentType _myType { get; }
+    /// <summary> この装備のレアリティ </summary>
+    public EquipmentRarity _myRarity { get; }
     /// <summary> この装備の名前 </summary>
     public string _myName { get; }
     /// <summary> この装備の特殊効果の効果量 </summary>

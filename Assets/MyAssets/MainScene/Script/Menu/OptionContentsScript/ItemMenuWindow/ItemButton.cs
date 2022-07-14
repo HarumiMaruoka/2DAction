@@ -40,12 +40,12 @@ public class ItemButton : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerManager.Instance == null)
+        if (PlayerStatusManager.Instance == null)
         {
             Debug.LogError("PlayerManagerがnullです！");
         }
         //所持数を取得
-        _nowItemVolume = PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
+        _nowItemVolume = ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
             Update_ItemVolume();
@@ -53,7 +53,8 @@ public class ItemButton : MonoBehaviour
         //所持数が0以下になった時の処理
         if (_nowItemVolume <= 0)
         {
-            Debug.Log(_myItem._name);
+            Debug.Log(_myItem._name + "の所持数が0になりました。\n" +
+                "_myItem._nameのボタンを非アクティブにします。");
             _itemWindowManager.ShouldDo_HaveItemZero(this, _myItem._myID, (NewItemMenuWindowManager.ItemFilter)_myItem._myType);
         }
         _beforeItemVolume = _nowItemVolume;
@@ -71,7 +72,7 @@ public class ItemButton : MonoBehaviour
     {
         if (_itemVolumText != null)
         {
-            _itemVolumText.text = " × " + PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+            _itemVolumText.text = " × " + ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
         }
     }
 

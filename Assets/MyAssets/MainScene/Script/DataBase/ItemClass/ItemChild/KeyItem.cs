@@ -13,7 +13,6 @@ public class KeyItem : Item
 
     public override void UseItem()
     {
-        base.UseItem();
         Debug.Log("Use KeyItem");
     }
 }

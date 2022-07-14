@@ -237,7 +237,7 @@ public class ItemMenuWindowManager : MonoBehaviour
                 foreach (var item in _items)
                 { 
                     //所持数が0ならスキップする
-                    if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0)
+                    if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0)
                     {
                         item.SetActive(false);
                         continue;
@@ -261,7 +261,7 @@ public class ItemMenuWindowManager : MonoBehaviour
                     if ((int)item.GetComponent<ItemButton>().MyItem._myType == (int)_currentItemFilter)
                     {
                         //所持数が0ならスキップする
-                        if (PlayerManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0) 
+                        if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0) 
                         {
                             item.SetActive(false);
                             continue;
