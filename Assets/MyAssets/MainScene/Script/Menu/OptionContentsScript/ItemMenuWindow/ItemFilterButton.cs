@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class ItemFilterButton : MonoBehaviour
 {
-    NewItemMenuWindowManager.ItemFilter _newMyFilter;
-    NewItemMenuWindowManager _newItemMenuWindowManager;
+    ItemMenuWindowManager.ItemFilter _newMyFilter;
+    ItemMenuWindowManager _newItemMenuWindowManager;
 
     /// <summary> アイテムフィルターをセットする </summary>
-    public void Set_ItemFilter(NewItemMenuWindowManager.ItemFilter itemFilter)
+    public void Set_ItemFilter(ItemMenuWindowManager.ItemFilter itemFilter)
     {
         _newMyFilter = itemFilter;
     }
 
     void Start()
     {
-        _newItemMenuWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<NewItemMenuWindowManager>();
+        _newItemMenuWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<ItemMenuWindowManager>();
     }
 
     public void OnClick_FilterUpdate()

@@ -17,7 +17,7 @@ public class ItemButton : MonoBehaviour
     int _beforeItemVolume;
     int _nowItemVolume;
 
-    NewItemMenuWindowManager _itemWindowManager;
+    ItemMenuWindowManager _itemWindowManager;
 
     public void SetItemData(Item item)
     {
@@ -27,7 +27,7 @@ public class ItemButton : MonoBehaviour
 
     void Start()
     {
-        _itemWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<NewItemMenuWindowManager>();
+        _itemWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<ItemMenuWindowManager>();
         //テキストの取得
         _itemNameText = transform.GetChild(0).GetComponent<Text>();
         _itemVolumText = transform.GetChild(1).GetComponent<Text>();
@@ -55,7 +55,7 @@ public class ItemButton : MonoBehaviour
         {
             Debug.Log(_myItem._name + "の所持数が0になりました。\n" +
                 "_myItem._nameのボタンを非アクティブにします。");
-            _itemWindowManager.ShouldDo_HaveItemZero(this, _myItem._myID, (NewItemMenuWindowManager.ItemFilter)_myItem._myType);
+            _itemWindowManager.ShouldDo_HaveItemZero(this, _myItem._myID, (ItemMenuWindowManager.ItemFilter)_myItem._myType);
         }
         _beforeItemVolume = _nowItemVolume;
     }

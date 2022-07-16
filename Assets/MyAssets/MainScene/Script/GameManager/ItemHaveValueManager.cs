@@ -19,7 +19,7 @@ public class ItemHaveValueManager : MonoBehaviour
             return _instance;
         }
     }
-    //プライベートなコンストラクタを定義する。名前を設定する。
+    //プライベートなコンストラクタを定義する。
     private ItemHaveValueManager() { }
 
     private void Awake()

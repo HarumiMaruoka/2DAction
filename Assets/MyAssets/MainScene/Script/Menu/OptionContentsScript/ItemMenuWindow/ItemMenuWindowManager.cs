@@ -1,431 +1,452 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary> アイテムウィンドウを管理するクラス </summary>
 public class ItemMenuWindowManager : MonoBehaviour
 {
+    //=====表示するアイテムのフィルターのenum=====//
     [System.Serializable]
-    //表示するアイテムのフィルター
     public enum ItemFilter
     {
+        ALL,
         HEAL,
         POWER_UP,
         MINUS_ITEM,
         KEY,
 
-        ALL,
-
         ITEM_FILTER_END
     }
 
-    //このクラスで使用する変数
-
-    //アイテムフィルター
+    /////<=======このクラスで使用する変数=======>/////
+    //=====アイテムフィルター=====//
     /// <summary> 前フレーム選択していたアイテムフィルター </summary>
     ItemFilter _beforeItemFilter;
     /// <summary> 現在のフレームで選択しているアイテムフィルター </summary>
-    ItemFilter _currentItemFilter;
+    ItemFilter _currentItemFilter = ItemFilter.ALL;
+    /// <summary> このクラスを初期化したかどうか </summary>
+    bool _whetherInitialized;
+    /// <summary> コンテントの子の配列 </summary>
+    ItemButton[][] _contentChildren;
+    //=====コンテントの子となるボタン達=====//
+    ItemButton[] _contentALLChildren;
+    ItemButton[] _contentHealChildren;
+    ItemButton[] _contentPowerUpChildren;
+    ItemButton[] _contentMinusChildren;
+    ItemButton[] _contentKeyChildren;
 
-    //選択しているアイテムのID
-    /// <summary> 前フレームに選択していたアイテムのID(index) </summary>
-    int _beforeItemIndex;
-    /// <summary> 現在選択しているアイテムのID(index) </summary>
-    int _currentItemIndex;
 
-    //各プレハブ
-    /// <summary> アイテムボタンのプレハブ </summary>
-    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
-
-
-    //配列類
+    //=========配列類=========//
     /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
-    GameObject[] _items = new GameObject[(int)Item.ItemID.ITEM_ID_END];
+    GameObject[] _itemButtons = new GameObject[(int)Item.ItemID.ITEM_ID_END];
     /// <summary> アイテムアイコンのイメージ </summary>
     Sprite[] _sprites = new Sprite[(int)Item.ItemID.ITEM_ID_END];
 
-    //フィルターのボタン類
-    GameObject _allFilterButton;
-    GameObject _healFilterButton;
-    GameObject _powerUpFilterButton;
-    GameObject _minusItemFilterButton;
-    GameObject _keyFilterButton;
-
-    //アサインすべきオブジェクト
+    //=====アサインすべきオブジェクト=====//
+    //=====フィルターのボタン類=====//
+    [Header("フィルターボタン"), SerializeField] GameObject[] _filters;
+    //=====各ボタンの親となるコンテント=====//
+    [Header("コンテントの配列"), SerializeField] GameObject[] _contents;
+    /// <summary> アイテムボタンのプレハブ </summary>
+    [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
     /// <summary> 説明文のテキスト </summary>
     [SerializeField] Text _ItemExplanatoryText;
     /// <summary> アイコンのイメージ </summary>
     [SerializeField] Image _itemIconImage;
     /// <summary> イベントシステム </summary>
     [SerializeField] EventSystem _eventSystem;
+    /// <summary>  </summary>
+    [SerializeField] ScrollRect _contentParent;
 
-    //インスペクタから設定すべき値
+    //=====インスペクタから設定すべき値=====//
     [Header("アイテムアイコンが格納されたフォルダのパス:resource以下名"), SerializeField] string _folderPath;
+    [Header("フィルターボタンの通常色"), SerializeField] Color _filterButton_NomalColor;
+    [Header("フィルターボタンの選択時の色"), SerializeField] Color _filterButton_SelectedColor;
 
+    //=====仮の入れ物=====//
+    GameObject temporaryObject;
 
     //初期化処理
     void Start()
     {
-        //アイテムフィルター
-        _currentItemFilter = ItemFilter.ALL;
-
-        if ((_allFilterButton = GameObject.FindGameObjectWithTag("ItemFilterALL")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: ALL Button");
-        if ((_healFilterButton = GameObject.FindGameObjectWithTag("ItemFilterHEAL")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: HEAL Button");
-        if ((_powerUpFilterButton = GameObject.FindGameObjectWithTag("ItemFilterPOWER_UP")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: POWER_UP Button");
-        if ((_minusItemFilterButton = GameObject.FindGameObjectWithTag("ItemFilterMINUS_ITEM")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: MINUS_ITEM Button");
-        if ((_keyFilterButton = GameObject.FindGameObjectWithTag("ItemFilterKEY")) == null) Debug.LogError("アイテムフィルターボタンの取得に失敗しました。タグを設定してください。: KEY Button");
-
-        //_allFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.ALL);
-        //_healFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.HEAL);
-        //_powerUpFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.POWER_UP);
-        //_minusItemFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
-        //_keyFilterButton.GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
-
-        //アイテムのアイコン画像を取得
-        _sprites = Resources.LoadAll<Sprite>(_folderPath);
-
-        //nullチェック
-        if (_ItemExplanatoryText == null)
-        {
-            Debug.LogError("説明文のテキストをアサインしてください");
-        }
-        if (_eventSystem == null)
-        {
-            Debug.LogError("EventSystemをアサインしてください");
-        }
-
-        //アイテムボタンをインスタンシエイトする準備の処理。
-        if (_itemButtonPrefab == null)
-        {
-            Debug.LogError("アイテムボタンのプレハブがアサインされていません。");
-        }
-        GameObject _itemContent = GameObject.FindGameObjectWithTag("ItemDrawContentALL");
-        if (_itemContent == null)
-        {
-            Debug.LogError("ItemDrawContentALLのタグが付いた、オブジェクトの取得に失敗しました。");
-        }
-        //アイテムボタンをScrollViewの、Contentの子としてインスタンシエイトしておく。
-        for (int i = 0; i < (int)Item.ItemID.ITEM_ID_END; i++)
-        {
-            _items[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _itemContent.transform);
-
-            //ItemDataをセットする
-            _items[i].GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
-        }
-
-        _eventSystem.SetSelectedGameObject(_items[0]);
-
-
-        //ボタンのキー入力の偏移先の指定処理。
-        //select on up と down を設定する 汚いのであとで直す
-        //Navigation navigation = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation;
-        //navigation.mode = Navigation.Mode.Explicit;
-        //navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>();
-        //navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_01].GetComponent<Button>();
-        //_items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>().navigation = navigation;
-        ////select on up と down を設定する
-        //navigation = _items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation;
-        //navigation.mode = Navigation.Mode.Explicit;
-        //navigation.selectOnDown = _items[(int)Item.ItemID.ITEM_ID_00].GetComponent<Button>();
-        //navigation.selectOnUp = _items[(int)Item.ItemID.ITEM_ID_END - 2].GetComponent<Button>();
-        //_items[(int)Item.ItemID.ITEM_ID_END - 1].GetComponent<Button>().navigation = navigation;
-
-
-        //各ボタンの偏移先を設定する。最初はALLの設定
-        Set_ItemButtonShiftDestination(ItemFilter.ALL, _items);
+        //このクラスを初期化する。
+        _whetherInitialized = Initialize_ThisClass();
     }
 
     void Update()
     {
-        UpdateItemWindow();
+        if (_whetherInitialized)
+        {
+            Update_Filter();
+        }
     }
 
+    /// <summary> 道具画面がアクティブになった時の処理 </summary>
     private void OnEnable()
     {
-        Update_ItemFilter();
-        _currentItemFilter = ItemFilter.ALL;
-        _eventSystem.SetSelectedGameObject(_items[0]);
-    }
-
-    /// <summary> アイテムウィンドウの更新関数 </summary>
-    void UpdateItemWindow()
-    {
-        //入力
-        InputAbove();
-        InputBelow();
-        InputRight();
-        InputLeft();
-
-        //必要であれば、アイテムフィルターを更新する。
-        Update_ItemFilter();
-
-        //現在選択されているボタンを取得
-        GameObject nowSelectItem = EventSystem.current.currentSelectedGameObject;
-
-        //説明文と画像を設定
-        if (nowSelectItem != null && nowSelectItem.TryGetComponent<ItemButton>(out ItemButton item))
-        {
-            _ItemExplanatoryText.text = item.MyItem._myExplanatoryText;
-            _itemIconImage.sprite = _sprites[(int)item.MyItem._myID];
-        }
-
-        //現在フレームの状態を保存
-        _beforeItemFilter = _currentItemFilter;
-        _beforeItemIndex = _currentItemIndex;
-    }
-
-    /// <summary> 上の入力があった時の処理 </summary>
-    void InputAbove()
-    {
 
     }
 
-    /// <summary> 下の入力があった時の処理 </summary>
-    void InputBelow()
+    //=========フィルター変更に関する処理=========//
+    /// <summary> フィルター変更処理 </summary>
+    void Update_Filter()
     {
-
-    }
-
-    /// <summary> 右の入力があった時の処理 </summary>
-    void InputRight()
-    {
-        //右の入力を検知
-        if (Input.GetButtonDown("Horizontal_Right"))
-        {
-            //ここにアイテムフィルターを変更する処理を書く
-            _currentItemFilter = _currentItemFilter + 1;
-            if (_currentItemFilter >= ItemFilter.ITEM_FILTER_END)
-            {
-                _currentItemFilter = ItemFilter.HEAL;
-            }
-        }
-    }
-
-    /// <summary> 左の入力があった時の処理 </summary>
-    void InputLeft()
-    {
-        //左の入力を検知
+        //フィルターを左にシフトする
         if (Input.GetButtonDown("Horizontal_Left"))
         {
-            //ここにアイテムフィルターを変更する処理を書く
-            _currentItemFilter = _currentItemFilter - 1;
-            if (_currentItemFilter < ItemFilter.HEAL)
+            _currentItemFilter--;
+            if (_currentItemFilter < 0)
             {
-                _currentItemFilter = ItemFilter.ALL;
+                _currentItemFilter = (ItemFilter)_filters.Length - 1;
             }
         }
-    }
-
-    /// <summary> アイテムを種類別で表示する。そのフィルターに係るアイテムボタンのみアクティブにする。それ以外は非アクティブにする。 </summary>
-    void Update_ItemFilter()
-    {
-        //最初の要素を頭にする
-        bool firstObj = true;
-
-        //前と今のフィルターが違えば更新する
+        //フィルターを右にシフトする
+        if (Input.GetButtonDown("Horizontal_Right"))
+        {
+            _currentItemFilter++;
+            if (_currentItemFilter > (ItemFilter)_filters.Length - 1)
+            {
+                _currentItemFilter = 0;
+            }
+        }
+        //必要であればフィルターを更新する
         if (_beforeItemFilter != _currentItemFilter)
         {
-            //一時リストを作成 : ボタンの偏移先を設定するよう。
-            List<GameObject> temporaryList = new List<GameObject>();
-
-            //全て表示する場合の処理
-            if (_currentItemFilter == ItemFilter.ALL)
-            {
-                foreach (var item in _items)
-                { 
-                    //所持数が0ならスキップする
-                    if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0)
-                    {
-                        item.SetActive(false);
-                        continue;
-                    }
-                    //頭の要素をSelectedGameObjectに指定する。
-                    if (firstObj)
-                    {
-                        firstObj = false;
-                        _eventSystem.SetSelectedGameObject(item);
-                    }
-                    item.SetActive(true);
-                    temporaryList.Add(item);
-                }
-            }
-
-            //一部だけ表示する場合(フィルターにかけるときの処理)
-            else
-            {
-                foreach (var item in _items)
-                {
-                    if ((int)item.GetComponent<ItemButton>().MyItem._myType == (int)_currentItemFilter)
-                    {
-                        //所持数が0ならスキップする
-                        if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item.GetComponent<ItemButton>().MyItem._myID] == 0) 
-                        {
-                            item.SetActive(false);
-                            continue;
-                        }
-                        //頭の要素をSelectedGameObjectに指定する。
-                        if (firstObj)
-                        {
-                            firstObj = false;
-                            _eventSystem.SetSelectedGameObject(item);
-                        }
-                        item.SetActive(true);
-                        temporaryList.Add(item);
-                    }
-                    else
-                    {
-                        item.SetActive(false);
-                    }
-                }
-            }
-            //ボタンの設定を更新する
-             Set_ItemButtonShiftDestination(_currentItemFilter, temporaryList);
-
-            //ボタンの色を更新する
-            Change_FilterButtonColor();
+            //=====フィルターの更新処理=====//
+            //コンテントを入れ替える
+            _contentParent.content = _contents[(int)_currentItemFilter].GetComponent<RectTransform>();
+            //古いコンテントを非アクティブにして、新しいコンテントをアクティブにする。
+            _contents[(int)_currentItemFilter].SetActive(true);
+            _contents[(int)_beforeItemFilter].SetActive(false);
+            //選択中のオブジェクトを変更する
+            Set_SelectedItemButton_ActiveTop(_contentChildren[(int)_currentItemFilter]);
+            //ボタンの色を変える
+            _filters[(int)_beforeItemFilter].GetComponent<Image>().color = _filterButton_NomalColor;
+            _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
         }
         _beforeItemFilter = _currentItemFilter;
     }
 
-    /// <summary> アイテムボタンの偏移先を決める処理 </summary>
+    //======アイテムの偏移先を設定する関連======//
+    /// <summary> アイテムボタンの偏移先を設定する。 </summary>
     /// <param name="currentButton"> 設定するボタン </param>
     /// <param name="up">    上に設定するボタン </param>
     /// <param name="down">  下に設定するボタン </param>
     /// <param name="left">  左に設定するボタン </param>
     /// <param name="right"> 右に設定するボタン </param>
-    void Set_ItemButtonShiftDestinationHelper(Button currentButton, Button up, Button down, Button left, Button right)
+    void Set_ItemButtonShiftDestinationHelper(ItemButton currentButton, ItemButton up, ItemButton down, GameObject left, GameObject right)
     {
         //ナビゲーションを取得
-        Navigation navigation = currentButton.navigation;
+        Navigation navigation = currentButton.GetComponent<Button>().navigation;
         //モードを変更
         navigation.mode = Navigation.Mode.Explicit;
         //偏移先を指定
-        navigation.selectOnUp = up;
-        navigation.selectOnDown = down;
-        navigation.selectOnLeft = left;
-        navigation.selectOnRight = right;
+        navigation.selectOnUp = up.GetComponent<Button>();
+        navigation.selectOnDown = down.GetComponent<Button>();
+        navigation.selectOnLeft = left.GetComponent<Button>();
+        navigation.selectOnRight = right.GetComponent<Button>();
+        //ナビゲーションをセット
+        currentButton.GetComponent<Button>().navigation = navigation;
+    }
+    /// <summary> 各ボタンの偏移先を設定する。 </summary>
+    /// <param name="filters"> フィルターボタンの配列 </param>
+    /// <param name="itemButton"> アイテムボタンの配列 </param>
+    void SetALL_ItemButtonShiftDestination(GameObject[] filters, ItemButton[][] itemButton)
+    {
+        //外側のアイテムのインデックス
+        int itemIndex = 0;
+        //外側のループ : フィルターごとの偏移先を設定する。
+        for (int filterIndex = 0; filterIndex < filters.Length; filterIndex++)
+        {
+            //内側のアイテムのインデックス
+            int itemIndexIndex = 0;
+            //内側のループ : アイテムごとの偏移先を設定する。
+            foreach (var item in itemButton[itemIndex])
+            {
+                //左右上下のボタンを取得。
+                int fiL = LargeOrSmall(filterIndex - 1, filters.Length - 1, 0);
+                int fiR = LargeOrSmall(filterIndex + 1, filters.Length - 1, 0);
+                int iiU = LargeOrSmall(itemIndexIndex - 1, itemButton[itemIndex].Length - 1, 0);
+                int iiD = LargeOrSmall(itemIndexIndex + 1, itemButton[itemIndex].Length - 1, 0);
+
+                //偏移先を設定。
+                Set_ItemButtonShiftDestinationHelper(
+                    itemButton[filterIndex][itemIndexIndex], //カレント
+                    itemButton[filterIndex][iiU],       //Up
+                    itemButton[filterIndex][iiD],       //Down
+                    filters[fiL],                       //Left
+                    filters[fiR]);                      //Right
+                //インデックスを更新
+                itemIndexIndex++;
+            }
+            //インデックスを更新
+            itemIndex++;
+        }
+    }
+    /// <summary> 受け取った値の大小を比較し、最大値より大きければ最小値を返し、最小値より小さければ最大値を返す。 </summary>
+    /// <param name="value"> 比較すべき値 </param>
+    /// <param name="maxValue"> 最大値 </param>
+    /// <param name="minValue"> 最小値 </param>
+    /// <returns> valueの値を比較し、min値より小さければmax値を返し、maxより大きければmin値を返す。 </returns>
+    int LargeOrSmall(int value, int maxValue, int minValue)
+    {
+        //最大値を超えていれば最小値を返す。
+        if (value > maxValue) return minValue;
+        //最小値を下回っていれば最大値を返す。
+        else if (value < minValue) return maxValue;
+        //どちらでもなければそのまま返す。
+        else return value;
+    }
+    /// <summary> 上下のボタンの偏移先を繋げる </summary>
+    /// <param name="upperButton"> 上のボタン </param>
+    /// <param name="underButton"> 下のボタン </param>
+    void ConnectButton_Vertical(Button currentButton, Button upperButton, Button underButton)
+    {
+        //上ボタンのナビゲーションを取得
+        Navigation navigation = currentButton.navigation;
+        //上のボタンを設定
+        navigation.selectOnUp = upperButton;
+        //下のボタンを設定
+        navigation.selectOnDown = underButton;
         //ナビゲーションをセット
         currentButton.navigation = navigation;
     }
-
-
-    GameObject leftButton;
-    GameObject rightButton;
-    /// <summary> アイテムボタンの偏移先を決める処理。 : 要素が0または1個の時の処理を考える必要有り。 </summary>
-    void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, List<GameObject> itemButton)
+    /// <summary> アクティブなアイテムの偏移先を設定する。 </summary>
+    /// <param name="item"> アイテムの2次元リスト </param>
+    void SetALL_ActiveItem_ShiftDestination(List<List<ItemButton>> item)
     {
-        if (itemButton.Count <= 1) { return; }
-        if (itemButton[0] != null)
+        //順番に偏移先を設定する。
+        for (int i = 0; i < item.Count; i++)
         {
-            //フィルター(横)の遷移先を設定する
-            switch (_currentItemFilter)
+            for (int j = 0; j < item[i].Count; j++)
             {
-                case ItemFilter.ALL: leftButton = _keyFilterButton; rightButton = _healFilterButton; break;
-                case ItemFilter.HEAL: leftButton = _allFilterButton; rightButton = _powerUpFilterButton; break;
-                case ItemFilter.POWER_UP: leftButton = _healFilterButton; rightButton = _minusItemFilterButton; break;
-                case ItemFilter.MINUS_ITEM: leftButton = _powerUpFilterButton; rightButton = _keyFilterButton; break;
-                case ItemFilter.KEY: leftButton = _minusItemFilterButton; rightButton = _allFilterButton; break;
+                ConnectButton_Vertical(item[i][j].GetComponent<Button>(),
+                    item[i][LargeOrSmall(j - 1, item[i].Count - 1, 0)].GetComponent<Button>(),
+                    item[i][LargeOrSmall(j + 1, item[i].Count - 1, 0)].GetComponent<Button>());
             }
-
-            //縦の偏移先を設定する
-            //先頭を設定
-            Set_ItemButtonShiftDestinationHelper(
-                itemButton[0].GetComponent<Button>(),
-                itemButton[itemButton.Count - 1].GetComponent<Button>(),
-                itemButton[1].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
-
-            //中を設定
-            for (int i = 1; i < itemButton.Count - 1; i++)
-            {
-                Set_ItemButtonShiftDestinationHelper(
-                itemButton[i].GetComponent<Button>(),
-                itemButton[i - 1].GetComponent<Button>(),
-                itemButton[i + 1].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
-            }
-
-            //末尾を設定
-            Set_ItemButtonShiftDestinationHelper(
-                itemButton[itemButton.Count - 1].GetComponent<Button>(),
-                itemButton[itemButton.Count - 2].GetComponent<Button>(),
-                itemButton[0].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
         }
     }
-    //オーバーロードする(行数は多くなるが、ToListするより実行効率は良いかと)
-    void Set_ItemButtonShiftDestination(ItemFilter _currentItemFilter, GameObject[] itemButton)
+    /// <summary> アクティブな一番上のアイテムボタンを選択状態にする。 </summary>
+    /// <param name="item"> 走査する配列 </param>
+    void Set_SelectedItemButton_ActiveTop(ItemButton[] item)
     {
-        if (itemButton.Length <= 1) { return; }
-        if (itemButton[0] != null)
+        foreach (var i in item)
         {
-            //フィルター(横)の遷移先を設定する
-            switch (_currentItemFilter)
+            //アクティブなボタンを見つけたら、そのボタンをセレクテッドボタンに設定し、ループを抜ける。
+            if (i.gameObject.activeSelf)
             {
-                case ItemFilter.ALL: leftButton = _keyFilterButton; rightButton = _healFilterButton; break;
-                case ItemFilter.HEAL: leftButton = _allFilterButton; rightButton = _powerUpFilterButton; break;
-                case ItemFilter.POWER_UP: leftButton = _healFilterButton; rightButton = _minusItemFilterButton; break;
-                case ItemFilter.MINUS_ITEM: leftButton = _powerUpFilterButton; rightButton = _keyFilterButton; break;
-                case ItemFilter.KEY: leftButton = _minusItemFilterButton; rightButton = _allFilterButton; break;
+                _eventSystem.SetSelectedGameObject(i.gameObject);
+                break;
             }
+        }
+    }
+    /// <summary> 上下を繋げる </summary>
+    /// <param name="item"> 間のアイテムボタン </param>
+    void Connect_TargetButton(ItemButton item)
+    {
+        //間のナビゲーションから上下のボタンを取得
+        Navigation navigation = item.GetComponent<Button>().navigation;
+        var up = navigation.selectOnUp;
+        var down = navigation.selectOnDown;
+        Navigation upNavigation = up.navigation;
+        Navigation downNavigation = down.navigation;
 
-            //縦の偏移先を設定する
-            //先頭を設定
-            Set_ItemButtonShiftDestinationHelper(
-                itemButton[0].GetComponent<Button>(),
-                itemButton[itemButton.Length - 1].GetComponent<Button>(),
-                itemButton[1].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
+        //偏移先を設定
+        upNavigation.selectOnDown = down;
+        downNavigation.selectOnUp = up;
 
-            //中を設定
-            for (int i = 1; i < itemButton.Length - 1; i++)
+        //ナビゲーションをセット
+        up.navigation = upNavigation;
+        down.navigation = downNavigation;
+    }
+
+    //==========クラス初期化関連==========//
+    /// <summary> このクラスを初期化する。 </summary>
+    /// <returns>成功したらtrueを返す。</returns>
+    bool Initialize_ThisClass()
+    {
+        //nullチェック
+        if (!CheckNull()) return false;
+        //フィルターボタンに値をセットする。
+        Set_FilterButton();
+        //アイテムボタンに情報をセットする。
+        Set_ItemButton();
+        //アイテムのアイコン画像を設定する。
+        _sprites = Resources.LoadAll<Sprite>(_folderPath);
+        //セレクテッドオブジェクトを指定する。
+        _eventSystem.SetSelectedGameObject(_itemButtons[0]);
+        //コンテントの子を取得する
+        Set_ContentChildren();
+
+        //コンテントの偏移先を設定する。
+        _contentChildren = new ItemButton[][] { _contentALLChildren, _contentHealChildren, _contentPowerUpChildren, _contentMinusChildren, _contentKeyChildren };
+        SetALL_ItemButtonShiftDestination(_filters, _contentChildren);
+
+        //ここに所持数が0個のアイテムを非アクティブにする処理を書く
+        Set_ActiveFalse_UnNeedItemALL(_contentChildren);
+
+        SetALL_ActiveItem_ShiftDestination(Get_ActiveItemButton(_contentChildren));
+
+        //フィルターボタンの色を変更する
+        _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
+
+        return true;
+    }
+    /// <summary> nullチェック </summary>
+    bool CheckNull()
+    {
+        if (_ItemExplanatoryText == null) { Debug.LogError("説明文のテキストをアサインしてください"); return false; }
+        if (_eventSystem == null) { Debug.LogError("EventSystemをアサインしてください"); return false; }
+        if (_itemButtonPrefab == null) { Debug.LogError("アイテムボタンのプレハブがアサインされていません。"); return false; }
+
+        if (_filters[(int)ItemFilter.ALL] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: ALL Button"); return false; }
+        if (_filters[(int)ItemFilter.HEAL] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: HEAL Button"); return false; }
+        if (_filters[(int)ItemFilter.POWER_UP] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: POWER_UP Button"); return false; }
+        if (_filters[(int)ItemFilter.MINUS_ITEM] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: MINUS_ITEM Button"); return false; }
+        if (_filters[(int)ItemFilter.KEY] == null) { Debug.LogError("アイテムフィルターボタンの取得に失敗しました。アサインしてください。: KEY Button"); return false; }
+
+        if (_contents[(int)ItemFilter.ALL] == null) { Debug.LogError("アイテムコンテントALLをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.HEAL] == null) { Debug.LogError("アイテムコンテントHealをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.POWER_UP] == null) { Debug.LogError("アイテムコンテントPowerUpをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.MINUS_ITEM] == null) { Debug.LogError("アイテムコンテントMinusをアサインしてください。"); return false; }
+        if (_contents[(int)ItemFilter.KEY] == null) { Debug.LogError("アイテムコンテントKeyをアサインしてください。"); return false; }
+
+        if (_contentParent == null) { Debug.LogError("ScrollViewのScrollRectをアサインしてください。"); return false; }
+
+        return true;
+    }
+    /// <summary> フィルターボタンに情報を設定する。 </summary>
+    void Set_FilterButton()
+    {
+        _filters[(int)ItemFilter.ALL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.ALL);
+        _filters[(int)ItemFilter.HEAL].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.HEAL);
+        _filters[(int)ItemFilter.POWER_UP].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.POWER_UP);
+        _filters[(int)ItemFilter.MINUS_ITEM].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
+        _filters[(int)ItemFilter.KEY].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
+    }
+    /// <summary> アイテムボタンに情報を設定する。 </summary>
+    void Set_ItemButton()
+    {
+        //アイテムボタンをScrollViewの、Contentの子としてインスタンシエイトしておき、データをセットする。
+        for (int i = 0; i < (int)Item.ItemID.ITEM_ID_END; i++)
+        {
+            //ALLコンテントの子としてインスタンシエイトする。
+            _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.ALL].transform);
+            //データをセット
+            _itemButtons[i].GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
+
+            //各コンテントに子としてインスタンシエイトする。
+            switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
             {
-                Set_ItemButtonShiftDestinationHelper(
-                itemButton[i].GetComponent<Button>(),
-                itemButton[i - 1].GetComponent<Button>(),
-                itemButton[i + 1].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
+                case Item.ItemType.HEAL: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
+                case Item.ItemType.POWER_UP: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
+                case Item.ItemType.MINUS_ITEM: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
+                case Item.ItemType.KEY: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
             }
-
-            //末尾を設定
-            Set_ItemButtonShiftDestinationHelper(
-                itemButton[itemButton.Length - 1].GetComponent<Button>(),
-                itemButton[itemButton.Length - 2].GetComponent<Button>(),
-                itemButton[0].GetComponent<Button>(),
-                leftButton.GetComponent<Button>(),
-                rightButton.GetComponent<Button>());
+            //データをセット
+            temporaryObject.GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
+        }
+    }
+    /// <summary> コンテントの子を取得し、変数に保存する。 </summary>
+    void Set_ContentChildren()
+    {
+        _contentALLChildren = _contents[(int)ItemFilter.ALL].GetComponentsInChildren<ItemButton>();
+        _contentHealChildren = _contents[(int)ItemFilter.HEAL].GetComponentsInChildren<ItemButton>();
+        _contentPowerUpChildren = _contents[(int)ItemFilter.POWER_UP].GetComponentsInChildren<ItemButton>();
+        _contentMinusChildren = _contents[(int)ItemFilter.MINUS_ITEM].GetComponentsInChildren<ItemButton>();
+        _contentKeyChildren = _contents[(int)ItemFilter.KEY].GetComponentsInChildren<ItemButton>();
+    }
+    /// <summary> 所持数0のアイテムを全て非アクティブにする </summary>
+    void Set_ActiveFalse_UnNeedItemALL(ItemButton[][] item)
+    {
+        for (int i = 0; i < item.Length; i++)
+        {
+            for (int j = 0; j < item[i].Length; j++)
+            {
+                //所持数が0かどうか判定する。
+                //0個であれば非アクティブにする
+                if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                {
+                    item[i][j].gameObject.SetActive(false);
+                }
+                //そうでなければアクティブにする
+                else
+                {
+                    item[i][j].gameObject.SetActive(true);
+                }
+            }
         }
     }
 
-    /// <summary> 現在のフィルターの色を変える。 </summary>
-    void Change_FilterButtonColor()
+    //=========便利な関数群=========//
+    /// <summary> アクティブなボタンの配列を取得する </summary>
+    /// <param name="item"> 検索するアイテムボタン群 </param>
+    /// <returns> アクティブなボタンのリスト </returns>
+    List<List<ItemButton>> Get_ActiveItemButton(ItemButton[][] item)
     {
-        _allFilterButton.GetComponent<Image>().color = Color.white;
-        _healFilterButton.GetComponent<Image>().color = Color.white;
-        _powerUpFilterButton.GetComponent<Image>().color = Color.white;
-        _minusItemFilterButton.GetComponent<Image>().color = Color.white;
-        _keyFilterButton.GetComponent<Image>().color = Color.white;
+        List<List<ItemButton>> itemButtons = new List<List<ItemButton>>();
 
-        switch (_currentItemFilter)
+        //ここにアクティブなボタンを保存する処理を書く
+        int index = 0;
+        foreach (var i in item)
         {
-            case ItemFilter.ALL: _allFilterButton.GetComponent<Image>().color = Color.cyan; break;
-            case ItemFilter.HEAL: _healFilterButton.GetComponent<Image>().color = Color.cyan; break;
-            case ItemFilter.POWER_UP: _powerUpFilterButton.GetComponent<Image>().color = Color.cyan; break;
-            case ItemFilter.MINUS_ITEM: _minusItemFilterButton.GetComponent<Image>().color = Color.cyan; break;
-            case ItemFilter.KEY: _keyFilterButton.GetComponent<Image>().color = Color.cyan; break;
+            itemButtons.Add(new List<ItemButton>());
+            foreach (var j in i)
+            {
+                if (j.gameObject.activeSelf)
+                {
+                    itemButtons[index].Add(j);
+                }
+            }
+            index++;
         }
+
+        return itemButtons;
+    }
+    /// <summary> 指定されたアイテムを非アクティブにする </summary>
+    void Set_ActiveFalse_UnNeedItem(ItemButton item)
+    {
+        item.gameObject.SetActive(false);
+    }
+    /// <summary> そのフィルターの一番上のアクティブなアイテムボタンを取得する </summary>
+    ItemButton Get_TopActiveObject(ItemFilter filter)
+    {
+        foreach (var item in _contentChildren[(int)filter])
+        {
+            if (item.gameObject.activeSelf) return item;
+        }
+        return null;
     }
 
-    public void Set_CurrentFilter(ItemFilter itemFilter)
+    //=========他のクラスから呼び出すメソッド=========//
+    /// <summary> フィルターを変更する </summary>
+    /// <param name="itemFilter"> 新しいフィルター </param>
+    public void Set_CurrentFillter(ItemFilter itemFilter)
     {
         _currentItemFilter = itemFilter;
+    }
+    /// <summary> アイテムの所持数が0になった時の処理 </summary>
+    public void ShouldDo_HaveItemZero(ItemButton item, Item.ItemID ID, ItemFilter filter)
+    {
+        //一番上のアクティブなボタンを取得
+        ItemButton itemTop = Get_TopActiveObject(_currentItemFilter);
+        //受け取ったボタンを非アクティブにし、上下の偏移先を設定する。
+        item.gameObject.SetActive(false);
+        Connect_TargetButton(item);
+        //selectedオブジェクトを変更する
+        //対象のボタンが一番上であれば、一つ下をselectオブジェクトにする。
+
+        //コンテントの一番上なら、一つ下のアイテムをセレクテッドオブジェクトに指定する
+        if (itemTop == item)
+        {
+            _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnDown.gameObject);
+        }
+        //それ以外ならセレクテッドオブジェクトを一つ上のボタンにする
+        else
+        {
+            _eventSystem.SetSelectedGameObject(item.GetComponent<Button>().navigation.selectOnUp.gameObject);
+        }
     }
 }
