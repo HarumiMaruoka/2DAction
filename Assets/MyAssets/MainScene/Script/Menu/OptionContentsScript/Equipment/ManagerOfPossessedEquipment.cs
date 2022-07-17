@@ -15,8 +15,6 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     [Header("装備ボタンのプレハブ"), SerializeField] GameObject _equipmentButtonPrefab;
 
     //<===== インスペクタから設定すべき値 =====>//
-    /// <summary> プレイヤーが所持できる装備の最大数 </summary>
-    [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveValue;
 
     void Start()
     {

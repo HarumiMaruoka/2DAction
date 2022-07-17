@@ -6,8 +6,8 @@ using UnityEngine;
 /// <summary> アイテム所持数を管理するクラス。 </summary>
 public class ItemHaveValueManager : MonoBehaviour
 {
+    //<======シングルトンパターン関連======>//
     private static ItemHaveValueManager _instance;
-    //インスタンスは読み取り専用
     public static ItemHaveValueManager Instance
     {
         get
@@ -19,7 +19,6 @@ public class ItemHaveValueManager : MonoBehaviour
             return _instance;
         }
     }
-    //プライベートなコンストラクタを定義する。
     private ItemHaveValueManager() { }
 
     private void Awake()
