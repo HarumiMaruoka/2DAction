@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary> 持っている装備を管理するクラス </summary>
-public class HaveEquipmentManager : MonoBehaviour
+public class HaveEquipmentManager : EquipmentBase
 {
     //<======シングルトンパターン関連======>//
     private static HaveEquipmentManager _instance;
