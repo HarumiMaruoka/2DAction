@@ -19,12 +19,14 @@ abstract public class Equipment
     /// <param name="offensivePower_LongDistance_RiseValue"> 遠距離攻撃力 </param>
     /// <param name="defensePower_RiseValue"> 防御力 </param>
     /// <param name="moveSpeed_RiseValue"> 移動速度 </param>
-    public Equipment(EquipmentID id, EquipmentType type, string name,
+    /// <param name="seriesName"> シリーズ名 </param>
+    public Equipment(EquipmentManager.EquipmentID id, EquipmentType type, string name,
         EquipmentRarity rarity, float specialEffects = 0f, float endurance_RiseValue = 0f,
         float maxHealthPoint_RiseValue = 0f, float maxStamina_RiseValue = 0f,
         float offensivePower_ShortDistance_RiseValue = 0f, float offensivePower_LongDistance_RiseValue = 0f,
         float defensePower_RiseValue = 0f, float moveSpeed_RiseValue = 0f,
-        string explanatoryText = "")
+        string explanatoryText = "",
+        string seriesName = "")
     {
         _myID = id;
         _myType = type;
@@ -34,6 +36,7 @@ abstract public class Equipment
         _specialEffects = specialEffects;
         _endurance_RiseValue = endurance_RiseValue;
         _explanatoryText = explanatoryText;
+        _seriesName = seriesName;
 
         _maxHealthPoint_RiseValue = maxHealthPoint_RiseValue;
         _maxStamina_RiseValue = maxStamina_RiseValue;
@@ -41,14 +44,6 @@ abstract public class Equipment
         _offensivePower_LongDistance_RiseValue = offensivePower_LongDistance_RiseValue;
         _defensePower_RiseValue = defensePower_RiseValue;
         _moveSpeed_RiseValue = moveSpeed_RiseValue;
-    }
-
-    /// <summary> 装備のID </summary>
-    public enum EquipmentID
-    {
-        EQUIPMENT_ID_01,
-
-        EQUIPMENT_ID_END
     }
 
     /// <summary> パーツのタイプ </summary>
@@ -67,10 +62,10 @@ abstract public class Equipment
     }
 
     /// <summary> パーツのレアリティ </summary>
-    public enum EquipmentRarity { A, B, C, D, E }
+    public enum EquipmentRarity { A, B, C, D, E, ERROR }
 
     /// <summary> この装備のID </summary>
-    public EquipmentID _myID { get; }
+    public EquipmentManager.EquipmentID _myID { get; }
     /// <summary> この装備の種類 </summary>
     public EquipmentType _myType { get; }
     /// <summary> この装備のレアリティ </summary>
@@ -86,12 +81,19 @@ abstract public class Equipment
     public string _explanatoryText { get; }
 
     //必要なパラメータ
-    public float _maxHealthPoint_RiseValue { get; }//最大体力の上昇値
-    public float _maxStamina_RiseValue { get; }//最大スタミナの上昇値
-    public float _offensivePower_ShortDistance_RiseValue { get; }//近距離攻撃の攻撃力の上昇値
-    public float _offensivePower_LongDistance_RiseValue { get; }// 遠距離攻撃の攻撃力の上昇値
-    public float _defensePower_RiseValue { get; }//防御力の上昇値
-    public float _moveSpeed_RiseValue { get; }//移動速度の上昇値
-
+    /// <summary> 最大体力の上昇値 </summary>
+    public float _maxHealthPoint_RiseValue { get; }
+    /// <summary> 最大スタミナの上昇値 </summary>
+    public float _maxStamina_RiseValue { get; }
+    /// <summary> 近距離攻撃の攻撃力の上昇値 </summary>
+    public float _offensivePower_ShortDistance_RiseValue { get; }
+    /// <summary> 遠距離攻撃の攻撃力の上昇値 </summary>
+    public float _offensivePower_LongDistance_RiseValue { get; }
+    /// <summary> 防御力の上昇値 </summary>
+    public float _defensePower_RiseValue { get; }
+    /// <summary> 移動速度の上昇値 </summary>
+    public float _moveSpeed_RiseValue { get; }
+    /// <summary> シリーズ名(同一名なら同じシリーズ。) </summary>
+    public string _seriesName { get; }
 }
 

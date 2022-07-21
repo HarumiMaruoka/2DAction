@@ -47,7 +47,6 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 
     void Update()
     {
-
     }
 
     /// <summary> このクラスの初期化関数。成功したらtrueを返す。 </summary>
@@ -66,36 +65,36 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
         //プレイヤーの名前を設定する
         _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.PlayerName;
         //プレイヤーの最大体力を設定する
-        _playerStatusText[(int)StatusName.MaxHP].text = PlayerStatusManager.Instance.PlayerMaxHealthPoint.ToString();
+        _playerStatusText[(int)StatusName.MaxHP].text = "最大体力 : " + PlayerStatusManager.Instance.PlayerMaxHealthPoint.ToString();
         //プレイヤーの最大スタミナを設定する
-        _playerStatusText[(int)StatusName.MaxStamina].text = PlayerStatusManager.Instance.PlayerMaxStamina.ToString();
+        _playerStatusText[(int)StatusName.MaxStamina].text = "最大スタミナ : " + PlayerStatusManager.Instance.PlayerMaxStamina.ToString();
         //プレイヤーの近距離攻撃力を設定する
-        _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = PlayerStatusManager.Instance.PlayerShortRangeAttackPower.ToString();
+        _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = "近距離攻撃力 : " + PlayerStatusManager.Instance.PlayerShortRangeAttackPower.ToString();
         //プレイヤーの遠距離攻撃力を設定する
-        _playerStatusText[(int)StatusName.LongRangeAttackPower].text = PlayerStatusManager.Instance.PlayerLongRangeAttackPower.ToString();
+        _playerStatusText[(int)StatusName.LongRangeAttackPower].text = "遠距離攻撃力 : " + PlayerStatusManager.Instance.PlayerLongRangeAttackPower.ToString();
         //プレイヤーの防御力を設定する
-        _playerStatusText[(int)StatusName.DefensePower].text = PlayerStatusManager.Instance.PlayerDefensePower.ToString();
+        _playerStatusText[(int)StatusName.DefensePower].text = "防御力 : " + PlayerStatusManager.Instance.PlayerDefensePower.ToString();
         //プレイヤーの移動速度を設定する
-        _playerStatusText[(int)StatusName.MoveSpeed].text = PlayerStatusManager.Instance.PlayerMoveSpeed.ToString();
+        _playerStatusText[(int)StatusName.MoveSpeed].text = "移動速度 : " + PlayerStatusManager.Instance.PlayerMoveSpeed.ToString();
         //プレイヤーの吹っ飛びにくさを設定する
-        _playerStatusText[(int)StatusName.DifficultToBlowOff].text = PlayerStatusManager.Instance.PlayerDifficultToBlowOff.ToString();
+        _playerStatusText[(int)StatusName.DifficultToBlowOff].text = "吹っ飛びにくさ : " + PlayerStatusManager.Instance.PlayerDifficultToBlowOff.ToString();
     }
 
     /// <summary> ターゲットのステータステキストを設定する。 </summary>
     /// <param name="target"></param>
-    void Set_PlayerStatusText(StatusName target)
+    void Update_TargetPlayerStatusText(StatusName target)
     {
         switch (target)
         {
             case StatusName.PlayerName: _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.PlayerName; break;
-            case StatusName.MaxHP: _playerStatusText[(int)StatusName.MaxHP].text = PlayerStatusManager.Instance.PlayerMaxHealthPoint.ToString(); break;
-            case StatusName.MaxStamina: _playerStatusText[(int)StatusName.MaxStamina].text = PlayerStatusManager.Instance.PlayerMaxStamina.ToString(); break;
-            case StatusName.ShortRangeAttackPower: _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = PlayerStatusManager.Instance.PlayerShortRangeAttackPower.ToString(); break;
-            case StatusName.LongRangeAttackPower: _playerStatusText[(int)StatusName.LongRangeAttackPower].text = PlayerStatusManager.Instance.PlayerLongRangeAttackPower.ToString(); break;
-            case StatusName.DefensePower: _playerStatusText[(int)StatusName.DefensePower].text = PlayerStatusManager.Instance.PlayerDefensePower.ToString(); break;
-            case StatusName.MoveSpeed: _playerStatusText[(int)StatusName.MoveSpeed].text = PlayerStatusManager.Instance.PlayerMoveSpeed.ToString(); break;
-            case StatusName.DifficultToBlowOff: _playerStatusText[(int)StatusName.DifficultToBlowOff].text = PlayerStatusManager.Instance.PlayerDifficultToBlowOff.ToString(); break;
-            default: Debug.LogError("無効な値です。 : Set_PlayerStatusText(StatusName target);");break;
+            case StatusName.MaxHP: _playerStatusText[(int)StatusName.MaxHP].text = "最大体力 : " + PlayerStatusManager.Instance.PlayerMaxHealthPoint.ToString(); break;
+            case StatusName.MaxStamina: _playerStatusText[(int)StatusName.MaxStamina].text = "最大スタミナ : " + PlayerStatusManager.Instance.PlayerMaxStamina.ToString(); break;
+            case StatusName.ShortRangeAttackPower: _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = "近距離攻撃力 : " + PlayerStatusManager.Instance.PlayerShortRangeAttackPower.ToString(); break;
+            case StatusName.LongRangeAttackPower: _playerStatusText[(int)StatusName.LongRangeAttackPower].text = "遠距離攻撃力 : " + PlayerStatusManager.Instance.PlayerLongRangeAttackPower.ToString(); break;
+            case StatusName.DefensePower: _playerStatusText[(int)StatusName.DefensePower].text = "防御力 : " + PlayerStatusManager.Instance.PlayerDefensePower.ToString(); break;
+            case StatusName.MoveSpeed: _playerStatusText[(int)StatusName.MoveSpeed].text = "移動速度 : " + PlayerStatusManager.Instance.PlayerMoveSpeed.ToString(); break;
+            case StatusName.DifficultToBlowOff: _playerStatusText[(int)StatusName.DifficultToBlowOff].text = "吹っ飛びにくさ : " + PlayerStatusManager.Instance.PlayerDifficultToBlowOff.ToString(); break;
+            default: Debug.LogError("無効な値です。 : Set_PlayerStatusText(StatusName target);"); break;
         }
     }
 }

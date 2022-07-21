@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary> 現在装備しているパーツを表示するクラス </summary>
 public class Draw_NowEquipped : MonoBehaviour
 {
     //<==========インスペクタから設定すべき値==========>//

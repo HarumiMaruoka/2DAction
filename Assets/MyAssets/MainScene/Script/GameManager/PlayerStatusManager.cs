@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 
-//このクラスでは今のところ、アイテムの所持数と装備数を管理する
+/// <summary> このクラスはプレイヤーのステータスを管理する。 </summary>
 public class PlayerStatusManager : MonoBehaviour
 {
     //このクラスはシングルトンパターンを使用したものである。

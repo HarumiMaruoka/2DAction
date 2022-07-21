@@ -2,18 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> 装備の所持数を管理する基底クラス </summary>
 public abstract class EquipmentBase : MonoBehaviour
 {
+    //<======= このクラスで使用する型 =======>//
+    /// <summary> 装備のID </summary>
     public enum EquipmentID
     {
         ID_0,
         ID_1,
+        ID_2,
+        ID_3,
 
         ID_END,
     }
+    /// <summary> 現在装備している装備を表す構造体 </summary>
+    struct MyEquipped
+    {
+        Equipment _head;
+        Equipment _torso;
+        Equipment _arm;
+        Equipment _foot;
+    }
+    struct HaveEquipped
+    {
+        public List<Equipment> _equipments;
+    }
 
     //<=========== 必要な値 ===========>//
-    Equipment[] _equipmentData = new Equipment[(int)EquipmentID.ID_END];
+    /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
+    Equipment[] _equipmentData;
+    /// <summary> 所持している装備のリスト </summary>
+    HaveEquipped _haveEquipment;
+    /// <summary> 現在装備している装備 </summary>
+    MyEquipped _myEquipped;
 
     //<======== アサインすべき値 ========>//
 
@@ -29,19 +51,18 @@ public abstract class EquipmentBase : MonoBehaviour
         return true;
     }
 
-    /// <summary> csvファイルからデータを読み込む関数 </summary>
+    /// <summary> csvファイルから、全ての装備のデータを読み込む関数 </summary>
     /// <returns> 読み込んだ結果を返す。失敗した場合はnullを返す。 </returns>
-    Equipment[] OnLoad_EquipmentData_csv()
+    void OnLoad_EquipmentData_csv()
     {
-        Equipment[] result = new Equipment[(int)EquipmentID.ID_END];
+        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
 
-        return result;
     }
 
-    /// <summary> jsonファイルからデータを読み込み、メンバー変数に格納する処理。 </summary>
+    /// <summary> 所持している装備を、jsonファイルからデータを読み込み、メンバー変数に格納する処理。 </summary>
     public void OnLoad_EquipmentData_Json()
     {
-
+        _haveEquipment._equipments = new List<Equipment>();
     }
 
     /// <summary> 所持している装備のデータを、jsonファイルに保存する処理。 </summary>

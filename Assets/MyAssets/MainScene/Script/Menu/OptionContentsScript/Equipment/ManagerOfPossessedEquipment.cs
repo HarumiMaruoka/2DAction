@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//所持している装備を管理するクラス
+/// <summary> 所持している装備のボタンを管理するクラス </summary>
 public class ManagerOfPossessedEquipment : MonoBehaviour
 {
     //<=========== 必要な値 ===========>//
@@ -15,6 +15,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     [Header("装備ボタンのプレハブ"), SerializeField] GameObject _equipmentButtonPrefab;
 
     //<===== インスペクタから設定すべき値 =====>//
+
 
     void Start()
     {
