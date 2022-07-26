@@ -10,6 +10,7 @@ public class EquipmentManager : MonoBehaviour
     /// <summary> 装備のID </summary>
     public enum EquipmentID
     {
+        Nan = -1,
         ID_0,
         ID_1,
         ID_2,
@@ -27,37 +28,42 @@ public class EquipmentManager : MonoBehaviour
         ID_END,
     }
     /// <summary> 現在装備している装備を表す構造体 </summary>
-    struct MyEquipped
+    public struct MyEquipped
     {
-        Equipment _head;
-        Equipment _torso;
-        Equipment _arm;
-        Equipment _foot;
+        public int _headPartsID;
+        public int _torsoPartsID;
+        public int _armRightPartsID;
+        public int _armLeftPartsID;
+        public int _footPartsID;
     }
     /// <summary> 所持している装備を格納する構造体 </summary>
-    struct HaveEquipped
+    public struct HaveEquipped
     {
-        public List<Equipment> _equipments;
+        /// <summary> 要素は装備のID。所持していなければ-1。 </summary>
+        public int[] _equipmentsID;
     }
 
     //<=========== 必要な値 ===========>//
     /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
     Equipment[] _equipmentData;
-    /// <summary> 所持している装備のリスト </summary>
-    HaveEquipped _haveEquipment;
+    public Equipment[] EquipmentData { get=> _equipmentData; }
+    /// <summary> 所持している装備の配列 </summary>
+    HaveEquipped _haveEquipmentID;
+    public HaveEquipped HaveEquipmentID { get => _haveEquipmentID; }
     /// <summary> 現在装備している装備 </summary>
-    MyEquipped _myEquipped;
+    MyEquipped _equipped;
+    public MyEquipped Equipped { get => _equipped; }
 
     //<======== アサインすべき値 ========>//
-
 
     //<===== インスペクタから設定すべき値 =====>//
     [Header("装備の基本情報が格納されたcsvファイルへのパス"), SerializeField] string _equipmentCsvFilePath;
     [Header("所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
     [Header("現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
-    [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveValue;
-
+    [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveVolume;
+    /// <summary> プレイヤーが所持できる装備の最大数 </summary>
+    public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
     //<======シングルトンパターン関連======>//
     private static EquipmentManager _instance;
@@ -71,7 +77,6 @@ public class EquipmentManager : MonoBehaviour
             }
             return _instance;
         }
-
     }
     private EquipmentManager() { }
 
@@ -90,12 +95,25 @@ public class EquipmentManager : MonoBehaviour
 
         // 所持している装備を保存しているファイルのパスを取得し、ファイルを開く。
         _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquipmentFile.json");
+        _equippedJsonFilePath = Path.Combine(Application.persistentDataPath, "EquippedFile.json");
         //このオブジェクトは、シーンを跨いでもデストロイしない。
         DontDestroyOnLoad(gameObject);
-        //リスト用のメモリを割り当てる。
-        _haveEquipment._equipments = new List<Equipment>();
+        //配列用のメモリを確保し、-1で初期化する。
+        _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
+        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
+
+        // テスト用コード : テキトーに所持していることにする。
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            _haveEquipmentID._equipmentsID[i] = i % _equipmentData.Length;
+        }
+
         //クラスを初期化
         Initialize_EquipmentBase();
+
+        //Debug.Log("装備関係をロードする。");
+        //OnLoad_EquipmentHaveData_Json();
+        //OnLoad_EquippedData_Json();
     }
     void Start()
     {
@@ -104,7 +122,20 @@ public class EquipmentManager : MonoBehaviour
 
     void Update()
     {
-
+        //Kキー押下でセーブする
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("装備関係をセーブする。");
+            OnSave_EquipmentHaveData_Json();
+            OnSave_EquippedData_Json();
+        }
+        //Lキー押下でロードする
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("装備関係をロードする。");
+            OnLoad_EquipmentHaveData_Json();
+            OnLoad_EquippedData_Json();
+        }
     }
 
     //<======== このクラスの初期化関連 ========>//
@@ -114,6 +145,12 @@ public class EquipmentManager : MonoBehaviour
     {
         //csvから装備情報を取得
         OnLoad_EquipmentData_csv();
+        //現在の着用している装備を初期化
+        _equipped._headPartsID = (int)EquipmentID.Nan;
+        _equipped._torsoPartsID = (int)EquipmentID.Nan;
+        _equipped._armRightPartsID = (int)EquipmentID.Nan;
+        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
+        _equipped._footPartsID = (int)EquipmentID.Nan;
         return true;
     }
 
@@ -221,7 +258,7 @@ public class EquipmentManager : MonoBehaviour
         Debug.Log("所持している装備データをロードします！");
         // 念のためファイルの存在チェック
         if (!File.Exists(_equipmentHaveJsonFilePath))
-         {
+        {
             //ここにファイルが無い場合の処理を書く
             Debug.Log("所持している装備データを保存しているファイルが見つかりません。");
 
@@ -229,24 +266,47 @@ public class EquipmentManager : MonoBehaviour
             return;
         }
         // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をセット。
-        //_itemVolume = JsonUtility.FromJson<ItemNumberOfPossessions>(File.ReadAllText(filePath));
+        _haveEquipmentID = JsonUtility.FromJson<HaveEquipped>(File.ReadAllText(_equipmentHaveJsonFilePath));
+        foreach (var i in _haveEquipmentID._equipmentsID)
+        {
+            if (i == -1) { Debug.Log("この要素は空です。"); }
+            else Debug.Log(_equipmentData[i]._myName);
+        }
     }
     /// <summary> 所持している装備のデータを、jsonファイルに保存する処理。 </summary>
     public void OnSave_EquipmentHaveData_Json()
     {
         Debug.Log("所持している装備データをセーブします！");
-        // アイテム所持数データを、JSON形式にシリアライズし、ファイルに保存
-        //File.WriteAllText(filePath, JsonUtility.ToJson(_itemVolume, false));
+        // 所持している装備データを、JSON形式にシリアライズし、ファイルに保存
+        File.WriteAllText(_equipmentHaveJsonFilePath, JsonUtility.ToJson(_haveEquipmentID, false));
+        foreach (var i in _haveEquipmentID._equipmentsID)
+        {
+            if (i == -1) { Debug.Log("この要素は空です。"); }
+            else Debug.Log(_equipmentData[i]._myName);
+        }
     }
-    /// <summary> 現在装備している装備をjsonファイルから取得し、メンバー変数に格納する処理。 </summary>
+    /// <summary> 所持している装備をjsonファイルから取得し、メンバー変数に格納する処理。 </summary>
     public void OnLoad_EquippedData_Json()
     {
+        Debug.Log("現在装備している装備データをロードします！");
+        // 念のためファイルの存在チェック
+        if (!File.Exists(_equippedJsonFilePath))
+        {
+            //ここにファイルが無い場合の処理を書く
+            Debug.Log("現在装備している装備データを保存しているファイルが見つかりません。");
 
+            //処理を抜ける
+            return;
+        }
+        // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をセット。
+        _equipped = JsonUtility.FromJson<MyEquipped>(File.ReadAllText(_equippedJsonFilePath));
     }
     /// <summary> 現在装備している装備のデータを、jsonファイルに保存する処理。 </summary>
     public void OnSave_EquippedData_Json()
     {
-
+        Debug.Log("現在装備している装備データをセーブします！");
+        // 現在装備している装備データを、JSON形式にシリアライズし、ファイルに保存
+        File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
 
     Equipment.EquipmentRarity Get_EquipmentRarity(string str)
@@ -266,15 +326,50 @@ public class EquipmentManager : MonoBehaviour
     //以下テスト用、実際に使えるモノと判断したら本番移行する。
     /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を取得する。 </summary>
     /// <param name="id"> 取得する装備のID </param>
-    public void Get_Equipment(int id)
+    public bool Get_Equipment(int id)
     {
-        _haveEquipment._equipments.Add(_equipmentData[id]);
+        //装備の取得処理
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (i == -1)
+            {
+                _haveEquipmentID._equipmentsID[i] = id;
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を失う。 </summary>
     /// <param name="id"> 減らす装備のID </param>
-    public void Lost_Equipment(int id)
+    public bool Lost_Equipment(int id)
     {
-        _haveEquipment._equipments.Remove(_equipmentData[id]);
+        //装備の喪失処理
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (i == id)
+            {
+                _haveEquipmentID._equipmentsID[i] = -1;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary> 現在装備している装備をConsoleに表示する。テスト用。 </summary>
+    public void DrawDebugLog_Equipped()
+    {
+        Debug.Log(
+            "現在着用している装備\n" +
+            "頭パーツ : " + _equipped._headPartsID
+            + "/" +
+            "胴パーツ : " + _equipped._torsoPartsID
+            + "/" +
+            "右腕パーツ : " + _equipped._armRightPartsID
+            + "/" +
+            "左腕パーツ : " + _equipped._armLeftPartsID
+            + "/" +
+            "足パーツ : " + _equipped._footPartsID
+            );
     }
 }

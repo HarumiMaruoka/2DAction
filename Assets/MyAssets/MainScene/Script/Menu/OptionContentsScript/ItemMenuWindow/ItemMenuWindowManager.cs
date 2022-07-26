@@ -26,6 +26,10 @@ public class ItemMenuWindowManager : MonoBehaviour
     ItemFilter _beforeItemFilter;
     /// <summary> 現在のフレームで選択しているアイテムフィルター </summary>
     ItemFilter _currentItemFilter = ItemFilter.ALL;
+    /// <summary> 前回選択していたアイテムボタン </summary>
+    GameObject _beforeItemButton;
+    /// <summary> 現在のアイテムボタン </summary>
+    ItemButton _currentItemButton;
     /// <summary> このクラスを初期化したかどうか </summary>
     bool _whetherInitialized;
     /// <summary> コンテントの子の配列 </summary>
@@ -52,7 +56,7 @@ public class ItemMenuWindowManager : MonoBehaviour
     /// <summary> アイテムボタンのプレハブ </summary>
     [Header("アイテムボタンプレハブ"), SerializeField] GameObject _itemButtonPrefab;
     /// <summary> 説明文のテキスト </summary>
-    [SerializeField] Text _ItemExplanatoryText;
+    [SerializeField] Text _itemExplanatoryText;
     /// <summary> アイコンのイメージ </summary>
     [SerializeField] Image _itemIconImage;
     /// <summary> イベントシステム </summary>
@@ -126,7 +130,16 @@ public class ItemMenuWindowManager : MonoBehaviour
             _filters[(int)_beforeItemFilter].GetComponent<Image>().color = _filterButton_NomalColor;
             _filters[(int)_currentItemFilter].GetComponent<Image>().color = _filterButton_SelectedColor;
         }
+
+        //説明文とアイコンを更新する
+        if (_eventSystem.currentSelectedGameObject != _beforeItemButton && _eventSystem.GetComponent<ItemButton>())
+        {
+            _itemExplanatoryText.text = _eventSystem.currentSelectedGameObject.GetComponent<ItemButton>().MyItem._myExplanatoryText;
+            _itemIconImage.sprite = _sprites[(int)_eventSystem.currentSelectedGameObject.GetComponent<ItemButton>().MyItem._myID];
+        }
+
         _beforeItemFilter = _currentItemFilter;
+        _beforeItemButton = _eventSystem.currentSelectedGameObject;
     }
 
     //======アイテムの偏移先を設定する関連======//
@@ -297,7 +310,7 @@ public class ItemMenuWindowManager : MonoBehaviour
     /// <summary> nullチェック </summary>
     bool CheckNull()
     {
-        if (_ItemExplanatoryText == null) { Debug.LogError("説明文のテキストをアサインしてください"); return false; }
+        if (_itemExplanatoryText == null) { Debug.LogError("説明文のテキストをアサインしてください"); return false; }
         if (_eventSystem == null) { Debug.LogError("EventSystemをアサインしてください"); return false; }
         if (_itemButtonPrefab == null) { Debug.LogError("アイテムボタンのプレハブがアサインされていません。"); return false; }
 

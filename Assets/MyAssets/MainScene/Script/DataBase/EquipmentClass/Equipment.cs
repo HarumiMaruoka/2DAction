@@ -44,6 +44,8 @@ abstract public class Equipment
         _offensivePower_LongDistance_RiseValue = offensivePower_LongDistance_RiseValue;
         _defensePower_RiseValue = defensePower_RiseValue;
         _moveSpeed_RiseValue = moveSpeed_RiseValue;
+
+        Set_MyTypeString();
     }
 
     /// <summary> パーツのタイプ </summary>
@@ -95,5 +97,19 @@ abstract public class Equipment
     public float _moveSpeed_RiseValue { get; }
     /// <summary> シリーズ名(同一名なら同じシリーズ。) </summary>
     public string _seriesName { get; }
+    /// <summary> この装備の種類の名前 </summary>
+    public string _myTypeName { get; private set; }
+
+    void Set_MyTypeString()
+    {
+        switch (_myType)
+        {
+            case EquipmentType.HEAD_PARTS: _myTypeName = "頭"; break;
+            case EquipmentType.TORSO_PARTS: _myTypeName = "胴"; break;
+            case EquipmentType.ARM_PARTS: _myTypeName = "腕"; break;
+            case EquipmentType.FOOT_PARTS: _myTypeName = "足"; break;
+            default: Debug.LogError("不正な値です。"); _myTypeName = ""; break;
+        }
+    }
 }
 
