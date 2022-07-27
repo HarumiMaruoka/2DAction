@@ -132,7 +132,7 @@ public class ItemMenuWindowManager : MonoBehaviour
         }
 
         //説明文とアイコンを更新する
-        if (_eventSystem.currentSelectedGameObject != _beforeItemButton && _eventSystem.GetComponent<ItemButton>())
+        if (_eventSystem.currentSelectedGameObject != _beforeItemButton && _eventSystem.currentSelectedGameObject?.GetComponent<ItemButton>())
         {
             _itemExplanatoryText.text = _eventSystem.currentSelectedGameObject.GetComponent<ItemButton>().MyItem._myExplanatoryText;
             _itemIconImage.sprite = _sprites[(int)_eventSystem.currentSelectedGameObject.GetComponent<ItemButton>().MyItem._myID];

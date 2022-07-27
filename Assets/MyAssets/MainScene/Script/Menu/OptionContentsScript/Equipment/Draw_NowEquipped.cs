@@ -6,24 +6,26 @@ using UnityEngine.UI;
 /// <summary> 現在装備しているパーツを表示するクラス </summary>
 public class Draw_NowEquipped : MonoBehaviour
 {
+    const int REFT_ARM = 0;
+    const int RIGHT_ARM = 1;
     //<==========インスペクタから設定すべき値==========>//
-    [Header("体を表示する場所"), SerializeField] Image _bodyPartsImageArea;
+    [Header("体全体を表示する場所"), SerializeField] Image _bodyPartsImageArea;
     [Header("頭パーツの情報を表示する場所"), SerializeField] Image _headPartsImageArea;
     [Header("胴パーツの情報を表示する場所"), SerializeField] Image _torsoPartsImageArea;
     [Header("腕パーツの情報を表示する場所"), SerializeField] Image _armLeftPartsImageArea;
     [Header("腕パーツの情報を表示する場所"), SerializeField] Image _armRightPartsImageArea;
     [Header("足パーツの情報を表示する場所"), SerializeField] Image _footPartsImageArea;
 
-    [Header("体を表示する場所 : テスト用"), SerializeField] Text _bodyPartsTextArea;
-    [Header("頭パーツの情報を表示する場所のテキスト : テスト用"), SerializeField] Text _headPartsTextArea;
-    [Header("頭パーツの情報を表示する場所のテキスト : テスト用"), SerializeField] Text _torsoPartsTextArea;
-    [Header("頭パーツの情報を表示する場所のテキスト : テスト用"), SerializeField] Text _armLeftPartsTextArea;
-    [Header("頭パーツの情報を表示する場所のテキスト : テスト用"), SerializeField] Text _armRightPartsTextArea;
-    [Header("頭パーツの情報を表示する場所のテキスト : テスト用"), SerializeField] Text _footPartsTextArea;
+    [Header("体全体を表示する場所(テキスト版) : テスト用"), SerializeField] Text _bodyPartsTextArea;
+    [Header("頭パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _headPartsTextArea;
+    [Header("胴パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _torsoPartsTextArea;
+    [Header("左腕パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _armLeftPartsTextArea;
+    [Header("右腕パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _armRightPartsTextArea;
+    [Header("足パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _footPartsTextArea;
 
     void Start()
     {
-
+        Update_EquippedALL();
     }
 
     void Update()
@@ -34,15 +36,67 @@ public class Draw_NowEquipped : MonoBehaviour
     /// <summary> 着用している装備の表示を更新する。 </summary>
     void Update_EquippedALL()
     {
-        _headPartsTextArea.text     = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._headPartsID]     ._myName;
-        _torsoPartsTextArea.text    = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._torsoPartsID]    ._myName;
-        _armLeftPartsTextArea.text  = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armLeftPartsID]  ._myName;
-        _armRightPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armRightPartsID] ._myName;
-        _footPartsTextArea.text     = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._footPartsID]     ._myName;
+        Update_Equipped(Equipment.EquipmentType.HEAD_PARTS);//頭
+        Update_Equipped(Equipment.EquipmentType.TORSO_PARTS);//胴
+        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, REFT_ARM);//左腕
+        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, RIGHT_ARM);//右腕
+        Update_Equipped(Equipment.EquipmentType.FOOT_PARTS);//足
     }
 
-    void Update_Equipped()
+    /// <summary> 装備の描画を更新 </summary>
+    /// <param name="updateType"> どこを更新するか </param>
+    /// <param name="whichArm"> 腕の場合左腕か右腕か。0なら左腕を更新し、1なら右腕を更新する。その他の値は不正。 </param>
+    void Update_Equipped(Equipment.EquipmentType updateType, int whichArm = -1)
     {
-
+        //腕以外の装備を更新
+        if (updateType != Equipment.EquipmentType.ARM_PARTS)
+        {
+            switch (updateType)
+            {
+                case Equipment.EquipmentType.HEAD_PARTS:
+                    if (EquipmentManager.Instance.Equipped._headPartsID >= 0)
+                        _headPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._headPartsID]._myName;
+                    else
+                        _headPartsTextArea.text = "未装備";
+                    break;
+                case Equipment.EquipmentType.TORSO_PARTS:
+                    if (EquipmentManager.Instance.Equipped._torsoPartsID >= 0)
+                        _torsoPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._torsoPartsID]._myName;
+                    else
+                        _torsoPartsTextArea.text = "未装備";
+                    break;
+                case Equipment.EquipmentType.FOOT_PARTS:
+                    if (EquipmentManager.Instance.Equipped._footPartsID >= 0)
+                        _footPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._footPartsID]._myName;
+                    else
+                        _footPartsTextArea.text = "未装備";
+                    break;
+                default: Debug.LogError("不正な値です。"); break;
+            }
+        }
+        //腕の装備を更新
+        else
+        {
+            //左腕の場合
+            if (whichArm == 0)
+            {
+                if (EquipmentManager.Instance.Equipped._armLeftPartsID >= 0)
+                    _armLeftPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armLeftPartsID]._myName;
+                else
+                    _armLeftPartsTextArea.text = "未装備";
+            }
+            //右腕の場合
+            else if (whichArm == 1)
+            {
+                if (EquipmentManager.Instance.Equipped._armRightPartsID >= 0)
+                    _armRightPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armRightPartsID]._myName;
+                else
+                    _armRightPartsTextArea.text = "未装備";
+            }
+            else
+            {
+                Debug.LogError("不正な値です。");
+            }
+        }
     }
 }

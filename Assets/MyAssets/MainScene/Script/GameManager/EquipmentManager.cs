@@ -372,4 +372,15 @@ public class EquipmentManager : MonoBehaviour
             "足パーツ : " + _equipped._footPartsID
             );
     }
+
+    /// <summary> これから着用する装備と、現在所持している装備を交換する。 </summary>
+    /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
+    /// <param name="soFarEquipmentID"> 現在着用している装備のID </param>
+    void Swap_HaveToEquipped(int fromNowEquipmentID, int soFarEquipmentID)
+    {
+        switch (EquipmentData[fromNowEquipmentID])
+        {
+
+        }
+    }
 }

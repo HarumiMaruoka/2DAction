@@ -41,7 +41,32 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
 
     void Update()
     {
+        Update_DrawEquipmentInformation();
+    }
 
+    /// <summary> 全てのボタンに装備情報を設定する。 </summary>
+    void Set_ValueToButtonALL()
+    {
+        for (int i = 0; i < EquipmentManager.Instance.MaxHaveValue; i++)
+        {
+            Set_ValueToButton(i);
+        }
+    }
+
+    /// <summary> 特定のボタンに装備情報を設定する。 </summary>
+    /// <param name="index"> 変更したいボタンのインデックス </param>
+    void Set_ValueToButton(int index)
+    {
+        // 所持装備の情報を保管している場所から、装備のIDを取得する。
+        int thisEquipmentID = EquipmentManager.Instance.HaveEquipmentID._equipmentsID[index];
+        // -1なら所持していないのでnullを設定する。そうでなければ、ボタンに装備情報をセットする。
+        if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentManager.Instance.EquipmentData[thisEquipmentID]);
+        else _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(null);
+    }
+
+    /// <summary> 装備情報の表示を切り替える。 </summary>
+    void Update_DrawEquipmentInformation()
+    {
         if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject && _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>())
         {
             //装備の種類
@@ -63,28 +88,10 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
             //説明文を設定
             _ExplanatoryTextArea.text = _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._explanatoryText;
 
+            _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton();
+            _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton();
         }
 
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
-    }
-
-    /// <summary> 全てのボタンに装備情報を設定する。 </summary>
-    void Set_ValueToButtonALL()
-    {
-        for (int i = 0; i < EquipmentManager.Instance.MaxHaveValue; i++)
-        {
-            Set_ValueToButton(i);
-        }
-    }
-
-    /// <summary> 特定のボタンに装備情報を設定する。 </summary>
-    /// <param name="index"> 変更したいボタンのインデックス </param>
-    void Set_ValueToButton(int index)
-    {
-        // 所持装備の情報を保管している場所から、装備のIDを取得する。
-        int thisEquipmentID = EquipmentManager.Instance.HaveEquipmentID._equipmentsID[index];
-        // -1なら所持していないのでnullを設定する。そうでなければ、ボタンに装備情報をセットする。
-        if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentManager.Instance.EquipmentData[thisEquipmentID]);
-        else _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(null);
     }
 }
