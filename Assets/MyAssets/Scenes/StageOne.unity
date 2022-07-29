@@ -49204,6 +49204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27844f0faed941c49bef6f34b34975f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _draw_NowEquipped: {fileID: 131973556}
+  _managerOfPossessedEquipment: {fileID: 666761395}
   _equipmentCsvFilePath: C:\Users\vantan\Desktop\2DActionBasicInformation\EquipmentDataBase.csv
   _equipmentHaveJsonFilePath: 
   _equippedJsonFilePath: 

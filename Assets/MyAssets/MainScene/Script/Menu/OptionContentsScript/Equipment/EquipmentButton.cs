@@ -28,7 +28,8 @@ public class EquipmentButton : MonoBehaviour
 
     void UpdateText()
     {
-        _myNameText.text = _myEquipment._myName;
+        if (_myEquipment != null) _myNameText.text = _myEquipment._myName;
+        else gameObject.SetActive(false);
     }
 
     public void OnEnabled_EquipButton()
@@ -40,5 +41,13 @@ public class EquipmentButton : MonoBehaviour
     public void OffEnabled_EquipButton()
     {
         _equipButton.SetActive(false);
+    }
+
+    /// <summary> このボタンを押した時に実行すべき関数 </summary>
+    public void OnClick_ThisButton()
+    {
+        // このボタンが持つ装備を着用する。
+        EquipmentManager.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
+        UpdateText();
     }
 }

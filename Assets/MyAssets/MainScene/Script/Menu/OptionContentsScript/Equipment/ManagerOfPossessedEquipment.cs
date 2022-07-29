@@ -65,7 +65,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     }
 
     /// <summary> 装備情報の表示を切り替える。 </summary>
-    void Update_DrawEquipmentInformation()
+    public void Update_DrawEquipmentInformation()
     {
         if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject && _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>())
         {
@@ -93,5 +93,27 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
         }
 
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
+    }
+
+    public void ForcedUpdate(Equipment equipment)
+    {
+        //装備の種類
+        _riseValueTexts[0].text = "装備の種類 : " + equipment._myTypeName;
+        //最大体力の増加量を設定
+        _riseValueTexts[1].text = "最大体力の上昇値 : " + equipment._maxHealthPoint_RiseValue.ToString();
+        //最大スタミナの増加量を設定
+        _riseValueTexts[2].text = "最大スタミナの上昇値 : " + equipment._maxStamina_RiseValue.ToString();
+        //近距離攻撃力の増加量を設定
+        _riseValueTexts[3].text = "近距離攻撃力の上昇値 : " + equipment._offensivePower_ShortDistance_RiseValue.ToString();
+        //遠離攻撃力の増加量を設定
+        _riseValueTexts[4].text = "遠距離攻撃力の上昇値 : " + equipment._offensivePower_LongDistance_RiseValue.ToString();
+        //防御力の増加量を設定
+        _riseValueTexts[5].text = "防御力の上昇値 : " + equipment._defensePower_RiseValue.ToString();
+        //移動速度の増加量を設定
+        _riseValueTexts[6].text = "移動速度の上昇値 : " + equipment._moveSpeed_RiseValue.ToString();
+        //吹っ飛びにくさの増加量を設定
+        _riseValueTexts[7].text = "吹っ飛びにくさの上昇値 : " + equipment._defensePower_RiseValue.ToString();
+        //説明文を設定
+        _ExplanatoryTextArea.text = equipment._explanatoryText;
     }
 }

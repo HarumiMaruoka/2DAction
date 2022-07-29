@@ -46,9 +46,10 @@ public class Draw_NowEquipped : MonoBehaviour
     /// <summary> 装備の描画を更新 </summary>
     /// <param name="updateType"> どこを更新するか </param>
     /// <param name="whichArm"> 腕の場合左腕か右腕か。0なら左腕を更新し、1なら右腕を更新する。その他の値は不正。 </param>
-    void Update_Equipped(Equipment.EquipmentType updateType, int whichArm = -1)
+     public void Update_Equipped(Equipment.EquipmentType updateType, int whichArm = -1)
     {
-        //腕以外の装備を更新
+        // 腕以外の装備を更新する。
+        // 装備マネージャーが現在着用している装備を知っているので、そこから情報を取得し、各コンポーネントに適用する。
         if (updateType != Equipment.EquipmentType.ARM_PARTS)
         {
             switch (updateType)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-/// <summary> 持っている装備を管理するクラス </summary>
+/// <summary> 持っている装備・着用している装備を、管理するクラス </summary>
 public class EquipmentManager : MonoBehaviour
 {
     //<======= このクラスで使用する型 =======>//
@@ -46,13 +46,15 @@ public class EquipmentManager : MonoBehaviour
     //<=========== 必要な値 ===========>//
     /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
     Equipment[] _equipmentData;
-    public Equipment[] EquipmentData { get=> _equipmentData; }
+    public Equipment[] EquipmentData { get => _equipmentData; }
     /// <summary> 所持している装備の配列 </summary>
     HaveEquipped _haveEquipmentID;
     public HaveEquipped HaveEquipmentID { get => _haveEquipmentID; }
     /// <summary> 現在装備している装備 </summary>
     MyEquipped _equipped;
     public MyEquipped Equipped { get => _equipped; }
+    [Header("現在着用している装備の表示を管理しているクラス"), SerializeField] Draw_NowEquipped _draw_NowEquipped;
+    [Header("装備の上昇値の表示を管理しているクラス"), SerializeField] ManagerOfPossessedEquipment _managerOfPossessedEquipment;
 
     //<======== アサインすべき値 ========>//
 
@@ -375,12 +377,53 @@ public class EquipmentManager : MonoBehaviour
 
     /// <summary> これから着用する装備と、現在所持している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
-    /// <param name="soFarEquipmentID"> 現在着用している装備のID </param>
-    void Swap_HaveToEquipped(int fromNowEquipmentID, int soFarEquipmentID)
+    /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
+    public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button)
     {
-        switch (EquipmentData[fromNowEquipmentID])
-        {
+        Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
+        Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
 
+        //ここに装備を交換するコードを書く
+
+        int temporary = -1;
+        //Typeを基に着用する
+        switch (fromNowEquipmentType)
+        {
+            //頭パーツの場合
+            case Equipment.EquipmentType.HEAD_PARTS:
+                temporary = _equipped._headPartsID;
+                _equipped._headPartsID = fromNowEquipmentID;
+                break;
+
+            //胴パーツの場合
+            case Equipment.EquipmentType.TORSO_PARTS:
+                temporary = _equipped._torsoPartsID;
+                _equipped._torsoPartsID = fromNowEquipmentID;
+                break;
+
+            //左腕パーツの場合 >>>>>>>>>>>>>>>>>あとで要修正
+            case Equipment.EquipmentType.ARM_PARTS:
+                temporary = _equipped._armLeftPartsID;
+                _equipped._armLeftPartsID = fromNowEquipmentID;
+                break;
+
+            //頭パーツの場合
+            case Equipment.EquipmentType.FOOT_PARTS:
+                temporary = _equipped._footPartsID;
+                _equipped._footPartsID = fromNowEquipmentID;
+                break;
         }
+
+
+        //着脱した装備をインベントリに格納する
+        if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
+        else button.Set_Equipment(null);
+        //表示を更新する
+        _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
+        if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate(EquipmentData[temporary]);
+
+        //以下要修正
+        Debug.Log("着用した装備のID : " + fromNowEquipmentType);
+        Debug.Log("着用した装備のID : " + fromNowEquipmentID);
     }
 }
