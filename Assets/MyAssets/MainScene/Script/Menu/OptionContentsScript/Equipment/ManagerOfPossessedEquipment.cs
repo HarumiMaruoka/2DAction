@@ -21,13 +21,22 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     [Header("装備の情報を表示するテキストの親"), SerializeField] GameObject _equipmentInformationParents;
     [Header("選択中の装備の説明文を表示するエリアのゲームオブジェクト"), SerializeField] Text _ExplanatoryTextArea;
 
-    //<===== インスペクタから設定すべき値 =====>//
-
-
     void Start()
     {
+        Initialized_ThisClass();
+    }
+
+    void Update()
+    {
+        Update_DrawEquipmentInformation();
+    }
+
+    /// <summary> このクラスの初期化関数 </summary>
+    void Initialized_ThisClass()
+    {
+        //配列分のメモリを確保
         _equipmentButtons = new GameObject[EquipmentManager.Instance.MaxHaveValue];
-        //所持できる数だけボタンを生成しておく
+        //所持できる数だけボタンを生成し、配列に保存しておく。
         for (int i = 0; i < EquipmentManager.Instance.MaxHaveValue; i++)
         {
             //生成処理。
@@ -35,13 +44,8 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
             //生成したボタンに値を設定する。
             Set_ValueToButton(i);
         }
-
+        //装備の情報を表示するテキストオブジェクトを取得し、変数に保存しておく。
         _riseValueTexts = _equipmentInformationParents.transform.GetComponentsInChildren<Text>();
-    }
-
-    void Update()
-    {
-        Update_DrawEquipmentInformation();
     }
 
     /// <summary> 全てのボタンに装備情報を設定する。 </summary>
@@ -88,14 +92,17 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
             //説明文を設定
             _ExplanatoryTextArea.text = _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._explanatoryText;
 
+            //新しい装備の「装備」ボタンをアクティブにし、古い装備の「装備」ボタンを非アクティブにする。
             _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton();
             _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton();
         }
-
+        //古いオブジェクトを保存しておく。
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
 
-    public void ForcedUpdate(Equipment equipment)
+    //強制的に装備の上昇値テキストを更新する
+    /// <param name="equipment"> 上昇値を表示する装備 </param>
+    public void ForcedUpdate_RiseValueText(Equipment equipment)
     {
         //装備の種類
         _riseValueTexts[0].text = "装備の種類 : " + equipment._myTypeName;

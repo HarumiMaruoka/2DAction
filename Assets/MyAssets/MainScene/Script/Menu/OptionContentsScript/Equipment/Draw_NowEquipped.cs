@@ -16,6 +16,7 @@ public class Draw_NowEquipped : MonoBehaviour
     [Header("腕パーツの情報を表示する場所"), SerializeField] Image _armRightPartsImageArea;
     [Header("足パーツの情報を表示する場所"), SerializeField] Image _footPartsImageArea;
 
+    //今はアイコン用画像を用意するのが面倒くさいのでテキストで表示する。
     [Header("体全体を表示する場所(テキスト版) : テスト用"), SerializeField] Text _bodyPartsTextArea;
     [Header("頭パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _headPartsTextArea;
     [Header("胴パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _torsoPartsTextArea;
@@ -48,7 +49,7 @@ public class Draw_NowEquipped : MonoBehaviour
     /// <param name="whichArm"> 腕の場合左腕か右腕か。0なら左腕を更新し、1なら右腕を更新する。その他の値は不正。 </param>
      public void Update_Equipped(Equipment.EquipmentType updateType, int whichArm = -1)
     {
-        // 腕以外の装備を更新する。
+        // 腕以外の装備を更新する場合の処理。
         // 装備マネージャーが現在着用している装備を知っているので、そこから情報を取得し、各コンポーネントに適用する。
         if (updateType != Equipment.EquipmentType.ARM_PARTS)
         {

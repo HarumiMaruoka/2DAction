@@ -27,13 +27,18 @@ public class EquipmentManager : MonoBehaviour
 
         ID_END,
     }
-    /// <summary> 現在装備している装備を表す構造体 </summary>
+    /// <summary> 現在装着している装備を表す構造体 </summary>
     public struct MyEquipped
     {
+        /// <summary> 頭に装着しているパーツ </summary>
         public int _headPartsID;
+        /// <summary> 胴に装備しているパーツ </summary>
         public int _torsoPartsID;
+        /// <summary> 右腕に装着しているパーツ </summary>
         public int _armRightPartsID;
+        /// <summary> 左腕に装着しているパーツ </summary>
         public int _armLeftPartsID;
+        /// <summary> 足に装着しているパーツ </summary>
         public int _footPartsID;
     }
     /// <summary> 所持している装備を格納する構造体 </summary>
@@ -56,19 +61,18 @@ public class EquipmentManager : MonoBehaviour
     [Header("現在着用している装備の表示を管理しているクラス"), SerializeField] Draw_NowEquipped _draw_NowEquipped;
     [Header("装備の上昇値の表示を管理しているクラス"), SerializeField] ManagerOfPossessedEquipment _managerOfPossessedEquipment;
 
-    //<======== アサインすべき値 ========>//
-
     //<===== インスペクタから設定すべき値 =====>//
     [Header("装備の基本情報が格納されたcsvファイルへのパス"), SerializeField] string _equipmentCsvFilePath;
     [Header("所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
     [Header("現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
-    /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveVolume;
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
     //<======シングルトンパターン関連======>//
+    //インスタンス
     private static EquipmentManager _instance;
+    //インスタンスのプロパティ
     public static EquipmentManager Instance
     {
         get
@@ -80,8 +84,26 @@ public class EquipmentManager : MonoBehaviour
             return _instance;
         }
     }
+    //プライベートなコンストラクタ
     private EquipmentManager() { }
 
+
+
+    //<======== このクラスの初期化関連 ========>//
+    /// <summary> 装備基底クラスの初期化関数。(派生先で呼び出す。) </summary>
+    /// <returns> 初期化に成功した場合true、失敗したらfalseを返す。 </returns>
+    bool Initialize_EquipmentBase()
+    {
+        //csvから装備情報を取得
+        OnLoad_EquipmentData_csv();
+        //現在の着用している装備を初期化
+        _equipped._headPartsID = (int)EquipmentID.Nan;
+        _equipped._torsoPartsID = (int)EquipmentID.Nan;
+        _equipped._armRightPartsID = (int)EquipmentID.Nan;
+        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
+        _equipped._footPartsID = (int)EquipmentID.Nan;
+        return true;
+    }
     private void Awake()
     {
         //もしインスタンスが設定されていなかったら自身を代入する
@@ -117,11 +139,9 @@ public class EquipmentManager : MonoBehaviour
         //OnLoad_EquipmentHaveData_Json();
         //OnLoad_EquippedData_Json();
     }
-    void Start()
-    {
 
-    }
 
+    //<======= このクラスの更新関連 =======>//
     void Update()
     {
         //Kキー押下でセーブする
@@ -140,21 +160,6 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    //<======== このクラスの初期化関連 ========>//
-    /// <summary> 装備基底クラスの初期化関数。(派生先で呼び出す。) </summary>
-    /// <returns> 初期化に成功した場合true、失敗したらfalseを返す。 </returns>
-    bool Initialize_EquipmentBase()
-    {
-        //csvから装備情報を取得
-        OnLoad_EquipmentData_csv();
-        //現在の着用している装備を初期化
-        _equipped._headPartsID = (int)EquipmentID.Nan;
-        _equipped._torsoPartsID = (int)EquipmentID.Nan;
-        _equipped._armRightPartsID = (int)EquipmentID.Nan;
-        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
-        _equipped._footPartsID = (int)EquipmentID.Nan;
-        return true;
-    }
 
     //<======== ロード & セーブ関連 ========>//
     /// <summary> csvファイルから、全ての装備のデータを読み込む関数 </summary>
@@ -185,7 +190,7 @@ public class EquipmentManager : MonoBehaviour
            (EquipmentID)int.Parse(values[0]),//ID
            Equipment.EquipmentType.HEAD_PARTS,//Type
            values[2],//name
-           Get_EquipmentRarity(values[3]), //rarity
+           Conversion_EquipmentRarity(values[3]), //rarity
            float.Parse(values[4]),
            float.Parse(values[5]),
            float.Parse(values[6]),
@@ -202,7 +207,7 @@ public class EquipmentManager : MonoBehaviour
            (EquipmentID)int.Parse(values[0]),//ID
            Equipment.EquipmentType.TORSO_PARTS,//Type
            values[2],//name
-           Get_EquipmentRarity(values[3]), //rarity
+           Conversion_EquipmentRarity(values[3]), //rarity
            float.Parse(values[4]),
            float.Parse(values[5]),
            float.Parse(values[6]),
@@ -219,7 +224,7 @@ public class EquipmentManager : MonoBehaviour
            (EquipmentID)int.Parse(values[0]),//ID
            Equipment.EquipmentType.ARM_PARTS,//Type
            values[2],//name
-           Get_EquipmentRarity(values[3]), //rarity
+           Conversion_EquipmentRarity(values[3]), //rarity
            float.Parse(values[4]),
            float.Parse(values[5]),
            float.Parse(values[6]),
@@ -237,7 +242,7 @@ public class EquipmentManager : MonoBehaviour
            (EquipmentID)int.Parse(values[0]),//ID
            Equipment.EquipmentType.FOOT_PARTS,//Type
            values[2],//name
-           Get_EquipmentRarity(values[3]), //rarity
+           Conversion_EquipmentRarity(values[3]), //rarity
            float.Parse(values[4]),
            float.Parse(values[5]),
            float.Parse(values[6]),
@@ -310,8 +315,10 @@ public class EquipmentManager : MonoBehaviour
         // 現在装備している装備データを、JSON形式にシリアライズし、ファイルに保存
         File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
-
-    Equipment.EquipmentRarity Get_EquipmentRarity(string str)
+    /// <summary> string を enum に変換する </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    Equipment.EquipmentRarity Conversion_EquipmentRarity(string str)
     {
         switch (str)
         {
@@ -325,57 +332,8 @@ public class EquipmentManager : MonoBehaviour
         return Equipment.EquipmentRarity.ERROR;
     }
 
-    //以下テスト用、実際に使えるモノと判断したら本番移行する。
-    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を取得する。 </summary>
-    /// <param name="id"> 取得する装備のID </param>
-    public bool Get_Equipment(int id)
-    {
-        //装備の取得処理
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
-        {
-            if (i == -1)
-            {
-                _haveEquipmentID._equipmentsID[i] = id;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を失う。 </summary>
-    /// <param name="id"> 減らす装備のID </param>
-    public bool Lost_Equipment(int id)
-    {
-        //装備の喪失処理
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
-        {
-            if (i == id)
-            {
-                _haveEquipmentID._equipmentsID[i] = -1;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary> 現在装備している装備をConsoleに表示する。テスト用。 </summary>
-    public void DrawDebugLog_Equipped()
-    {
-        Debug.Log(
-            "現在着用している装備\n" +
-            "頭パーツ : " + _equipped._headPartsID
-            + "/" +
-            "胴パーツ : " + _equipped._torsoPartsID
-            + "/" +
-            "右腕パーツ : " + _equipped._armRightPartsID
-            + "/" +
-            "左腕パーツ : " + _equipped._armLeftPartsID
-            + "/" +
-            "足パーツ : " + _equipped._footPartsID
-            );
-    }
-
-    /// <summary> これから着用する装備と、現在所持している装備を交換する。 </summary>
+    //<====== このコンポーネントが持つ機能 ======>//
+    /// <summary> 所持している装備と、着用している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
     /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
     public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button)
@@ -420,10 +378,58 @@ public class EquipmentManager : MonoBehaviour
         else button.Set_Equipment(null);
         //表示を更新する
         _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
-        if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate(EquipmentData[temporary]);
+        if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
 
         //以下要修正
         Debug.Log("着用した装備のID : " + fromNowEquipmentType);
         Debug.Log("着用した装備のID : " + fromNowEquipmentID);
+    }
+
+    //以下テスト用、実際に使えるモノと判断したら本番移行する。
+    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を取得する。 </summary>
+    /// <param name="id"> 取得する装備のID </param>
+    public bool Get_Equipment(int id)
+    {
+        //装備の取得処理
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (i == -1)
+            {
+                _haveEquipmentID._equipmentsID[i] = id;
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を失う。 </summary>
+    /// <param name="id"> 減らす装備のID </param>
+    public bool Lost_Equipment(int id)
+    {
+        //装備の喪失処理
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (i == id)
+            {
+                _haveEquipmentID._equipmentsID[i] = -1;
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary> 現在装備している装備をConsoleに表示する。テスト用。 </summary>
+    public void DrawDebugLog_Equipped()
+    {
+        Debug.Log(
+            "現在着用している装備\n" +
+            "頭パーツ : " + _equipped._headPartsID
+            + "/" +
+            "胴パーツ : " + _equipped._torsoPartsID
+            + "/" +
+            "右腕パーツ : " + _equipped._armRightPartsID
+            + "/" +
+            "左腕パーツ : " + _equipped._armLeftPartsID
+            + "/" +
+            "足パーツ : " + _equipped._footPartsID
+            );
     }
 }
