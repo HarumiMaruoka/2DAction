@@ -29450,7 +29450,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -66, y: -60}
-  m_SizeDelta: {x: 270, y: 100}
+  m_SizeDelta: {x: 120, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &726368838
 MonoBehaviour:
@@ -30402,16 +30402,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974908d669f2cbe49b9b8ae5fe377f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerName: The Robo
-  _maxPlayerHealthPoint: 100
+  _baseStatus:
+    _playerName: Robo
+    _maxHp: 100
+    _maxStamina: 0
+    _shortRangeAttackPower: 0
+    _longRangeAttackPower: 0
+    _defensePower: 0
+    _moveSpeed: 0
+    _difficultToBlowOff: 0
   _playerHealthPoint: 100
-  _playerMaxStamina: 0
   _playerStamina: 0
-  _playerShortRangeAttackPower: 0
-  _playerLongRangeAttackPower: 0
-  _playerDefensePower: 0
-  _playerMoveSpeed: 1
-  _playerDifficultToBlowOff: 0
 --- !u!1 &821420099
 GameObject:
   m_ObjectHideFlags: 0
@@ -50621,7 +50622,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 66, y: -60}
-  m_SizeDelta: {x: 270, y: 100}
+  m_SizeDelta: {x: 120, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1156393982
 MonoBehaviour:

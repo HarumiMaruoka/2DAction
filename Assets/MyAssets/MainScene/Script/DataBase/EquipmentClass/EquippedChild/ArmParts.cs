@@ -18,6 +18,7 @@ public class ArmParts : Equipment
         float offensivePower_LongDistance_RiseValue = 0f,
         float defensePower_RiseValue = 0f,
         float moveSpeed_RiseValue = 0f,
+        float difficultToBlowOff = 0f,
         string explanatoryText = "",
         string seriesName = "",
         AttackType attackType = AttackType.ERROR
@@ -33,7 +34,8 @@ public class ArmParts : Equipment
             offensivePower_ShortDistance_RiseValue,
             offensivePower_LongDistance_RiseValue,
             defensePower_RiseValue,
-            moveSpeed_RiseValue, 
+            moveSpeed_RiseValue,
+            difficultToBlowOff,
             explanatoryText,
             seriesName
             )

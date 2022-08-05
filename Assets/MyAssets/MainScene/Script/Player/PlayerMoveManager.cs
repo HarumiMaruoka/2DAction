@@ -145,7 +145,7 @@ public class PlayerMoveManager : MonoBehaviour
             _rigidBody2D.AddForce(_newForce * 10f * Time.deltaTime * 100f, ForceMode2D.Force);
             if (Mathf.Approximately(_newImpulse.x, 0f) && Mathf.Approximately(_newImpulse.y, 0f))
             {
-                _newVelocity *= PlayerStatusManager.Instance.PlayerMoveSpeed;
+                _newVelocity *= PlayerStatusManager.Instance.ConsequentialPlayerStatus._moveSpeed;
                 _rigidBody2D.velocity = (Vector2.right * _newVelocity)+(Vector2.up * _rigidBody2D.velocity.y);
             }
 

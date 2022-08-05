@@ -19,12 +19,13 @@ abstract public class Equipment
     /// <param name="offensivePower_LongDistance_RiseValue"> 遠距離攻撃力 </param>
     /// <param name="defensePower_RiseValue"> 防御力 </param>
     /// <param name="moveSpeed_RiseValue"> 移動速度 </param>
+    /// <param name="difficultToBlowOff"> 吹っ飛びにくさ </param>
     /// <param name="seriesName"> シリーズ名 </param>
     public Equipment(EquipmentManager.EquipmentID id, EquipmentType type, string name,
         EquipmentRarity rarity, float specialEffects = 0f, float endurance_RiseValue = 0f,
         float maxHealthPoint_RiseValue = 0f, float maxStamina_RiseValue = 0f,
         float offensivePower_ShortDistance_RiseValue = 0f, float offensivePower_LongDistance_RiseValue = 0f,
-        float defensePower_RiseValue = 0f, float moveSpeed_RiseValue = 0f,
+        float defensePower_RiseValue = 0f, float moveSpeed_RiseValue = 0f, float difficultToBlowOff = 0f,
         string explanatoryText = "",
         string seriesName = "")
     {
@@ -38,12 +39,21 @@ abstract public class Equipment
         _explanatoryText = explanatoryText;
         _seriesName = seriesName;
 
-        _maxHealthPoint_RiseValue = maxHealthPoint_RiseValue;
-        _maxStamina_RiseValue = maxStamina_RiseValue;
-        _offensivePower_ShortDistance_RiseValue = offensivePower_ShortDistance_RiseValue;
-        _offensivePower_LongDistance_RiseValue = offensivePower_LongDistance_RiseValue;
-        _defensePower_RiseValue = defensePower_RiseValue;
-        _moveSpeed_RiseValue = moveSpeed_RiseValue;
+        //_maxHealthPoint_RiseValue = maxHealthPoint_RiseValue;
+        //_maxStamina_RiseValue = maxStamina_RiseValue;
+        //_offensivePower_ShortDistance_RiseValue = offensivePower_ShortDistance_RiseValue;
+        //_offensivePower_LongDistance_RiseValue = offensivePower_LongDistance_RiseValue;
+        //_defensePower_RiseValue = defensePower_RiseValue;
+        //_moveSpeed_RiseValue = moveSpeed_RiseValue;
+
+        Set_ThisEquipment_StatusRisingValue
+            (maxHealthPoint_RiseValue,
+            maxStamina_RiseValue,
+            offensivePower_ShortDistance_RiseValue,
+            offensivePower_LongDistance_RiseValue,
+            defensePower_RiseValue,
+            moveSpeed_RiseValue,
+            difficultToBlowOff);
 
         Set_MyTypeString();
     }
@@ -82,23 +92,39 @@ abstract public class Equipment
     /// <summary> 説明文 </summary>
     public string _explanatoryText { get; }
 
-    //必要なパラメータ
-    /// <summary> 最大体力の上昇値 </summary>
-    public float _maxHealthPoint_RiseValue { get; }
-    /// <summary> 最大スタミナの上昇値 </summary>
-    public float _maxStamina_RiseValue { get; }
-    /// <summary> 近距離攻撃の攻撃力の上昇値 </summary>
-    public float _offensivePower_ShortDistance_RiseValue { get; }
-    /// <summary> 遠距離攻撃の攻撃力の上昇値 </summary>
-    public float _offensivePower_LongDistance_RiseValue { get; }
-    /// <summary> 防御力の上昇値 </summary>
-    public float _defensePower_RiseValue { get; }
-    /// <summary> 移動速度の上昇値 </summary>
-    public float _moveSpeed_RiseValue { get; }
     /// <summary> シリーズ名(同一名なら同じシリーズ。) </summary>
     public string _seriesName { get; }
     /// <summary> この装備の種類の名前 </summary>
     public string _myTypeName { get; private set; }
+
+    //この装備のステータス上昇量
+    PlayerStatusManager.PlayerStatus _thisEquipment_StatusRisingValue;
+    public PlayerStatusManager.PlayerStatus ThisEquipment_StatusRisingValue { get => _thisEquipment_StatusRisingValue; }
+    /// <summary> ステータス上昇量をセットする </summary>
+    /// <param name="maxHp"> 最大体力 </param>
+    /// <param name="maxStamina"> 最大スタミナ </param>
+    /// <param name="offensivePow_Short"> 近距離攻撃力 </param>
+    /// <param name="offensivePow_Long"> 遠距離攻撃力 </param>
+    /// <param name="defensePow"> 防御力 </param>
+    /// <param name="moveSpeed"> 移動速度 </param>
+    /// <param name="difficultToBlowOff"> 吹っ飛びにくさ </param>
+    void Set_ThisEquipment_StatusRisingValue(
+        float maxHp,
+        float maxStamina,
+        float offensivePow_Short,
+        float offensivePow_Long,
+        float defensePow,
+        float moveSpeed,
+        float difficultToBlowOff)
+    {
+        _thisEquipment_StatusRisingValue._maxHp = maxHp;
+        _thisEquipment_StatusRisingValue._maxStamina = maxStamina;
+        _thisEquipment_StatusRisingValue._shortRangeAttackPower = offensivePow_Short;
+        _thisEquipment_StatusRisingValue._longRangeAttackPower = offensivePow_Long;
+        _thisEquipment_StatusRisingValue._defensePower = defensePow;
+        _thisEquipment_StatusRisingValue._moveSpeed = moveSpeed;
+        _thisEquipment_StatusRisingValue._difficultToBlowOff = difficultToBlowOff;
+    }
 
     void Set_MyTypeString()
     {

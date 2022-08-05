@@ -18,6 +18,7 @@ public class TorsoParts : Equipment
          float offensivePower_LongDistance_RiseValue = 0f,
          float defensePower_RiseValue = 0f,
          float moveSpeed_RiseValue = 0f,
+         float difficultToBlowOff = 0f,
          string explanatoryText = "",
         string seriesName = ""
         ) : base(
@@ -33,6 +34,7 @@ public class TorsoParts : Equipment
              offensivePower_LongDistance_RiseValue,
              defensePower_RiseValue,
              moveSpeed_RiseValue,
+             difficultToBlowOff,
              explanatoryText,
              seriesName
              )

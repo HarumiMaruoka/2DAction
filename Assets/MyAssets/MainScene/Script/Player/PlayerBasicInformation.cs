@@ -99,7 +99,7 @@ public class PlayerBasicInformation : MonoBehaviour
             //バッテリーと接触したときの処理
             if (collision.gameObject.tag == "Battery")
             {
-                PlayerStatusManager.Instance.PlayerHealthPoint = PlayerStatusManager.Instance.PlayerMaxHealthPoint;
+                PlayerStatusManager.Instance.PlayerHealthPoint = PlayerStatusManager.Instance.ConsequentialPlayerStatus._maxHp;
                 AudioSource.PlayClipAtPoint(collision.gameObject.GetComponent<AudioSource>().clip, transform.position);
             }
         }

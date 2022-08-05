@@ -76,26 +76,43 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
             //装備の種類
             _riseValueTexts[0].text = "装備の種類 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._myTypeName;
             //最大体力の増加量を設定
-            _riseValueTexts[1].text = "最大体力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._maxHealthPoint_RiseValue.ToString();
+            _riseValueTexts[1].text = "最大体力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._maxHp.ToString();
             //最大スタミナの増加量を設定
-            _riseValueTexts[2].text = "最大スタミナの上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._maxStamina_RiseValue.ToString();
+            _riseValueTexts[2].text = "最大スタミナの上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._maxStamina.ToString();
             //近距離攻撃力の増加量を設定
-            _riseValueTexts[3].text = "近距離攻撃力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._offensivePower_ShortDistance_RiseValue.ToString();
+            _riseValueTexts[3].text = "近距離攻撃力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._shortRangeAttackPower.ToString();
             //遠離攻撃力の増加量を設定
-            _riseValueTexts[4].text = "遠距離攻撃力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._offensivePower_LongDistance_RiseValue.ToString();
+            _riseValueTexts[4].text = "遠距離攻撃力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._longRangeAttackPower.ToString();
             //防御力の増加量を設定
-            _riseValueTexts[5].text = "防御力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._defensePower_RiseValue.ToString();
+            _riseValueTexts[5].text = "防御力の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._defensePower.ToString();
             //移動速度の増加量を設定
-            _riseValueTexts[6].text = "移動速度の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._moveSpeed_RiseValue.ToString();
+            _riseValueTexts[6].text = "移動速度の上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._moveSpeed.ToString();
             //吹っ飛びにくさの増加量を設定
-            _riseValueTexts[7].text = "吹っ飛びにくさの上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._defensePower_RiseValue.ToString();
+            _riseValueTexts[7].text = "吹っ飛びにくさの上昇値 : " + _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment.ThisEquipment_StatusRisingValue._difficultToBlowOff.ToString();
             //説明文を設定
             _ExplanatoryTextArea.text = _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._explanatoryText;
 
             //新しい装備の「装備」ボタンをアクティブにし、古い装備の「装備」ボタンを非アクティブにする。
-            _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton();
-            _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton();
+            if (_eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+            {
+                _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton_OtherArm();
+            }
+            else
+            {
+                _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton_LeftArm();
+                _eventSystem.currentSelectedGameObject?.GetComponent<EquipmentButton>()?.OnEnabled_EquipButton_RightArm();
+            }
+            if (_beforeSelectedGameObject?.GetComponent<EquipmentButton>()?._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+            {
+                _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton_OtherArm();
+            }
+            else
+            {
+                _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton_LeftArm(); 
+                _beforeSelectedGameObject?.GetComponent<EquipmentButton>()?.OffEnabled_EquipButton_RightArm();
+            }
         }
+
         //古いオブジェクトを保存しておく。
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
@@ -107,19 +124,19 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
         //装備の種類
         _riseValueTexts[0].text = "装備の種類 : " + equipment._myTypeName;
         //最大体力の増加量を設定
-        _riseValueTexts[1].text = "最大体力の上昇値 : " + equipment._maxHealthPoint_RiseValue.ToString();
+        _riseValueTexts[1].text = "最大体力の上昇値 : " + equipment.ThisEquipment_StatusRisingValue._maxHp.ToString();
         //最大スタミナの増加量を設定
-        _riseValueTexts[2].text = "最大スタミナの上昇値 : " + equipment._maxStamina_RiseValue.ToString();
+        _riseValueTexts[2].text = "最大スタミナの上昇値 : " + equipment.ThisEquipment_StatusRisingValue._maxStamina.ToString();
         //近距離攻撃力の増加量を設定
-        _riseValueTexts[3].text = "近距離攻撃力の上昇値 : " + equipment._offensivePower_ShortDistance_RiseValue.ToString();
+        _riseValueTexts[3].text = "近距離攻撃力の上昇値 : " + equipment.ThisEquipment_StatusRisingValue._shortRangeAttackPower.ToString();
         //遠離攻撃力の増加量を設定
-        _riseValueTexts[4].text = "遠距離攻撃力の上昇値 : " + equipment._offensivePower_LongDistance_RiseValue.ToString();
+        _riseValueTexts[4].text = "遠距離攻撃力の上昇値 : " + equipment.ThisEquipment_StatusRisingValue._longRangeAttackPower.ToString();
         //防御力の増加量を設定
-        _riseValueTexts[5].text = "防御力の上昇値 : " + equipment._defensePower_RiseValue.ToString();
+        _riseValueTexts[5].text = "防御力の上昇値 : " + equipment.ThisEquipment_StatusRisingValue._defensePower.ToString();
         //移動速度の増加量を設定
-        _riseValueTexts[6].text = "移動速度の上昇値 : " + equipment._moveSpeed_RiseValue.ToString();
+        _riseValueTexts[6].text = "移動速度の上昇値 : " + equipment.ThisEquipment_StatusRisingValue._moveSpeed.ToString();
         //吹っ飛びにくさの増加量を設定
-        _riseValueTexts[7].text = "吹っ飛びにくさの上昇値 : " + equipment._defensePower_RiseValue.ToString();
+        _riseValueTexts[7].text = "吹っ飛びにくさの上昇値 : " + equipment.ThisEquipment_StatusRisingValue._difficultToBlowOff.ToString();
         //説明文を設定
         _ExplanatoryTextArea.text = equipment._explanatoryText;
     }

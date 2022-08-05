@@ -48,6 +48,7 @@ public class ItemHaveValueManager : MonoBehaviour
     [System.Serializable]
     public struct ItemNumberOfPossessions
     {
+        /// <summary> インデックスはIDで所持数が取得できる。 </summary>
         public int[] _itemNumberOfPossessions;
     }
     [SerializeField] ItemNumberOfPossessions _itemVolume;
@@ -59,7 +60,7 @@ public class ItemHaveValueManager : MonoBehaviour
         _itemFilePath = Path.Combine(Application.persistentDataPath, "ItemNumberOfPossessionsFile.json");
         // アイテム所持数を、ファイルから取得する。
         OnLoad_ItemNumberOfPossessions(_itemFilePath);
-        Debug.Log("PlayerManagerの初期化に成功しました。");
+        Debug.Log("ItemHaveValueManagerの初期化に成功しました。");
     }
 
     void Update()
@@ -84,7 +85,7 @@ public class ItemHaveValueManager : MonoBehaviour
         //インデックスが正しいか判定
         if (itemID < (int)Item.ItemID.ITEM_ID_00 || itemID >= (int)Item.ItemID.ITEM_ID_END)
         {
-            //インデックスが場外なら処理を抜ける
+            //インデックスが範囲外なら処理を抜ける
             Debug.LogError("無効なアイテムIDです。");
             return;
         }
@@ -99,7 +100,7 @@ public class ItemHaveValueManager : MonoBehaviour
         if (!File.Exists(filePath))
         {
             //ここにファイルが無い場合の処理を書く
-            Debug.Log("アイテム所持数を保存しているファイルが見つかりません。");
+            Debug.LogError("アイテム所持数を保存しているファイルが見つかりません。");
 
             //処理を抜ける
             return;

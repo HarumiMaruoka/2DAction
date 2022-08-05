@@ -48,7 +48,8 @@ public class EquipmentManager : MonoBehaviour
         public int[] _equipmentsID;
     }
 
-    //<=========== 必要な値 ===========>//
+    //<=========== メンバー変数 ===========>//
+    public System.Action ReplacedEquipment;
     /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
     Equipment[] _equipmentData;
     public Equipment[] EquipmentData { get => _equipmentData; }
@@ -199,8 +200,9 @@ public class EquipmentManager : MonoBehaviour
            float.Parse(values[9]),
            float.Parse(values[10]),
            float.Parse(values[11]),
-           values[12],
-           values[13]); break;
+           float.Parse(values[12]),
+           values[13],
+           values[14]); break;
                 //胴用装備を取得し保存
                 case "Torso":
                     _equipmentData[index] = new TorsoParts(
@@ -216,8 +218,9 @@ public class EquipmentManager : MonoBehaviour
            float.Parse(values[9]),
            float.Parse(values[10]),
            float.Parse(values[11]),
-           values[12],
-           values[13]); break;
+           float.Parse(values[12]),
+           values[13],
+           values[14]); break;
                 //腕用装備を取得し保存
                 case "Arm":
                     _equipmentData[index] = new ArmParts(
@@ -233,9 +236,10 @@ public class EquipmentManager : MonoBehaviour
            float.Parse(values[9]),
            float.Parse(values[10]),
            float.Parse(values[11]),
-           values[12],
+           float.Parse(values[12]),
            values[13],
-           ArmParts.Get_AttackType(values[14])); break;
+           values[14],
+           ArmParts.Get_AttackType(values[15])); break;
                 //足用装備を取得し保存
                 case "Foot":
                     _equipmentData[index] = new FootParts(
@@ -251,8 +255,9 @@ public class EquipmentManager : MonoBehaviour
            float.Parse(values[9]),
            float.Parse(values[10]),
            float.Parse(values[11]),
-           values[12],
-           values[13]); break;
+           float.Parse(values[12]),
+           values[13],
+           values[14]); break;
                 default: Debug.LogError("設定されていないEquipmentTypeです。"); break;
             }
             index++;
@@ -336,7 +341,8 @@ public class EquipmentManager : MonoBehaviour
     /// <summary> 所持している装備と、着用している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
     /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
-    public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button)
+    /// <param name="whichArm"> どちらの腕装備するか判断する値、0なら左腕、1なら右腕。 </param>
+    public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int whichArm = -1)
     {
         Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
         Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
@@ -345,44 +351,91 @@ public class EquipmentManager : MonoBehaviour
 
         int temporary = -1;
         //Typeを基に着用する
-        switch (fromNowEquipmentType)
+        //腕以外の場合
+        if (fromNowEquipmentType != Equipment.EquipmentType.ARM_PARTS)
         {
-            //頭パーツの場合
-            case Equipment.EquipmentType.HEAD_PARTS:
-                temporary = _equipped._headPartsID;
-                _equipped._headPartsID = fromNowEquipmentID;
-                break;
+            switch (fromNowEquipmentType)
+            {
+                //頭パーツの場合
+                case Equipment.EquipmentType.HEAD_PARTS:
+                    temporary = _equipped._headPartsID;
+                    _equipped._headPartsID = fromNowEquipmentID;
+                    break;
 
-            //胴パーツの場合
-            case Equipment.EquipmentType.TORSO_PARTS:
-                temporary = _equipped._torsoPartsID;
-                _equipped._torsoPartsID = fromNowEquipmentID;
-                break;
+                //胴パーツの場合
+                case Equipment.EquipmentType.TORSO_PARTS:
+                    temporary = _equipped._torsoPartsID;
+                    _equipped._torsoPartsID = fromNowEquipmentID;
+                    break;
 
-            //左腕パーツの場合 >>>>>>>>>>>>>>>>>あとで要修正
-            case Equipment.EquipmentType.ARM_PARTS:
+                //足パーツの場合
+                case Equipment.EquipmentType.FOOT_PARTS:
+                    temporary = _equipped._footPartsID;
+                    _equipped._footPartsID = fromNowEquipmentID;
+                    break;
+            }
+            //着脱した装備をインベントリに格納する
+            if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
+            else button.Set_Equipment(null);
+            //表示を更新する
+            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
+            if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
+        }
+        //腕の場合
+        else
+        {
+            if (whichArm == 0)
+            {
                 temporary = _equipped._armLeftPartsID;
                 _equipped._armLeftPartsID = fromNowEquipmentID;
-                break;
-
-            //頭パーツの場合
-            case Equipment.EquipmentType.FOOT_PARTS:
-                temporary = _equipped._footPartsID;
-                _equipped._footPartsID = fromNowEquipmentID;
-                break;
+            }
+            else if(whichArm == 1)
+            {
+                temporary = _equipped._armRightPartsID;
+                _equipped._armRightPartsID = fromNowEquipmentID;
+            }
+            else
+            {
+                Debug.LogError($"不正な値です{whichArm}");
+            }
+            //着脱した装備をインベントリに格納する
+            if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
+            else button.Set_Equipment(null);
+            //表示を更新する
+            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, whichArm);
+            if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
         }
-
-
-        //着脱した装備をインベントリに格納する
-        if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
-        else button.Set_Equipment(null);
-        //表示を更新する
-        _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
-        if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
-
+        ApplyEquipment_ALL();
+        ReplacedEquipment();
         //以下要修正
         Debug.Log("着用した装備のID : " + fromNowEquipmentType);
         Debug.Log("着用した装備のID : " + fromNowEquipmentID);
+    }
+
+    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 : 全身 </summary>
+    void ApplyEquipment_ALL()
+    {
+        //リセットする。
+        PlayerStatusManager.Instance._equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
+        //増加値を適用する。
+        ApplyEquipment_SpecificParts(_equipped._headPartsID);//頭
+        ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//胴
+        ApplyEquipment_SpecificParts(_equipped._armLeftPartsID);//左腕
+        ApplyEquipment_SpecificParts(_equipped._armRightPartsID);//右腕
+        ApplyEquipment_SpecificParts(_equipped._footPartsID);//足
+    }
+    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 </summary>
+    /// <param name="equipmentID"> 適用する装備のID </param>
+    void ApplyEquipment_SpecificParts(int equipmentID)
+    {
+        if (equipmentID >= 0)
+        {
+            PlayerStatusManager.Instance._equipment_RisingValue += EquipmentData[equipmentID].ThisEquipment_StatusRisingValue;
+        }
+        else
+        {
+            Debug.LogError("未装備の箇所はありますか?そうでなければエラーです! : 装備マネージャーコンポーネントより");
+        }
     }
 
     //以下テスト用、実際に使えるモノと判断したら本番移行する。

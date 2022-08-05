@@ -7,7 +7,57 @@ using System.Linq;
 /// <summary> このクラスはプレイヤーのステータスを管理する。 </summary>
 public class PlayerStatusManager : MonoBehaviour
 {
-    //このクラスはシングルトンパターンを使用したものである。
+    //<======== このクラスで使用する型 ========>//
+    [System.Serializable]
+    public struct PlayerStatus
+    {
+        /// <summary> 名前 </summary>
+        public string _playerName;
+        /// <summary> 最大体力 </summary>
+        public float _maxHp;
+        /// <summary> 最大スタミナ </summary>
+        public float _maxStamina;
+        /// <summary> 近距離攻撃力 </summary>
+        public float _shortRangeAttackPower;
+        /// <summary> 遠距離攻撃力 </summary>
+        public float _longRangeAttackPower;
+        /// <summary> 防御力 </summary>
+        public float _defensePower;
+        /// <summary> 移動速度 </summary>
+        public float _moveSpeed;
+        /// <summary> 吹っ飛びにくさ </summary>
+        public float _difficultToBlowOff;
+
+        public PlayerStatus(string name = "", float hp = 0f, float stamina = 0f, float shortAttackPow = 0f, float longAttackPow = 0f, float defensePow = 0f, float moveSpeed = 0f, float difficultToBlowOff = 0f)
+        {
+            _playerName = name;
+            _maxHp = hp;
+            _maxStamina = stamina;
+            _shortRangeAttackPower = shortAttackPow;
+            _longRangeAttackPower = longAttackPow;
+            _defensePower = defensePow;
+            _moveSpeed = moveSpeed;
+            _difficultToBlowOff = difficultToBlowOff;
+        }
+        public static PlayerStatus zero
+        {
+            get => new PlayerStatus();
+        }
+
+        /// <summary> PlayerStatus型 : +演算子のオーバーライド </summary>
+        public static PlayerStatus operator +(PlayerStatus p1, PlayerStatus p2)
+        {
+            p1._maxHp += p2._maxHp;
+            p1._maxStamina += p2._maxStamina;
+            p1._shortRangeAttackPower += p2._shortRangeAttackPower;
+            p1._longRangeAttackPower += p2._longRangeAttackPower;
+            p1._defensePower += p2._defensePower;
+            p1._moveSpeed += p2._moveSpeed;
+            p1._difficultToBlowOff += p2._difficultToBlowOff;
+            return p1;
+        }
+    }
+    //<===== シングルトンパターン関連 =====>//
     //インスタンス
     private static PlayerStatusManager _instance;
     //インスタンスは読み取り専用
@@ -25,46 +75,27 @@ public class PlayerStatusManager : MonoBehaviour
     //プライベートなコンストラクタを定義する。
     private PlayerStatusManager() { }
 
-    /// <summary> プレイヤーの名前 </summary>
-    [SerializeField] string _playerName;
-    public string PlayerName { get => _playerName; }
-    //各パラメータ
-    /// <summary> プレイヤーの最大体力 </summary>
-    [Header("プレイヤーの最大体力"), SerializeField] float _maxPlayerHealthPoint;
-    /// <summary> プレイヤーの最大体力 </summary>
-    public float PlayerMaxHealthPoint { get => _maxPlayerHealthPoint; set { Debug.Log("プレイヤーの最大体力の値を変更しました"); _maxPlayerHealthPoint = value; } }
-    /// <summary> プレイヤーの体力 </summary>
-    [Header("プレイヤーの体力"), SerializeField] float _playerHealthPoint;
-    /// <summary> プレイヤーの体力 </summary>
-    public float PlayerHealthPoint { get => _playerHealthPoint; set { Debug.Log("プレイヤーの体力の値を変更しました"); _playerHealthPoint = value; } }
-    /// <summary> プレイヤーの最大スタミナ </summary>
-    [Header("プレイヤーの最大スタミナ"), SerializeField] float _playerMaxStamina;
-    /// <summary> プレイヤーの最大スタミナ </summary>
-    public float PlayerMaxStamina { get => _playerMaxStamina; set => _playerMaxStamina = value; }
-    /// <summary> プレイヤーのスタミナ </summary>
-    [Header("プレイヤーのスタミナ"), SerializeField] float _playerStamina;
-    /// <summary> プレイヤーのスタミナ </summary>
+    // <=========== メンバー変数 ===========> //
+    /// <summary> 基礎ステータス </summary>
+    [Header("プレイヤーの基礎ステータス"), SerializeField] PlayerStatus _baseStatus;
+    /// <summary> 基礎ステータス </summary>
+    public PlayerStatus BaseStatus { get => _baseStatus; set => _baseStatus = value; }
+    /// <summary> 装備分の上昇値 </summary>
+    public PlayerStatus _equipment_RisingValue { get; set; }
+    /// <summary> レベル分の上昇値 </summary>
+    public PlayerStatus _level_RisingValue { get; set; }
+    /// <summary> その他(アイテム使用時の一時的な上昇値等)の上昇値 </summary>
+    public PlayerStatus _other_RisingValue { get; set; }
+    /// <summary> 諸々を合計した、最終的なステータス </summary>
+    public PlayerStatus ConsequentialPlayerStatus { get => _baseStatus + _equipment_RisingValue + _level_RisingValue + _other_RisingValue; }
+
+    [Header("プレイヤーの現在の体力"), SerializeField] float _playerHealthPoint;
+    /// <summary> プレイヤーの現在の体力 </summary>
+    public float PlayerHealthPoint { get => _playerHealthPoint; set => _playerHealthPoint = value; }
+
+    [Header("プレイヤーの現在のスタミナ"), SerializeField] float _playerStamina;
+    /// <summary> プレイヤーの現在のスタミナ </summary>
     public float PlayerStamina { get => _playerStamina; set => _playerStamina = value; }
-    /// <summary> プレイヤーの近距離攻撃力 </summary>
-    [Header("プレイヤーの近距離攻撃力"), SerializeField] float _playerShortRangeAttackPower;
-    /// <summary> プレイヤーの近距離攻撃力 </summary>
-    public float PlayerShortRangeAttackPower { get => _playerShortRangeAttackPower; set { Debug.Log("攻撃力の値を変更しました"); _playerShortRangeAttackPower = value; } }
-    /// <summary> プレイヤーの遠距離攻撃力 </summary>
-    [Header("プレイヤーの遠距離攻撃力"), SerializeField] float _playerLongRangeAttackPower;
-    /// <summary> プレイヤーの遠距離攻撃力 </summary>
-    public float PlayerLongRangeAttackPower { get => _playerLongRangeAttackPower; set { Debug.Log("攻撃力の値を変更しました"); _playerLongRangeAttackPower = value; } }
-    /// <summary> プレイヤーの防御力 </summary>
-    [Header("プレイヤーの防御力"), SerializeField] float _playerDefensePower;
-    /// <summary> プレイヤーの防御力 </summary>
-    public float PlayerDefensePower { get => _playerDefensePower; set { Debug.Log("防御力の値を変更しました"); _playerDefensePower = value; } }
-    /// <summary> プレイヤーの移動力 </summary>
-    [Header("プレイヤーの移動力"), SerializeField] float _playerMoveSpeed;
-    /// <summary> プレイヤーの移動力 </summary>
-    public float PlayerMoveSpeed { get => _playerMoveSpeed; set { Debug.Log("プレイヤーの移動力の値を変更しました"); _playerMoveSpeed = value; } }
-    /// <summary> プレイヤーの吹っ飛びにくさ </summary>
-    [Header("プレイヤーの吹っ飛びにくさ"), SerializeField] float _playerDifficultToBlowOff;
-    /// <summary> プレイヤーの吹っ飛びにくさ </summary>
-    public float PlayerDifficultToBlowOff { get => _playerDifficultToBlowOff; set { Debug.Log("プレイヤーの移動力の値を変更しました"); _playerDifficultToBlowOff = value; } }
 
     /// <summary> プレイヤーが向いている方向 </summary>
     private bool _isRight;

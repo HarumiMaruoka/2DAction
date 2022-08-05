@@ -14,10 +14,11 @@ public class HeadParts : Equipment
         float endurance_RiseValue = 0f,
         float maxHealthPoint_RiseValue = 0f,
         float maxStamina_RiseValue = 0f,
-        float offensivePower_ShortDistance_RiseValue = 0f, 
+        float offensivePower_ShortDistance_RiseValue = 0f,
         float offensivePower_LongDistance_RiseValue = 0f,
         float defensePower_RiseValue = 0f,
         float moveSpeed_RiseValue = 0f,
+        float difficultToBlowOff = 0f,
         string explanatoryText = "",
         string seriesName = ""
         )
@@ -32,8 +33,9 @@ public class HeadParts : Equipment
             maxStamina_RiseValue,
             offensivePower_ShortDistance_RiseValue,
             offensivePower_LongDistance_RiseValue,
-            defensePower_RiseValue, 
+            defensePower_RiseValue,
             moveSpeed_RiseValue,
+            difficultToBlowOff,
             explanatoryText,
             seriesName
             )
