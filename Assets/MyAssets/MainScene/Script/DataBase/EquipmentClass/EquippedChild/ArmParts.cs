@@ -21,7 +21,8 @@ public class ArmParts : Equipment
         float difficultToBlowOff = 0f,
         string explanatoryText = "",
         string seriesName = "",
-        AttackType attackType = AttackType.ERROR
+        WeaponID attackType = WeaponID.ERROR,
+        float attackPower = 0f
         ) : base(
             id,
             type,
@@ -41,29 +42,36 @@ public class ArmParts : Equipment
             )
     {
         _myAttackType = attackType;
+        _myAttackPower = attackPower;
     }
 
-    public enum AttackType
+    /// <summary> 武器の種類を表すenum </summary>
+    public enum WeaponID
     {
-        Nomal,
+        WeaponID_00_NomalShotAttack,
+        WeaponID_00_NomalSlashingAttack,
+
         Unexpected,//テスト用。仮の値です。(つまり未想定)
 
         AttackType_END,
         ERROR,
     }
+    /// <summary> 自身の武器の種類 </summary>
+    WeaponID _myAttackType;
+    /// <summary> 自身の攻撃力 </summary>
+    public float _myAttackPower { get; }
 
-    AttackType _myAttackType;
-
-    public static AttackType Get_AttackType(string str)
+    public static WeaponID Get_AttackType(string str)
     {
         switch (str)
         {
-            case "NomalShot": return AttackType.Nomal;
+            case "NomalShot": return WeaponID.WeaponID_00_NomalShotAttack;
+            case "NomalSlashing": return WeaponID.WeaponID_00_NomalSlashingAttack;
 
-            case "Unexpected (未想定)":Debug.Log("テスト用の武器が読み込まれました。"); return AttackType.Unexpected;
+            case "Unexpected (未想定)": Debug.Log("テスト用の武器が読み込まれました。"); return WeaponID.Unexpected;
         }
 
         Debug.LogError("不正な値です。");
-        return AttackType.ERROR;
+        return WeaponID.ERROR;
     }
 }

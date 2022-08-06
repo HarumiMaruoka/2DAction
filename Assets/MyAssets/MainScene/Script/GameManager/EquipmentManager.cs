@@ -49,6 +49,7 @@ public class EquipmentManager : MonoBehaviour
     }
 
     //<=========== メンバー変数 ===========>//
+    /// <summary> 装備更新時に呼び出されるデリゲート変数。 </summary>
     public System.Action ReplacedEquipment;
     /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
     Equipment[] _equipmentData;
@@ -239,7 +240,8 @@ public class EquipmentManager : MonoBehaviour
            float.Parse(values[12]),
            values[13],
            values[14],
-           ArmParts.Get_AttackType(values[15])); break;
+           ArmParts.Get_AttackType(values[15]),
+           float.Parse(values[16])); break;
                 //足用装備を取得し保存
                 case "Foot":
                     _equipmentData[index] = new FootParts(

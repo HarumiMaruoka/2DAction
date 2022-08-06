@@ -44,6 +44,10 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
         {
             Debug.LogError("クラスの初期化に失敗しました。 : クラス名 : DrawPlayerStatus_OnEquipmentWindow");
         }
+    }
+
+    private void OnEnable()
+    {
         EquipmentManager.Instance.ReplacedEquipment += SetALL_PlayerStatusText;
     }
 

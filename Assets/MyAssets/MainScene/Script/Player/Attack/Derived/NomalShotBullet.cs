@@ -2,39 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> 基本射撃攻撃コンポーネント </summary>
 public class NomalShotBullet : PlayerWeaponBase
 {
-    //弾は指定の方向に飛ぶだけ
-    [Header("弾の速度"), SerializeField] float _bulletMoveSpeedX;
+    //<======= メンバー変数 =======>//
+    [Header("弾の速度"), SerializeField] float _bulletSpeed = 10f;
 
-    void Start()
+    /// <summary> 基本射撃攻撃クラス独自の初期化処理 </summary>
+    protected override void WeaponInit()
     {
-        WeaponInit();
-        gameObject.SetActive(false);
+        base.WeaponInit();
+        //IDを設定する。
+        _myWeaponID = (int)ArmParts.WeaponID.WeaponID_00_NomalShotAttack;
+        //PressTypeを設定する。
+        _isPressType = false;
     }
 
-    void Update()
+    /// <summary> Fireボタンが押されたときの処理 : デリゲート変数に登録し呼び出す。 </summary>
+    public override void Run_FireProcess()
     {
-        
+        //このコンポーネントがアタッチされているゲームオブジェクトをアクティブにする。
+        gameObject.SetActive(true);
+        //アニメーションを再生する。 : アニメーションパラメータを設定する。
+        _animator.SetInteger("WeaponID", _myWeaponID);
+        //プレイヤーが向いている方向に一直線に飛んで行く
+        _rigidBody2D.velocity = Vector2.right * (PlayerStatusManager.Instance.IsRight ? _bulletSpeed : -_bulletSpeed);
     }
 
-    public override void Move()
-    {
-        base.Move();
-    }
-
-    /// <summary>　アクティブになった時の処理 </summary>
+    /// <summary> オブジェクトがアクティブになった時の処理 </summary>
     private void OnEnable()
     {
-        Vector2 dir = Vector2.zero;
-        if (PlayerStatusManager.Instance.IsRight)
-        {
-            dir = Vector2.right;
-        }
-        else
-        {
-            dir = Vector2.left;
-        }
-        _rigidBody2D.velocity = dir * _bulletMoveSpeedX;
+        OnEnable_ThisWeapon();
+    }
+
+    /// <summary> オブジェクトが非アクティブになった時の処理 </summary>
+    private void OnDisable()
+    {
+
     }
 }

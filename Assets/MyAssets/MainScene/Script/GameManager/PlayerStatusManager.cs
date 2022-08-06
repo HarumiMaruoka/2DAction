@@ -28,6 +28,7 @@ public class PlayerStatusManager : MonoBehaviour
         /// <summary> 吹っ飛びにくさ </summary>
         public float _difficultToBlowOff;
 
+        //コンストラクタ
         public PlayerStatus(string name = "", float hp = 0f, float stamina = 0f, float shortAttackPow = 0f, float longAttackPow = 0f, float defensePow = 0f, float moveSpeed = 0f, float difficultToBlowOff = 0f)
         {
             _playerName = name;
