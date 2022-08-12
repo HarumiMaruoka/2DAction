@@ -1,73 +1,62 @@
 using UnityEngine;
 
+/// <summary> 武器の基底クラス </summary>
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class PlayerWeaponBase : MonoBehaviour
 {
-    //<====== 自身の各コンポーネント ======>//
+    //<====== 各コンポーネント ======>//
     protected Rigidbody2D _rigidBody2D;
     protected Collider2D _collider2D;
     protected Animator _animator;
     /// <summary> 自身の武器ID </summary>
     protected int _myWeaponID;
-    [Header("アクティブになった瞬間の位置オフセット"), SerializeField] protected Vector3 _positionOffsetAtBirth;
-    /// <summary> 押下時に実行する武器か? : この変数がtrueの場合、この武器は、押下時のみ実行する武器。falseの場合、押している間ずっと実行すべき武器。 </summary>
+    [Header("プレイヤーの位置からのオフセット"), SerializeField]
+    protected Vector3 _offsetFromPlayerPosition;
+    /// <summary> プレイヤーのポジション </summary>
+    protected Transform _playerPos;
+    /// <summary>
+    /// 押下時に実行する武器か? : 
+    /// この変数がtrueの場合、この武器は、押下時のみ実行する武器。
+    /// falseの場合、押している間ずっと実行すべき武器。 
+    /// </summary>
     protected bool _isPressType;
 
     /// <summary> 武器の初期化処理 : オーバーライド可能 </summary>
-    protected virtual void WeaponInit()
-    {
-        //コンポーネントを取得
-        _animator = GetComponent<Animator>();
-        _collider2D = GetComponent<Collider2D>();
-        _rigidBody2D = GetComponent<Rigidbody2D>();
-    }
+    protected virtual void WeaponInit() { _playerPos = transform.parent; }
 
     /// <summary> 攻撃実行処理 : Fireボタンが押された時の処理。 : オーバーライド可 </summary>
-    public virtual void Run_FireProcess()
-    {
-        //このコンポーネントがアタッチされているゲームオブジェクトをアクティブにする。
-        gameObject.SetActive(true);
-        //アニメーションを再生する。 : アニメーションパラメータを設定する。
-        _animator.SetInteger("WeaponID", _myWeaponID);
-    }
+    public virtual void Run_FireProcess() { }
 
-    /// <summary> アクティブになった時の処理 : オーバーライド可 </summary>
-    protected virtual void OnEnable_ThisWeapon()
-    {
-        //向きによってローテーションを変える。
-        //プレイヤーが右に向いている時 かつ、オブジェクトが向いている方向が右の時
-        if (PlayerStatusManager.Instance.IsRight && transform.rotation.x > 0)
-        {
+    /// <summary> このオブジェクトがアクティブになった時に実行すべき関数。 : オーバーライド可 </summary>
+    protected virtual void OnEnable_ThisWeapon() { }
 
-        }
-        //位置を設定する。
-        transform.position = transform.position + _positionOffsetAtBirth;
-    }
+    /// <summary> アップデート関数。 : オーバーライド可 </summary>
+    protected virtual void Update_ThisClass() { }
 
     /// <summary> 必要であれば移動する。 : オーバーライド可 </summary>
     public virtual void Move() { }
 
-    /// <summary> 攻撃開始の処理。 : オーバーライド可 </summary>
-    protected virtual void OnStart_ThisAttack()
+    /// <summary> 自身とプレイヤーの向きをチェックし、必要であれば向きを変更する。 : 向きは他のコンポーネントにも適用したいのでスケールで管理する。 </summary>
+    protected void DirectionCheck()
     {
-        //このゲームオブジェクトをアクティブにする。
-        gameObject.SetActive(true);
+        //向きによってローテーションを変える。
+        //プレイヤーが右に向いている時 かつ、武器オブジェクトが向いている方向が左向きのとき、武器オブジェクトが向いている方向を反転させる。
+        if (PlayerStatusManager.Instance.IsRight && transform.localScale.x < 0)
+        {
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
+        //プレイヤーが左に向いている時 かつ、武器オブジェクトが向いている方向が右向きのとき、武器オブジェクトが向いている方向を反転させる。
+        else if (!PlayerStatusManager.Instance.IsRight && transform.localScale.x > 0)
+        {
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
     }
-    /// <summary> 攻撃終了の処理 : オーバーライド可 </summary>
-    protected virtual void OnEnd_ThisAttack()
-    {
-        //このゲームオブジェクトを非アクティブにする。
-        gameObject.SetActive(false);
-    }
-
-    /// <summary> このコンポーネントをアクティブにする。 : オーバーライド可 </summary>
-    protected virtual void Activate_ThisComponen() { enabled = true; }
-    /// <summary> このコンポーネントを非アクティブにする。 : オーバーライド可 </summary>
-    protected virtual void DeactivateThisComponent() { enabled = false; }
-
-    /// <summary> このゲームオブジェクトにアタッチされたコライダーをアクティブにする。 : オーバーライド可 </summary>
-    protected virtual void ActivateCollider() { _collider2D.enabled = true; }
-    /// <summary> このゲームオブジェクトにアタッチされたコライダーを非アクティブにする。 : オーバーライド可 </summary>
-    protected virtual void DeactivateCollider() { _collider2D.enabled = false; }
+    /// <summary> 位置を更新する。 </summary>
+    /// <returns> 更新後の位置 </returns>
+    protected Vector3 UpdatePosition() { return transform.position = _playerPos.position + _offsetFromPlayerPosition; }
 }

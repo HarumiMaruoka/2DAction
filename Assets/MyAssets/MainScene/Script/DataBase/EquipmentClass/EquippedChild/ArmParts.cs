@@ -49,7 +49,7 @@ public class ArmParts : Equipment
     public enum WeaponID
     {
         WeaponID_00_NomalShotAttack,
-        WeaponID_00_NomalSlashingAttack,
+        WeaponID_01_NomalSlashingAttack,
 
         Unexpected,//テスト用。仮の値です。(つまり未想定)
 
@@ -66,7 +66,7 @@ public class ArmParts : Equipment
         switch (str)
         {
             case "NomalShot": return WeaponID.WeaponID_00_NomalShotAttack;
-            case "NomalSlashing": return WeaponID.WeaponID_00_NomalSlashingAttack;
+            case "NomalSlashing": return WeaponID.WeaponID_01_NomalSlashingAttack;
 
             case "Unexpected (未想定)": Debug.Log("テスト用の武器が読み込まれました。"); return WeaponID.Unexpected;
         }

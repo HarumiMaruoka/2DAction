@@ -22,12 +22,12 @@ public class E_Stomper : EnemyBase
 
     void Start()
     {
-        base.EnemyInitialize();
+        base.Initialize_Enemy();
     }
 
     void Update()
     {
-        NeedEnemyElement();
+        Update_Enemy();
         Move();
     }
 

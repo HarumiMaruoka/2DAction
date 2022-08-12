@@ -12,13 +12,13 @@ public class E_MachineBat : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        base.EnemyInitialize();
+        base.Initialize_Enemy();
     }
 
     // Update is called once per frame
     void Update()
     {
-        NeedEnemyElement();
+        Update_Enemy();
         Move();
     }
 
