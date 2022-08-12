@@ -2,39 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Enemy:Stomperのスクリプト
+/// <summary> Enemy : Stomperのコンポーネント </summary>
 public class E_Stomper : EnemyBase
 {
-    [SerializeField] float _moveSpeed;
-    [SerializeField] bool _isGizmo;
+    //<=========== メンバー変数 ===========>//
+    [Header("移動速度"), SerializeField] float _moveSpeed;
+    [Header("デバッグ用Gizmoを表示するか"), SerializeField] bool _isGizmo;
 
-    //右に何があるか判定用
+    /// <summary> 右に何があるか判定用オーバーラップボックスのオフセット </summary>
     [Tooltip("右に何かがないか判定用"), SerializeField]
     private Vector3 _overLapBoxOffsetRight;
-    //左に何があるか判定用
+    /// <summary> 左に何があるか判定用オーバーラップボックスのオフセット </summary>
     [Tooltip("左に何かがないか判定用"), SerializeField]
     private Vector3 _overLapBoxOffsetLeft;
-    //上記のサイズ
-    [Tooltip("上記のサイズ"), SerializeField]
+    /// <summary> オーバーラップボックスのサイズ </summary>
+    [Tooltip("上記オーバーラップボックスのサイズ"), SerializeField]
     private Vector2 _overLapBoxSizeVertical;
-
+    /// <summary> オーバーラップボックスのLayerMask </summary>
     [SerializeField] LayerMask _layerMask;
 
+
+    //<=========== Unityメッセージ ===========>//
     void Start()
     {
         base.Initialize_Enemy();
     }
-
     void Update()
     {
         Update_Enemy();
         Move();
     }
+    // デバッグ用 : Gizmoを表示する。
+    private void OnDrawGizmos()
+    {
+        // オーバーラップボックスを描画する
+        Gizmos.color = Color.red;
+        if (_isGizmo)
+        {
+            //右のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
+            //左のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
+        }
+    }
 
-    //横に動くだけ
+    //<======== protectedメンバー関数 ========>//
+    /// <summary> Stomperの移動処理 : 横に動くだけ。何かあれば反転する。 </summary>
     protected override void Move()
     {
-        //向いている方向へ進む
+        // 向いている方向へ進む。
         if (_isRight)
         {
             _spriteRenderer.flipX = _isRight;
@@ -46,36 +62,23 @@ public class E_Stomper : EnemyBase
             _rigidBody2d.velocity = new Vector2(-1 * _moveSpeed, _rigidBody2d.velocity.y);
         }
 
+        // 進んでいる方向に何かあれば反転する。
         if (BodyContactLeft())
         {
             _isRight = true;
         }
-        else if(BodyContactRight())
+        else if (BodyContactRight())
         {
             _isRight = false;
         }
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    _isRight ^= true;
-    //}
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        if (_isGizmo)
-        {
-            //右のgizmo
-            Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
-            //左のgizmo
-            Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
-        }
-    }
-
+    //<======== privateメンバー関数 ========>//
+    /// <summary> Physics2D.OverlapBoxAllを利用して、左に何かあるか判定する。 </summary>
+    /// <returns> 何かあればtrueを返す。 </returns>
     bool BodyContactLeft()
     {
-        //左に何かあるか判定する
+        // コライダーをすべて取得
         Collider2D[] collision = Physics2D.OverlapBoxAll(
             _overLapBoxOffsetLeft + transform.position,
             _overLapBoxSizeVertical,
@@ -88,10 +91,11 @@ public class E_Stomper : EnemyBase
         }
         return false;
     }
-
+    /// <summary> Physics2D.OverlapBoxAllを利用して、右に何かあるか判定する。 </summary>
+    /// <returns> 何かあればtrueを返す。 </returns>
     bool BodyContactRight()
     {
-        //右に何かあるか判定する
+        // コライダーをすべて取得
         Collider2D[] collision = Physics2D.OverlapBoxAll(
             _overLapBoxOffsetRight + transform.position,
             _overLapBoxSizeVertical,

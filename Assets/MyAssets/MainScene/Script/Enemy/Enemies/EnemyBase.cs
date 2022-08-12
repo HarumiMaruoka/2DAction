@@ -154,27 +154,31 @@ public class EnemyBase : MonoBehaviour
 
     //<============= public関数 =============>//
     //******************** 攻撃ヒット関連 ********************//
-    //プレイヤーからの攻撃時に、呼び出すので public で宣言する。
-    public void HitPlayerAttadk(int damage)//ノックバックしない場合
+    /// <summary> プレイヤーからの攻撃処理 : ノックバック無し版 </summary>
+    /// <param name="damage"> ダメージ量 </param>
+    public void HitPlayerAttadk(int damage)
     {
-        //自身の体力を減らし、0.1秒だけ色を赤に変える。
+        //自身の体力を減らし、一定時間 色を被ダメ用の色に変える。
         _hitPoint -= damage;
         _isColorChange = true;
         _colorChangeTimeValue = _colorChangeTime;
     }
-    public void HitPlayerAttadk(int damage, float knockBackTimer)//ノックバックする場合
+    /// <summary> プレイヤーからの攻撃処理 : ノックバック有り版 </summary>
+    /// <param name="damage"> ダメージ量 </param>
+    /// <param name="knockBackTimer"> ノックバック時間 </param>
+    public void HitPlayerAttadk(int damage, float knockBackTimer)
     {
         //自身の体力を減らし、0.1秒だけ色を赤に変える。
         _hitPoint -= damage;
         _isColorChange = true;
         _colorChangeTimeValue = _colorChangeTime;
 
-        //ノックバックする。プレイヤーのノックバック力(時間)-エネミーの耐久力(時間)分、Moveを停止する。
+        //ノックバックする。プレイヤーのノックバック力(時間) - エネミーの耐久力(時間)分、Moveを停止する。
         _knockBackModeTime = (knockBackTimer - _weight) > 0f ? (knockBackTimer - _weight) : 0f;
         StartCoroutine(KnockBackMode());
     }
-    //プレイヤーと敵が接触した時に呼ばれる。プレイヤーの体力を減らして、ノックバックさせる。
-    public void HitPlayer()
+    /// <summary> プレイヤーに対する攻撃処理 : オーバーライド可 </summary>
+    public virtual void HitPlayer()
     {
         //プレイヤーのHitPointを減らす
         PlayerStatusManager.Instance.PlayerHealthPoint -= _offensive_Power;
@@ -190,8 +194,9 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
+
     //<============= コルーチン =============>//
-    /// <summary> ノックバック実行用コルーチン </summary>
+    /// <summary> ノックバック実行用コルーチン。 : ノックバック中かどうかを表す変数を一定時間 true にする。 </summary>
     IEnumerator KnockBackMode()
     {
         _isKnockBackNow = true;
@@ -199,7 +204,8 @@ public class EnemyBase : MonoBehaviour
         _isKnockBackNow = false;
     }
 
+
     //<============= 仮想関数 =============>//
-    /// <summary> エネミー移動関数 : オーバーライド可 </summary>
+    /// <summary> Enemy移動用関数 : オーバーライド可 </summary>
     protected virtual void Move() { }
 }

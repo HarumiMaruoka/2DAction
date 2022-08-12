@@ -2,8 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
+/// <summary> Bossの基底クラス。 : ***** 現在MonoBehaviourを継承しているが、のちにEnemyBaseを継承すべき。 ***** </summary>
 public class BossBase : MonoBehaviour
 {
+    //<=========== このクラスで使用する型 ===========>//
+    /// <summary> ボスのステートを表す型 </summary>
     public enum BossState
     {
         IDLE,//待機
