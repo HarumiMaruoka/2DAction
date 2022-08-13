@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> Enemyの基底クラス </summary>
 public class EnemyBase : MonoBehaviour
 {
     //<============= メンバー変数 =============>//
@@ -49,12 +50,12 @@ public class EnemyBase : MonoBehaviour
     /// <returns> 成功したら true を返す。 </returns>
     protected bool Initialize_Enemy()
     {
-        if (EnemyInitialize_Get_PlayerComponents())
+        if (!EnemyInitialize_Get_PlayerComponents())
         {
             Debug.LogError($"初期化に失敗しました。 : {gameObject.name}");
             return false;
         }
-        if (EnemyInitialize_Get_ThisGameObjectComponents())
+        if (!EnemyInitialize_Get_ThisGameObjectComponents())
         {
             Debug.LogError($"初期化に失敗しました。 : {gameObject.name}");
             return false;
@@ -93,7 +94,7 @@ public class EnemyBase : MonoBehaviour
 
     //<============= private関数 =============>//
     //******************** 初期化関連 ********************//
-    /// <summary> プレイヤーのコンポーネントを取得 </summary>
+    /// <summary> プレイヤーにアタッチされているコンポーネントを取得する。 </summary>
     /// <returns> 成功したら true を返す。 </returns>
     bool EnemyInitialize_Get_PlayerComponents()
     {

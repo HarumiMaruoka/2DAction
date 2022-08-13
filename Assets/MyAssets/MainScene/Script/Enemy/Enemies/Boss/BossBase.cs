@@ -2,7 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-/// <summary> Bossの基底クラス。 : ***** 現在MonoBehaviourを継承しているが、のちにEnemyBaseを継承すべき。 ***** </summary>
+/// <summary> Bossの基底クラス。 :
+/// ***** 現在MonoBehaviourを継承しているが、のちにEnemyBaseを継承すべき。 *****
+/// ***** 現在新しいBossBaseを作成中 *****
+/// </summary>
 public class BossBase : MonoBehaviour
 {
     //<=========== このクラスで使用する型 ===========>//
@@ -23,12 +26,18 @@ public class BossBase : MonoBehaviour
         DIE,//死
     }
 
-    [Tooltip("体力"), SerializeField] protected int _hitPoint;
-    [Tooltip("攻撃力"), SerializeField] protected int _offensive_Power;
-    [Tooltip("プレイヤーに対するノックバック力"), SerializeField] protected Vector2 _playerKnockBackPower;
+
+    //<============= メンバー変数 =============>//
+
+    [Tooltip("体力"), SerializeField] 
+    protected int _hitPoint;
+    [Tooltip("攻撃力"), SerializeField]
+    protected int _offensive_Power;
+    [Tooltip("プレイヤーに対するノックバック力"), SerializeField]
+    protected Vector2 _playerKnockBackPower;
 
     //プレイヤーのコンポーネント
-    GameObject _playerObjedt;
+    protected GameObject _playerObjedt;
     protected Transform _playerPos;
     protected PlayerBasicInformation _playerBasicInformation;
     protected Rigidbody2D _playersRigidBody2D;
@@ -43,10 +52,11 @@ public class BossBase : MonoBehaviour
     /// <summary> このキャラが向いている方向 </summary>
     protected bool _isRight;
 
-    /// <summary> 戦闘中かどうか関連 </summary>
-    private bool _previousFrameIsBattle = false;
-    private bool _isBattle = false;
-    private bool _isBattleStart = false;
+    // 戦闘中かどうか関連
+    /// <summary> 前のフレームで戦闘状態だったか？ : 戦闘中であれば true </summary>
+    private bool _beforeFrameIsFight = false;
+    /// <summary> 現在のフレームで戦闘状態か？ : 戦闘中であれば true </summary>
+    private bool _isFight = false;
 
     //クールタイム関連
     /// <summary> 現在のクールタイム </summary>
@@ -55,7 +65,9 @@ public class BossBase : MonoBehaviour
     protected bool _isCoolTimeExit = false;
 
     //攻撃関連
+    /// <summary> 攻撃を開始するか？ : 開始するフレームで true </summary>
     protected bool _isAttackStart = false;
+    /// <summary> 攻撃を終了するか？ : 終了するフレームで true </summary>
     protected bool _isAttackExit = false;
 
     /// <summary> ボス攻撃後のクールタイム </summary>
@@ -65,18 +77,23 @@ public class BossBase : MonoBehaviour
     [Tooltip("戦闘停止までの距離"), SerializeField] private Vector2 _fightStopDistance;
 
     //色変更用
+    /// <summary> Hit用 : 色を変更するかどうか </summary>
     protected bool _isColorChange = false;
+    /// <summary> Hit用 : 色を変更する時間。 </summary>
     protected float _colorChangeTime = 0.1f;
+    /// <summary> Hit用 : 色を変更する時間、残り時間。 </summary>
     protected float _colorChangeTimeValue = 0;
 
     /// <summary> ノックバック関連 </summary>
     bool _isKnockBackNow;
     float _knockBackModeTime = 0f;
 
-    //自分の状態
+    /// <summary> 現在のステート </summary>
     public BossState _nowState { get; protected set; }
-    [SerializeField] int now;
 
+
+    //<============= protectedメンバー関数 =============>//
+    /// <summary> Boss共通の初期化処理 </summary>
     protected void InitBoss()
     {
         //プレイヤーのコンポーネントを取得
@@ -95,13 +112,12 @@ public class BossBase : MonoBehaviour
     /// <summary> 継承先のUpdateで実行すべき関数 </summary>
     protected void CommonUpdateBoss()
     {
-        now = (int)_nowState;
         DoFight();//戦うかどうか
         CommonBattleStart();//戦闘開始時のみ実行
         BattleStart();//独自の戦闘開始時の処理
         CommonBattleExit();//戦闘終了時のみ実行
         BattleExit();//独自の戦闘終了時の処理
-        if (_isBattleStart)
+        if (_isFight)
         {
             UpdateBoss();
         }
@@ -111,7 +127,7 @@ public class BossBase : MonoBehaviour
     void DoFight()
     {
         //前フレームの状態を保存する
-        _previousFrameIsBattle = _isBattleStart;
+        _beforeFrameIsFight = _isFight;
         //プレイヤーとの距離を測る処理をここに書く
         Vector2 difference = _playerPos.position - transform.position;
         _spriteRenderer.flipX = difference.x > 0f;
@@ -120,20 +136,15 @@ public class BossBase : MonoBehaviour
         //距離が一定以上近づいたら_isFightをTrueにする
         if (diffX < 10f && diffY < 5f)
         {
-            _isBattleStart = true;
+            _isFight = true;
         }
         //距離が一定以上離れたら_isFightをFalseにする
         else if (diffX > 25f || diffY > 10f)
         {
-            _isBattleStart = false;
+            _isFight = false;
         }
     }
 
-    /// <summary> ボスのステートを、必要に応じて変更する。オーバーライド可 </summary>
-    virtual protected void CangeState() { }
-
-    /// <summary> ボスの処理。オーバーライド可 </summary>
-    virtual protected void UpdateBoss() { }
 
 
     /// <summary> プレイヤーと接触したときに呼ばれる </summary>
@@ -163,16 +174,10 @@ public class BossBase : MonoBehaviour
         StartCoroutine(KnockBackMode());
     }
 
-    //ノックバック用のコード。
-    IEnumerator KnockBackMode()
-    {
-        _isKnockBackNow = true;
-        yield return new WaitForSeconds(_knockBackModeTime);
-        _isKnockBackNow = false;
-    }
+    
 
     /// <summary> Boss共通の戦闘開始時の処理 </summary>
-    protected void CommonBattleStart()
+    protected virtual void CommonBattleStart()
     {
         if (IsBattleStart())
         {
@@ -181,7 +186,7 @@ public class BossBase : MonoBehaviour
     }
 
     /// <summary> Boss共通の戦闘終了時の処理 </summary>
-    protected void CommonBattleExit()
+    protected virtual void CommonBattleExit()
     {
         if (IsBattleExit())
         {
@@ -189,31 +194,43 @@ public class BossBase : MonoBehaviour
         }
     }
 
-    /// <summary> 派生先で独自の戦闘開始の処理をここに書く。オーバーライド可 </summary>
-    virtual protected void BattleStart() { }
-
-    /// <summary> 派生先で独自の戦闘終了の処理をここに書く。オーバーライド可 </summary>
-    virtual protected void BattleExit() { }
-
+    /// <summary> 戦いを始めるかどうか判定する。 </summary>
+    /// <returns> 戦う場合 true を返す。 </returns>
     protected bool IsBattleStart()
     {
-        //_isBattleがfalseからtrueになったフレームのみ実行する
-        if (_previousFrameIsBattle == false && _isBattleStart == true)
+        if (_beforeFrameIsFight == false && _isFight == true)
         {
             return true;
         }
         return false;
     }
-
+    /// <summary> 戦いを終了するかどうか判定する。 </summary>
+    /// <returns> 終了する場合 false を返す。 </returns>
     protected bool IsBattleExit()
     {
-        //_isBattleがtrueからfalseになったフレームのみ実行する
-        if (_previousFrameIsBattle == true && _isBattleStart == false)
+        if (_beforeFrameIsFight == true && _isFight == false)
         {
             return true;
         }
         return false;
     }
 
+    //<============= コルーチン =============>//
+    /// <summary> ノックバック処理 </summary>
+    IEnumerator KnockBackMode()
+    {
+        _isKnockBackNow = true;
+        yield return new WaitForSeconds(_knockBackModeTime);
+        _isKnockBackNow = false;
+    }
 
+    //<============= 仮想関数 =============>//
+    /// <summary> 派生先で独自の戦闘開始の処理をここに書く。オーバーライド可 </summary>
+    virtual protected void BattleStart() { }
+    /// <summary> 派生先で独自の戦闘終了の処理をここに書く。オーバーライド可 </summary>
+    virtual protected void BattleExit() { }
+    /// <summary> ボスのステートを、必要に応じて変更する。オーバーライド可 </summary>
+    virtual protected void CangeState() { }
+    /// <summary> ボスの処理。オーバーライド可 </summary>
+    virtual protected void UpdateBoss() { }
 }

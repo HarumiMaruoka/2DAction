@@ -13,7 +13,10 @@ public class E_MachineBat : EnemyBase
     //<=========== Unityメッセージ ===========>//
     void Start()
     {
-        base.Initialize_Enemy();
+        if (!base.Initialize_Enemy())
+        {
+            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
+        }
     }
     void Update()
     {
@@ -25,25 +28,23 @@ public class E_MachineBat : EnemyBase
     /// <summary> マシンコウモリの移動処理 : 敵(プレイヤー)に向かって移動し続ける </summary>
     protected override void Move()
     {
-        //エネミーはプレイヤーがいる方向を向く : 絵の向きを変える。
+        // エネミーはプレイヤーがいる方向を向く : 絵の向きを変える。
         _spriteRenderer.flipX = (transform.position.x < _playerPos.transform.position.x);
 
-        //ノックバック中でなければ、プレイヤーに向かって移動する。
+        // ノックバック中でなければ、プレイヤーに向かって移動する。
         if (!_isKnockBackNow)
         {
-            //プレイヤーとエネミーの位置の差を取得する
+            // Enemyから見てどの方向にプレイヤーがいるかを取得する。
             float moveX = _playerPos.transform.position.x - transform.position.x;
             float moveY = _playerPos.transform.position.y - transform.position.y;
-
-            // 絶対値を取る
-            moveX = (moveX > 0) ? _moveSpeed : -_moveSpeed;
-            moveY = (moveY > 0) ? _moveSpeed : -_moveSpeed;
-
             // 距離が近い時は停止するその方向の移動は、停止する。
             if (moveX < _distanceToStop) moveX = 0f;
             if (moveY < _distanceToStop) moveY = 0f;
+            // そうで無い場合はプレイヤーに向かって移動する。
+            if (!Mathf.Approximately(moveX, 0f)) moveX = (moveX > 0) ? _moveSpeed : -_moveSpeed;
+            if (!Mathf.Approximately(moveY, 0f)) moveY = (moveY > 0) ? _moveSpeed : -_moveSpeed;
 
-            //無機質で機械的な移動を表現したいのでvelocityで移動する
+            // 移動処理
             _rigidBody2d.velocity = new Vector2(moveX / 50, moveY / 150);
         }
         else//ノックバック処理

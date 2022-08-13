@@ -25,7 +25,11 @@ public class E_Stomper : EnemyBase
     //<=========== Unityメッセージ ===========>//
     void Start()
     {
-        base.Initialize_Enemy();
+        if (!base.Initialize_Enemy())
+        {
+            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
+        }
+        
     }
     void Update()
     {
