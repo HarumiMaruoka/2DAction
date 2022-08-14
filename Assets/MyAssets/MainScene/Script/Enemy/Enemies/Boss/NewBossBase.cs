@@ -40,15 +40,13 @@ public class NewBossBase : EnemyBase
     /// <summary> 現在クールタイム中かどうか </summary>
     protected bool _isCoolTimerNow = false;
     /// <summary> 現在クールタイム中かどうかの前フレームの値 </summary>
-    protected bool _beforeIsCoolTimerNow = false;
+    private bool _beforeIsCoolTimerNow = false;
     /// <summary> クールタイム時間 </summary>
     protected float _coolTimeValue = 0f;
-
-    //攻撃関連
-    /// <summary> 攻撃を開始するか？ : 開始するフレームで true </summary>
-    protected bool _isAttackStart = false;
-    /// <summary> 攻撃を終了するか？ : 終了するフレームで true </summary>
-    protected bool _isAttackExit = false;
+    /// <summary> 現在攻撃中かどうか </summary>
+    protected bool _isAttackNow = false;
+    /// <summary> 現在攻撃中かどうかの前フレームの値 </summary>
+    private bool _beforeIsAttackNow = false;
 
     /// <summary> ボス攻撃後のクールタイム </summary>
     Dictionary<BossState, float> _bossAttackCoolTime = new Dictionary<BossState, float>();
@@ -58,6 +56,8 @@ public class NewBossBase : EnemyBase
 
     /// <summary> 現在のステート </summary>
     public BossState _nowState { get; protected set; }
+
+    protected Animator _animator;
 
 
     //<============= protectedメンバー関数 =============>//
@@ -70,27 +70,55 @@ public class NewBossBase : EnemyBase
             Debug.LogError($"初期化に失敗しました。{gameObject.name}");
             return false;
         }
+        if (!(_animator=GetComponent<Animator>()))
+        {
+            Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 : {gameObject.name}");
+            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
+            return false;
+        }
         return true;
     }
-    protected virtual void Update_BossBase()
+    /// <summary> ボス共通の更新処理 : オーバーライド可 </summary>
+    protected virtual void CommonUpdate_BossBase()
     {
+        // 後のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
+        _beforeIsCoolTimerNow = _isCoolTimerNow;
 
+        // 以下は判定を内部で行っているので、実行すべきタイミングで勝手に実行してくれる。
+        Update_StartAttackProcess();
+        Update_EndAttackProcess();
     }
 
     /// <summary> 攻撃開始のフレームを検知する </summary>
     /// <returns> 攻撃開始のフレームで true を返す。 </returns>
-    protected bool StartAttack()
+    protected bool Get_IsAttackStart()
     {
         return _beforeIsCoolTimerNow == false && _isCoolTimerNow == true;
     }
     /// <summary> 攻撃終了のフレームを検知する </summary>
     /// <returns> 攻撃終了のフレームで true を返す。 </returns>
-    protected bool EndAttack()
+    protected bool Get_IsAttackEnd()
     {
         return _beforeIsCoolTimerNow == true && _isCoolTimerNow == false;
     }
 
     //<============= privateメンバー関数 =============>//
+    /// <summary> 攻撃開始処理 </summary>
+    void Update_StartAttackProcess()
+    {
+        if (Get_IsAttackStart())
+        {
+            StartAttackProcess();
+        }
+    }
+    /// <summary> 攻撃終了処理 </summary>
+    void Update_EndAttackProcess()
+    {
+        if (Get_IsAttackEnd())
+        {
+            EndAttackProcess();
+        }
+    }
 
 
 
@@ -104,8 +132,14 @@ public class NewBossBase : EnemyBase
 
 
     //<============= 仮想関数 =============>//
-    /// <summary> 攻撃開始処理 : オーバーライド可 </summary>
-    protected virtual void StartAttackProcess() { }
-    /// <summary> 攻撃終了処理 : オーバーライド可 </summary>
-    protected virtual void EndAttackProcess() { }
+    /// <summary> 攻撃開始処理 : オーバーライド推奨 </summary>
+    protected virtual void StartAttackProcess()
+    {
+        // オーバーライド先でアニメーションの遷移処理等記述してください。
+    }
+    /// <summary> 攻撃終了処理 : オーバーライド推奨 </summary>
+    protected virtual void EndAttackProcess()
+    {
+        // オーバーライド先でアニメーションの遷移処理や、クールタイム開始処理等記述してください。
+    }
 }
