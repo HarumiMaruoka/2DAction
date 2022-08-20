@@ -5,6 +5,31 @@ using UnityEngine;
 /// <summary> Enemyの基底クラス </summary>
 public class EnemyBase : MonoBehaviour
 {
+    //<=========== このクラスで使用する型 ===========>//
+
+    /// <summary> Enemyのステータス </summary>
+    public struct EnemyStatus
+    {
+        public int _hitPoint;
+        public int _offensivePower;
+        public Vector2 _blowingPower;
+        public float _weight;
+
+        /// <summary> EnemyStatusのコンストラクタ </summary>
+        /// <param name="hitPoint"> 体力 </param>
+        /// <param name="offensivePower"> 攻撃力 </param>
+        /// <param name="blowingPowerUp"> 吹っ飛ばし力 : 上方向の威力 </param>
+        /// <param name="blowingPowerRight"> 吹っ飛ばし力 : 右方向の威力 </param>
+        /// <param name="weight"> 重さ : 吹っ飛びにくさ </param>
+        public EnemyStatus(int hitPoint = 1, int offensivePower = 1, int blowingPowerUp = 1, int blowingPowerRight = 1, float weight = 1f)
+        {
+            _hitPoint = hitPoint;
+            _offensivePower = offensivePower;
+            _blowingPower = Vector2.up * blowingPowerUp + Vector2.right * blowingPowerRight;
+            _weight = weight;
+        }
+    }
+
     //<============= メンバー変数 =============>//
     //エネミー共通のステータス
     /// <summary> ヒットポイント </summary>

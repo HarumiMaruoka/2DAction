@@ -8,6 +8,7 @@ using UnityEngine;
 /// 今はまだ使用していない。
 /// 
 /// 変更点 : EnemyBaseを継承している点。
+///          その他いろいろ最適化
 /// </summary>
 public class NewBossBase : EnemyBase
 {
@@ -45,8 +46,6 @@ public class NewBossBase : EnemyBase
     protected float _coolTimeValue = 0f;
     /// <summary> 現在攻撃中かどうか </summary>
     protected bool _isAttackNow = false;
-    /// <summary> 現在攻撃中かどうかの前フレームの値 </summary>
-    private bool _beforeIsAttackNow = false;
 
     /// <summary> ボス攻撃後のクールタイム </summary>
     Dictionary<BossState, float> _bossAttackCoolTime = new Dictionary<BossState, float>();
@@ -103,7 +102,7 @@ public class NewBossBase : EnemyBase
     }
 
     //<============= privateメンバー関数 =============>//
-    /// <summary> 攻撃開始処理 </summary>
+    /// <summary> 攻撃開始を検知して処理を実行する。 </summary>
     void Update_StartAttackProcess()
     {
         if (Get_IsAttackStart())
@@ -111,7 +110,7 @@ public class NewBossBase : EnemyBase
             StartAttackProcess();
         }
     }
-    /// <summary> 攻撃終了処理 </summary>
+    /// <summary> 攻撃終了を検知して処理を実行する。 </summary>
     void Update_EndAttackProcess()
     {
         if (Get_IsAttackEnd())
@@ -120,10 +119,9 @@ public class NewBossBase : EnemyBase
         }
     }
 
-
-
     //<============= コルーチン =============>//
-    IEnumerator CoolTime_Coroutine()
+    /// <summary> クールタイムを開始する。 : 指定された時間クールタイム変数を true にする。 </summary>
+   　protected IEnumerator StartCoolTime()
     {
         _isCoolTimerNow = true;
         yield return new WaitForSeconds(_coolTimeValue);
@@ -135,11 +133,11 @@ public class NewBossBase : EnemyBase
     /// <summary> 攻撃開始処理 : オーバーライド推奨 </summary>
     protected virtual void StartAttackProcess()
     {
-        // オーバーライド先でアニメーションの遷移処理等記述してください。
+        // ここに、オーバーライド先でアニメーションの遷移処理等の、攻撃開始に関わる処理を記述してください。
     }
     /// <summary> 攻撃終了処理 : オーバーライド推奨 </summary>
     protected virtual void EndAttackProcess()
     {
-        // オーバーライド先でアニメーションの遷移処理や、クールタイム開始処理等記述してください。
+        // ここに、オーバーライド先でアニメーションの遷移処理や、クールタイム開始処理等の、攻撃終了に関わる処理を記述してください。
     }
 }
