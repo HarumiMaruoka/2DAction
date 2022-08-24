@@ -89,7 +89,7 @@ public class PlayerBasicInformation : MonoBehaviour
                 _hitEnemySound.Play();
                 StartCoroutine(GodMode());
             }
-            if (collision.gameObject.TryGetComponent(out BossAttack bossAttack))
+            if (collision.gameObject.TryGetComponent(out BossWeapon bossAttack))
             {
                 bossAttack.HitPlayer();
                 _newPlayerStateManagement._isHitEnemy = true;

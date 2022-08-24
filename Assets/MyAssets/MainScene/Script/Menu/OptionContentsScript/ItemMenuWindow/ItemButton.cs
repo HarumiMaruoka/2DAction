@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ItemButton : MonoBehaviour
 {
+    //<===== メンバー変数 =====>//
     //アイテム名のテキスト
     Text _itemNameText;
     //個数のテキスト
@@ -19,12 +20,7 @@ public class ItemButton : MonoBehaviour
 
     ItemMenuWindowManager _itemWindowManager;
 
-    public void SetItemData(Item item)
-    {
-        _myItem = item;
-    }
-
-
+    //<===== Unityメッセージ =====>//
     void Start()
     {
         _itemWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<ItemMenuWindowManager>();
@@ -37,15 +33,14 @@ public class ItemButton : MonoBehaviour
         //所持数を設定
         Update_ItemVolume();
     }
-
-    private void Update()
+    void Update()
     {
         if (PlayerStatusManager.Instance == null)
         {
             Debug.LogError("PlayerManagerがnullです！");
         }
         //所持数を取得
-        _nowItemVolume = ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
+        _nowItemVolume = ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
             Update_ItemVolume();
@@ -59,27 +54,29 @@ public class ItemButton : MonoBehaviour
         }
         _beforeItemVolume = _nowItemVolume;
     }
-
     /// <summary> アイテムボタンがアクティブになった時の処理。 </summary>
-    private void OnEnable()
+    void OnEnable()
     {
         //所持数をセットする
         Update_ItemVolume();
     }
 
+    //<===== publicメンバー関数 =====>//
+    public void SetItemData(Item item)
+    {
+        _myItem = item;
+    }
     /// <summary> 所持数を更新する。 </summary>
     public void Update_ItemVolume()
     {
         if (_itemVolumText != null)
         {
-            _itemVolumText.text = " × " + ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+            _itemVolumText.text = " × " + ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
         }
     }
-
-
     /// <summary> ボタンを押したら実行する </summary>
     public void Use_ThisItem()
     {
-        GameManager.Instance.ItemData[(int)MyItem._myID].UseItem();
+        ItemDataBase.Instance.ItemData[(int)MyItem._myID].UseItem();
     }
 }

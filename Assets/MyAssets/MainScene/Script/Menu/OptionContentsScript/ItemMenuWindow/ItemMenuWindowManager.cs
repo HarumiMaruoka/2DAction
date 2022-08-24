@@ -288,7 +288,7 @@ public class ItemMenuWindowManager : MonoBehaviour
         if (!CheckNull()) return false;
         //フィルターボタンに値をセットする。
         Set_FilterButton();
-        //アイテムボタンに情報をセットする。
+        //アイテムボタンを生成し情報を設定する。
         Set_ItemButton();
         //アイテムのアイコン画像を設定する。
         _sprites = Resources.LoadAll<Sprite>(_folderPath);
@@ -343,7 +343,7 @@ public class ItemMenuWindowManager : MonoBehaviour
         _filters[(int)ItemFilter.MINUS_ITEM].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.MINUS_ITEM);
         _filters[(int)ItemFilter.KEY].GetComponent<ItemFilterButton>().Set_ItemFilter(ItemFilter.KEY);
     }
-    /// <summary> アイテムボタンに情報を設定する。 </summary>
+    /// <summary> アイテムボタンを生成し情報を設定する。 </summary>
     void Set_ItemButton()
     {
         //アイテムボタンをScrollViewの、Contentの子としてインスタンシエイトしておき、データをセットする。
@@ -352,7 +352,7 @@ public class ItemMenuWindowManager : MonoBehaviour
             //ALLコンテントの子としてインスタンシエイトする。
             _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.ALL].transform);
             //データをセット
-            _itemButtons[i].GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
+            _itemButtons[i].GetComponent<ItemButton>().SetItemData(ItemDataBase.Instance.ItemData[i]);
 
             //各フィルターのコンテントの子としてインスタンシエイトする。
             switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
@@ -364,7 +364,7 @@ public class ItemMenuWindowManager : MonoBehaviour
                 default: Debug.LogError("エラー! : 不正な値です"); break;
             }
             //データをセット
-            temporaryObject.GetComponent<ItemButton>().SetItemData(GameManager.Instance.ItemData[i]);
+            temporaryObject.GetComponent<ItemButton>().SetItemData(ItemDataBase.Instance.ItemData[i]);
         }
     }
     /// <summary> コンテントの子を取得し、変数に保存する。 </summary>
@@ -385,7 +385,7 @@ public class ItemMenuWindowManager : MonoBehaviour
             {
                 //所持数が0かどうか判定する。
                 //0個であれば非アクティブにする
-                if (ItemHaveValueManager.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                if (ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
                 {
                     item[i][j].gameObject.SetActive(false);
                 }

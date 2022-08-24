@@ -35,9 +35,9 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     void Initialized_ThisClass()
     {
         //配列分のメモリを確保
-        _equipmentButtons = new GameObject[EquipmentManager.Instance.MaxHaveValue];
+        _equipmentButtons = new GameObject[EquipmentDataBase.Instance.MaxHaveValue];
         //所持できる数だけボタンを生成し、配列に保存しておく。
-        for (int i = 0; i < EquipmentManager.Instance.MaxHaveValue; i++)
+        for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
         {
             //生成処理。
             _equipmentButtons[i] = Instantiate(_equipmentButtonPrefab, Vector3.zero, Quaternion.identity, _content);
@@ -51,7 +51,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     /// <summary> 全てのボタンに装備情報を設定する。 </summary>
     void Set_ValueToButtonALL()
     {
-        for (int i = 0; i < EquipmentManager.Instance.MaxHaveValue; i++)
+        for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
         {
             Set_ValueToButton(i);
         }
@@ -62,9 +62,9 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     void Set_ValueToButton(int index)
     {
         // 所持装備の情報を保管している場所から、装備のIDを取得する。
-        int thisEquipmentID = EquipmentManager.Instance.HaveEquipmentID._equipmentsID[index];
+        int thisEquipmentID = EquipmentDataBase.Instance.HaveEquipmentID._equipmentsID[index];
         // -1なら所持していないのでnullを設定する。そうでなければ、ボタンに装備情報をセットする。
-        if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentManager.Instance.EquipmentData[thisEquipmentID]);
+        if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentDataBase.Instance.EquipmentData[thisEquipmentID]);
         else _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(null);
     }
 

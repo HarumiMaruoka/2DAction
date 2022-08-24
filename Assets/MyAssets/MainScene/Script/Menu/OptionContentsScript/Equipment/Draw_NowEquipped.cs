@@ -56,20 +56,20 @@ public class Draw_NowEquipped : MonoBehaviour
             switch (updateType)
             {
                 case Equipment.EquipmentType.HEAD_PARTS:
-                    if (EquipmentManager.Instance.Equipped._headPartsID >= 0)
-                        _headPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._headPartsID]._myName;
+                    if (EquipmentDataBase.Instance.Equipped._headPartsID >= 0)
+                        _headPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID]._myName;
                     else
                         _headPartsTextArea.text = "–¢‘•”õ";
                     break;
                 case Equipment.EquipmentType.TORSO_PARTS:
-                    if (EquipmentManager.Instance.Equipped._torsoPartsID >= 0)
-                        _torsoPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._torsoPartsID]._myName;
+                    if (EquipmentDataBase.Instance.Equipped._torsoPartsID >= 0)
+                        _torsoPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._torsoPartsID]._myName;
                     else
                         _torsoPartsTextArea.text = "–¢‘•”õ";
                     break;
                 case Equipment.EquipmentType.FOOT_PARTS:
-                    if (EquipmentManager.Instance.Equipped._footPartsID >= 0)
-                        _footPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._footPartsID]._myName;
+                    if (EquipmentDataBase.Instance.Equipped._footPartsID >= 0)
+                        _footPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._footPartsID]._myName;
                     else
                         _footPartsTextArea.text = "–¢‘•”õ";
                     break;
@@ -82,16 +82,16 @@ public class Draw_NowEquipped : MonoBehaviour
             //¶˜r‚Ìê‡
             if (whichArm == 0)
             {
-                if (EquipmentManager.Instance.Equipped._armLeftPartsID >= 0)
-                    _armLeftPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armLeftPartsID]._myName;
+                if (EquipmentDataBase.Instance.Equipped._armLeftPartsID >= 0)
+                    _armLeftPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID]._myName;
                 else
                     _armLeftPartsTextArea.text = "–¢‘•”õ";
             }
             //‰E˜r‚Ìê‡
             else if (whichArm == 1)
             {
-                if (EquipmentManager.Instance.Equipped._armRightPartsID >= 0)
-                    _armRightPartsTextArea.text = EquipmentManager.Instance.EquipmentData[EquipmentManager.Instance.Equipped._armRightPartsID]._myName;
+                if (EquipmentDataBase.Instance.Equipped._armRightPartsID >= 0)
+                    _armRightPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID]._myName;
                 else
                     _armRightPartsTextArea.text = "–¢‘•”õ";
             }

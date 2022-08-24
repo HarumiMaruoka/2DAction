@@ -25942,8 +25942,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d080e8e77356f8f4b895defdb537aa3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemCSVPath: C:\Users\vantan\Desktop\2DActionBasicInformation\ItemInformation.csv
-  _itemJSONPath: 
 --- !u!4 &194046938 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5348122343562175753, guid: 39b2b2e1caaf7d04b93bf4720825e82c, type: 3}
@@ -27144,29 +27142,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 403081137}
-  - component: {fileID: 403081136}
+  - component: {fileID: 403081138}
   m_Layer: 0
-  m_Name: <<<ItemHaveValueManager>>>
+  m_Name: <<<ItemManager>>>
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &403081136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403081135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa0d2912f3668b8469adf47da6b74fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _itemFilePath: 
-  _itemVolume:
-    _itemNumberOfPossessions: 
 --- !u!4 &403081137
 Transform:
   m_ObjectHideFlags: 0
@@ -27181,6 +27164,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &403081138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403081135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afcd29ba492f2f4ca258a910bbdcb82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemCSVPath: C:\Users\vantan\Desktop\2DActionBasicInformation\ItemInformation.csv
+  _itemJsonPath: 
+  _itemVolume:
+    _itemNumberOfPossessions: 
 --- !u!1 &422285945
 GameObject:
   m_ObjectHideFlags: 0
@@ -55872,6 +55871,14 @@ PrefabInstance:
     - target: {fileID: 4271132077866417725, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
       propertyPath: m_Name
       value: Bringer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4271132078442668896, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
+      propertyPath: _playerTagName
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4271132078482889336, guid: e031a1c7b2139614e9571e8849872b62, type: 3}
+      propertyPath: _playerTagName
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e031a1c7b2139614e9571e8849872b62, type: 3}

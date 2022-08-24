@@ -48,12 +48,12 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 
     private void OnEnable()
     {
-        EquipmentManager.Instance.ReplacedEquipment += SetALL_PlayerStatusText;
+        EquipmentDataBase.Instance.ReplacedEquipment += SetALL_PlayerStatusText;
     }
 
     private void OnDisable()
     {
-        EquipmentManager.Instance.ReplacedEquipment -= SetALL_PlayerStatusText;
+        EquipmentDataBase.Instance.ReplacedEquipment -= SetALL_PlayerStatusText;
     }
 
     /// <summary> このクラスの初期化関数。成功したらtrueを返す。 </summary>

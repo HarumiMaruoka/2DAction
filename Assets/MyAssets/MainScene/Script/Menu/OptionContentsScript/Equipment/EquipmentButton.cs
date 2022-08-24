@@ -83,21 +83,21 @@ public class EquipmentButton : MonoBehaviour
     public void OnClick_ExecutionSwap_OtherArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentManager.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
         UpdateText();
     }
     /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
     public void OnClick_ExecutionSwap_LeftArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentManager.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 0);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 0);
         UpdateText();
     }
     /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
     public void OnClick_ExecutionSwap_RightArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentManager.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 1);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 1);
         UpdateText();
     }
 }
