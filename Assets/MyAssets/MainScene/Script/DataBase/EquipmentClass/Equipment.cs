@@ -21,7 +21,7 @@ abstract public class Equipment
     /// <param name="moveSpeed_RiseValue"> 移動速度 </param>
     /// <param name="difficultToBlowOff"> 吹っ飛びにくさ </param>
     /// <param name="seriesName"> シリーズ名 </param>
-    public Equipment(EquipmentManager.EquipmentID id, EquipmentType type, string name,
+    public Equipment(EquipmentDataBase.EquipmentID id, EquipmentType type, string name,
         EquipmentRarity rarity, float specialEffects = 0f, float endurance_RiseValue = 0f,
         float maxHealthPoint_RiseValue = 0f, float maxStamina_RiseValue = 0f,
         float offensivePower_ShortDistance_RiseValue = 0f, float offensivePower_LongDistance_RiseValue = 0f,
@@ -77,7 +77,7 @@ abstract public class Equipment
     public enum EquipmentRarity { A, B, C, D, E, ERROR }
 
     /// <summary> この装備のID </summary>
-    public EquipmentManager.EquipmentID _myID { get; }
+    public EquipmentDataBase.EquipmentID _myID { get; }
     /// <summary> この装備の種類 </summary>
     public EquipmentType _myType { get; }
     /// <summary> この装備のレアリティ </summary>

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-/// <summary> 持っている装備・着用している装備を、管理するクラス </summary>
-public class EquipmentManager : MonoBehaviour
+/// <summary> 
+/// 全ての装備の情報と、
+/// プレイヤーが所持している装備・着用している装備を、管理するクラス。
+/// </summary>
+public class EquipmentDataBase : MonoBehaviour
 {
     //<======= このクラスで使用する型 =======>//
     /// <summary> 装備のID </summary>
@@ -65,17 +68,17 @@ public class EquipmentManager : MonoBehaviour
 
     //<===== インスペクタから設定すべき値 =====>//
     [Header("装備の基本情報が格納されたcsvファイルへのパス"), SerializeField] string _equipmentCsvFilePath;
-    [Header("所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
-    [Header("現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
+    [Header("確認用 : 所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
+    [Header("確認用 : 現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
     [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveVolume;
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
     //<======シングルトンパターン関連======>//
     //インスタンス
-    private static EquipmentManager _instance;
+    private static EquipmentDataBase _instance;
     //インスタンスのプロパティ
-    public static EquipmentManager Instance
+    public static EquipmentDataBase Instance
     {
         get
         {
@@ -87,7 +90,7 @@ public class EquipmentManager : MonoBehaviour
         }
     }
     //プライベートなコンストラクタ
-    private EquipmentManager() { }
+    private EquipmentDataBase() { }
 
 
 

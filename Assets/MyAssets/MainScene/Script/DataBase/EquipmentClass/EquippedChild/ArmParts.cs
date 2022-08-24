@@ -6,7 +6,7 @@ public class ArmParts : Equipment
 {
     //コンストラクタ
     public ArmParts(
-        EquipmentManager.EquipmentID id,
+        EquipmentDataBase.EquipmentID id,
         EquipmentType type,
         string name,
         EquipmentRarity rarity,

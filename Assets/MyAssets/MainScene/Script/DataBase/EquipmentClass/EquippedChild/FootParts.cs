@@ -6,7 +6,7 @@ public class FootParts : Equipment
 {
     //コンストラクタ
     public FootParts(
-        EquipmentManager.EquipmentID id,
+        EquipmentDataBase.EquipmentID id,
         EquipmentType type,
         string name,
         EquipmentRarity rarity,

@@ -18,12 +18,12 @@ public class ItemTestScript : MonoBehaviour
     /// <summary> 特定のIDのアイテムを1つ増やす。 </summary>
     public void PlusItem(int itemID)
     {
-        ItemHaveValueManager.Instance.Set_ItemNumberOfPossessions(itemID, 1);
+        ItemDataBase.Instance.Set_ItemNumberOfPossessions(itemID, 1);
     }
 
     /// <summary> 特定のIDのアイテムを1つ減らす。 </summary>
     public void MinusItem(int itemID)
     {
-        ItemHaveValueManager.Instance.Set_ItemNumberOfPossessions(itemID, -1);
+        ItemDataBase.Instance.Set_ItemNumberOfPossessions(itemID, -1);
     }
 }
