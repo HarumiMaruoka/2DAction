@@ -7,7 +7,7 @@ using UnityEngine;
 /// コライダーだけ持つ子オブジェクトに持たせる。
 /// こいつも、EnemyBaseを継承させる方がいいかな？
 /// </summary>
-public class BossAttack : MonoBehaviour
+public class BossWeapon : MonoBehaviour
 {
     //<=========== メンバー変数 ===========>//
     //プレイヤーのコンポーネント
@@ -109,12 +109,6 @@ public class BossAttack : MonoBehaviour
     /// <returns> 成功したら true を返す。 </returns>
     bool BossAttackInitialize_Get_ThisGameObjectComponents()
     {
-        _animator = GetComponent<Animator>();
-        if (_animator == null)
-        {
-            Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 : {gameObject.name}");
-            return false;
-        }
         _collider2D = GetComponent<Collider2D>();
         if (_collider2D == null)
         {
@@ -124,8 +118,12 @@ public class BossAttack : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
         {
-            Debug.LogError($"SpriteRendererコンポーネントの取得に失敗しました。 : {gameObject.name}");
-            return false;
+            Debug.LogError($"SpriteRendererコンポーネントの取得に失敗しました。 \n このクラスでSpriteRendererコンポーネントを使用しますか？ : オブジェクト名 \"{gameObject.name}\"");
+        }
+        _animator = GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 \n このクラスでAnimatorコンポーネントを使用しますか？ : オブジェクト名 \" {gameObject.name}\"");
         }
         return true;
     }
