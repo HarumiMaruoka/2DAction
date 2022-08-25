@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ゲーム全体で使用可能なクラス。未だに何も記述していないので必要ないかもしれない。
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     //<===== シングルトン関係 =====>//
@@ -27,6 +30,7 @@ public class GameManager : MonoBehaviour
     /// <summary> 初期化に成功したかどうかを表す変数。 </summary>
     bool _isInitialized = false;
 
+    //<===== Unityメッセージ =====>//
     void Awake()
     {
         if( _isInitialized = Initialized())

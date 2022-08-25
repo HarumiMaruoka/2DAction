@@ -94,59 +94,12 @@ public class EquipmentDataBase : MonoBehaviour
 
 
 
-    //<======== このクラスの初期化関連 ========>//
-    /// <summary> 装備基底クラスの初期化関数。(派生先で呼び出す。) </summary>
-    /// <returns> 初期化に成功した場合true、失敗したらfalseを返す。 </returns>
-    bool Initialize_EquipmentBase()
-    {
-        //csvから装備情報を取得
-        OnLoad_EquipmentData_csv();
-        //現在の着用している装備を初期化
-        _equipped._headPartsID = (int)EquipmentID.Nan;
-        _equipped._torsoPartsID = (int)EquipmentID.Nan;
-        _equipped._armRightPartsID = (int)EquipmentID.Nan;
-        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
-        _equipped._footPartsID = (int)EquipmentID.Nan;
-        return true;
-    }
+    //<======= Unityメッセージ =======>//
     private void Awake()
     {
-        //もしインスタンスが設定されていなかったら自身を代入する
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        //もう既に存在する場合は、このオブジェクトを破棄する。
-        else if (_instance != null)
-        {
-            Destroy(this.gameObject);
-        }
-
-        // 所持している装備を保存しているファイルのパスを取得し、ファイルを開く。
-        _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquipmentFile.json");
-        _equippedJsonFilePath = Path.Combine(Application.persistentDataPath, "EquippedFile.json");
-        //このオブジェクトは、シーンを跨いでもデストロイしない。
-        DontDestroyOnLoad(gameObject);
-        //配列用のメモリを確保し、-1で初期化する。
-        _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
-        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
-
-        // テスト用コード : テキトーに所持していることにする。
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
-        {
-            _haveEquipmentID._equipmentsID[i] = i % _equipmentData.Length;
-        }
-
         //クラスを初期化
         Initialize_EquipmentBase();
-
-        //Debug.Log("装備関係をロードする。");
-        //OnLoad_EquipmentHaveData_Json();
-        //OnLoad_EquippedData_Json();
     }
-
-
-    //<======= このクラスの更新関連 =======>//
     void Update()
     {
         //Kキー押下でセーブする
@@ -166,6 +119,54 @@ public class EquipmentDataBase : MonoBehaviour
     }
 
 
+    //<======== privateメンバー関数 ========>//
+    /// <summary> 装備基底クラスの初期化関数。(派生先で呼び出す。) </summary>
+    /// <returns> 初期化に成功した場合true、失敗したらfalseを返す。 </returns>
+    bool Initialize_EquipmentBase()
+    {
+        /*** シングルトン関係の処理 ***/
+        //もしインスタンスが設定されていなかったら自身を代入する
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        //もう既に存在する場合は、このオブジェクトを破棄する。
+        else if (_instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
+        /***** 所持している装備を保存しているファイルのパスを取得し、ファイルを開く。 *****/
+        _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquipmentFile.json");
+        _equippedJsonFilePath = Path.Combine(Application.persistentDataPath, "EquippedFile.json");
+
+        /***** 配列用のメモリを確保する。 *****/
+        _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
+        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
+
+        // ***** テスト用コード ***** // : テキトーに所持していることにする。
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            _haveEquipmentID._equipmentsID[i] = i % _equipmentData.Length;
+        }
+
+        /***** csvファイルからすべての装備情報を取得 *****/
+        OnLoad_EquipmentData_csv();
+
+        /***** 現在の着用している装備を初期化 *****/
+        _equipped._headPartsID = (int)EquipmentID.Nan;
+        _equipped._torsoPartsID = (int)EquipmentID.Nan;
+        _equipped._armRightPartsID = (int)EquipmentID.Nan;
+        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
+        _equipped._footPartsID = (int)EquipmentID.Nan;
+
+        /*jsonファイルから所持している装備と着用している装備の*/
+        //OnLoad_EquipmentHaveData_Json();
+        //OnLoad_EquippedData_Json();
+
+        return true;
+    }
     //<======== ロード & セーブ関連 ========>//
     /// <summary> csvファイルから、全ての装備のデータを読み込む関数 </summary>
     /// <returns> 読み込んだ結果を返す。失敗した場合はnullを返す。 </returns>
@@ -269,6 +270,33 @@ public class EquipmentDataBase : MonoBehaviour
         }
 
     }
+    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 : 全身 </summary>
+    void ApplyEquipment_ALL()
+    {
+        //リセットする。
+        PlayerStatusManager.Instance._equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
+        //増加値を適用する。
+        ApplyEquipment_SpecificParts(_equipped._headPartsID);//頭
+        ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//胴
+        ApplyEquipment_SpecificParts(_equipped._armLeftPartsID);//左腕
+        ApplyEquipment_SpecificParts(_equipped._armRightPartsID);//右腕
+        ApplyEquipment_SpecificParts(_equipped._footPartsID);//足
+    }
+    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 </summary>
+    /// <param name="equipmentID"> 適用する装備のID </param>
+    void ApplyEquipment_SpecificParts(int equipmentID)
+    {
+        if (equipmentID >= 0)
+        {
+            PlayerStatusManager.Instance._equipment_RisingValue += EquipmentData[equipmentID].ThisEquipment_StatusRisingValue;
+        }
+        else
+        {
+            Debug.LogError("未装備の箇所はありますか?そうでなければエラーです! : 装備マネージャーコンポーネントより");
+        }
+    }
+
+    //<===== publicメンバー関数 =====>//
     /// <summary> 所持している装備を、jsonファイルからデータを読み込み、メンバー変数に格納する処理。 </summary>
     public void OnLoad_EquipmentHaveData_Json()
     {
@@ -341,8 +369,6 @@ public class EquipmentDataBase : MonoBehaviour
         Debug.LogError("不正な値です。");
         return Equipment.EquipmentRarity.ERROR;
     }
-
-    //<====== このコンポーネントが持つ機能 ======>//
     /// <summary> 所持している装備と、着用している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
     /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
@@ -417,33 +443,8 @@ public class EquipmentDataBase : MonoBehaviour
         Debug.Log("着用した装備のID : " + fromNowEquipmentID);
     }
 
-    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 : 全身 </summary>
-    void ApplyEquipment_ALL()
-    {
-        //リセットする。
-        PlayerStatusManager.Instance._equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
-        //増加値を適用する。
-        ApplyEquipment_SpecificParts(_equipped._headPartsID);//頭
-        ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//胴
-        ApplyEquipment_SpecificParts(_equipped._armLeftPartsID);//左腕
-        ApplyEquipment_SpecificParts(_equipped._armRightPartsID);//右腕
-        ApplyEquipment_SpecificParts(_equipped._footPartsID);//足
-    }
-    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 </summary>
-    /// <param name="equipmentID"> 適用する装備のID </param>
-    void ApplyEquipment_SpecificParts(int equipmentID)
-    {
-        if (equipmentID >= 0)
-        {
-            PlayerStatusManager.Instance._equipment_RisingValue += EquipmentData[equipmentID].ThisEquipment_StatusRisingValue;
-        }
-        else
-        {
-            Debug.LogError("未装備の箇所はありますか?そうでなければエラーです! : 装備マネージャーコンポーネントより");
-        }
-    }
 
-    //以下テスト用、実際に使えるモノと判断したら本番移行する。
+    //<===== 以下テスト用、実際に使えるモノと判断したら本番移行する。 =====>//
     /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を取得する。 </summary>
     /// <param name="id"> 取得する装備のID </param>
     public bool Get_Equipment(int id)
