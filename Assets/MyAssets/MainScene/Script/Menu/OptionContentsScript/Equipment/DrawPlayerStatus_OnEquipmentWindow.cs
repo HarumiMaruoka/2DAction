@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary> 装備画面に、プレイヤーステータスを描画する機能 </summary>
+/// <summary> 
+/// 装備画面に、プレイヤーステータスを描画するコンポーネント。
+/// 現在選択中のパーツを装備することによるステータスの変化量を描画する機能を追記してください。
+/// </summary>
 public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 {
     enum StatusName
