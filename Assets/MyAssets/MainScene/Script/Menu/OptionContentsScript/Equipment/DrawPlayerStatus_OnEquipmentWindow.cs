@@ -42,9 +42,6 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
         if (!_whetherInitialized)
         {
             _whetherInitialized = Initialize_ThisClass();
-        }
-        if (!_whetherInitialized)
-        {
             Debug.LogError("クラスの初期化に失敗しました。 : クラス名 : DrawPlayerStatus_OnEquipmentWindow");
         }
     }

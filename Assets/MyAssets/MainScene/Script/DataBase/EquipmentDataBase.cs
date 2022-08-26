@@ -74,6 +74,9 @@ public class EquipmentDataBase : MonoBehaviour
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
+    public const int LEFT_ARM = 0;
+    public const int RIGHT_ARM = 1;
+
     //<======シングルトンパターン関連======>//
     //インスタンス
     private static EquipmentDataBase _instance;
@@ -372,8 +375,8 @@ public class EquipmentDataBase : MonoBehaviour
     /// <summary> 所持している装備と、着用している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
     /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
-    /// <param name="whichArm"> どちらの腕装備するか判断する値、0なら左腕、1なら右腕。 </param>
-    public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int whichArm = -1)
+    /// <param name="armFlag"> どちらの腕装備するか判断する値、0なら左腕、1なら右腕。 </param>
+    public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = -1)
     {
         Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
         Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
@@ -415,25 +418,25 @@ public class EquipmentDataBase : MonoBehaviour
         //腕の場合
         else
         {
-            if (whichArm == 0)
+            if (armFlag == 0)
             {
                 temporary = _equipped._armLeftPartsID;
                 _equipped._armLeftPartsID = fromNowEquipmentID;
             }
-            else if(whichArm == 1)
+            else if(armFlag == 1)
             {
                 temporary = _equipped._armRightPartsID;
                 _equipped._armRightPartsID = fromNowEquipmentID;
             }
             else
             {
-                Debug.LogError($"不正な値です{whichArm}");
+                Debug.LogError($"不正な値です{armFlag}");
             }
             //着脱した装備をインベントリに格納する
             if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
             else button.Set_Equipment(null);
             //表示を更新する
-            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, whichArm);
+            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
             if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
         }
         ApplyEquipment_ALL();

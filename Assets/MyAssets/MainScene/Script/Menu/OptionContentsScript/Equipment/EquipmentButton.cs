@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary> 「装備」のボタン ※ 装備するボタンとは異なる </summary>
+/// <summary> 「装備」のボタン </summary>
 public class EquipmentButton : MonoBehaviour
 {
     //<===== このクラスで使用する型 =====>//
@@ -90,14 +90,14 @@ public class EquipmentButton : MonoBehaviour
     public void OnClick_ExecutionSwap_LeftArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 0);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.LEFT_ARM);
         UpdateText();
     }
     /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
     public void OnClick_ExecutionSwap_RightArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, 1);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.RIGHT_ARM);
         UpdateText();
     }
 }
