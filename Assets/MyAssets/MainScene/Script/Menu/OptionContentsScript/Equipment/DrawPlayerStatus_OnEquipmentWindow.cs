@@ -36,26 +36,28 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
     //子オブジェクトを格納する場所
     Text[] _playerStatusText;
 
+    //<===== unityメッセージ =====>//
     void Start()
     {
         //初期化していなければ初期化する。
         if (!_whetherInitialized)
         {
-            _whetherInitialized = Initialize_ThisClass();
-            Debug.LogError("クラスの初期化に失敗しました。 : クラス名 : DrawPlayerStatus_OnEquipmentWindow");
+            if(!(_whetherInitialized = Initialize_ThisClass()))
+            {
+                Debug.LogError($"初期化に失敗しました。 : ゲームオブジェクト名 {gameObject.name}");
+            }
         }
     }
-
     private void OnEnable()
     {
         EquipmentDataBase.Instance.ReplacedEquipment += SetALL_PlayerStatusText;
     }
-
     private void OnDisable()
     {
         EquipmentDataBase.Instance.ReplacedEquipment -= SetALL_PlayerStatusText;
     }
 
+    //<===== privateメンバー関数 =====>//
     /// <summary> このクラスの初期化関数。成功したらtrueを返す。 </summary>
     bool Initialize_ThisClass()
     {
@@ -69,23 +71,32 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
     /// <summary> プレイヤーのステータスを、テキストに設定する。 </summary>
     void SetALL_PlayerStatusText()
     {
-        //******************* 現在ステータスの最大値を表示しているので、基礎ステータス+レベル分の上昇値を表示するようにする *******************//
         //プレイヤーの名前を設定する
         _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.BaseStatus._playerName;
+
+        //繰り返し使用するので変数に保存。
+        var status = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
         //プレイヤーの最大体力を設定する
-        _playerStatusText[(int)StatusName.MaxHP].text = "最大体力 : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._maxHp.ToString();
+        _playerStatusText[(int)StatusName.MaxHP].text =
+            $"最大体力 : {status._maxHp}";
         //プレイヤーの最大スタミナを設定する
-        _playerStatusText[(int)StatusName.MaxStamina].text = "最大スタミナ : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._maxStamina.ToString();
+        _playerStatusText[(int)StatusName.MaxStamina].text =
+            $"最大スタミナ : {status._maxStamina}";
         //プレイヤーの近距離攻撃力を設定する
-        _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = "近距離攻撃力 : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._shortRangeAttackPower.ToString();
+        _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = 
+            $"近距離攻撃力 : {status._shortRangeAttackPower}";
         //プレイヤーの遠距離攻撃力を設定する
-        _playerStatusText[(int)StatusName.LongRangeAttackPower].text = "遠距離攻撃力 : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._longRangeAttackPower.ToString();
+        _playerStatusText[(int)StatusName.LongRangeAttackPower].text =
+            $"遠距離攻撃力 : {status._longRangeAttackPower}";
         //プレイヤーの防御力を設定する
-        _playerStatusText[(int)StatusName.DefensePower].text = "防御力 : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._defensePower.ToString();
+        _playerStatusText[(int)StatusName.DefensePower].text = 
+            $"防御力 : {status._defensePower}";
         //プレイヤーの移動速度を設定する
-        _playerStatusText[(int)StatusName.MoveSpeed].text = "移動速度 : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._moveSpeed.ToString();
+        _playerStatusText[(int)StatusName.MoveSpeed].text =
+            $"移動速度 : {status._moveSpeed}";
         //プレイヤーの吹っ飛びにくさを設定する
-        _playerStatusText[(int)StatusName.DifficultToBlowOff].text = "吹っ飛びにくさ : " + PlayerStatusManager.Instance.ConsequentialPlayerStatus._defensePower.ToString();
+        _playerStatusText[(int)StatusName.DifficultToBlowOff].text = 
+            $"吹っ飛びにくさ : {status._defensePower}";
     }
 
     /// <summary> ターゲットのステータステキストを設定する。 </summary>

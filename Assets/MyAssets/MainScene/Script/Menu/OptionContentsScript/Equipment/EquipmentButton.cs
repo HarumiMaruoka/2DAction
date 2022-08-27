@@ -85,6 +85,7 @@ public class EquipmentButton : MonoBehaviour
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
         UpdateText();
+        OffEnabled_EquipButton_OtherArm();
     }
     /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
     public void OnClick_ExecutionSwap_LeftArm()
@@ -92,6 +93,8 @@ public class EquipmentButton : MonoBehaviour
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.LEFT_ARM);
         UpdateText();
+        OffEnabled_EquipButton_LeftArm();
+        OffEnabled_EquipButton_RightArm();
     }
     /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
     public void OnClick_ExecutionSwap_RightArm()
@@ -99,5 +102,23 @@ public class EquipmentButton : MonoBehaviour
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.RIGHT_ARM);
         UpdateText();
+        OffEnabled_EquipButton_LeftArm();
+        OffEnabled_EquipButton_RightArm();
+    }
+    /// <summary> 「装備」ボタンをクリック時に実行する。 </summary>
+    public void OnClick_EquipmentButton()
+    {
+        TryGetComponent(out EquipmentButton currentEquipmentButton);
+
+        //現在選択中のパーツの「装備する」ボタンをアクティブにする。
+        if (currentEquipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+        {
+            currentEquipmentButton.OnEnabled_EquipButton_OtherArm();
+        }
+        else
+        {
+            currentEquipmentButton.OnEnabled_EquipButton_LeftArm();
+            currentEquipmentButton.OnEnabled_EquipButton_RightArm();
+        }
     }
 }

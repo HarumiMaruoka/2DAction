@@ -11,6 +11,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     /// <summary> 装備ボタンの配列 </summary>
     GameObject[] _equipmentButtons;
     GameObject _beforeSelectedGameObject;
+    EquipmentButton _beforeEquipmentButton;
     Text[] _riseValueTexts;
 
     //<======== アサインすべき値 ========>//
@@ -119,37 +120,55 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     //    //古いオブジェクトを保存しておく。
     //    _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     //}
+
+    /// <summary> 装備情報の表示を切り替える。 </summary>
     public void Update_DrawEquipmentInformation()
     {
-        // 選択しているオブジェクトが異なる場合に処理を実行する。
+        // 前フレームと今フレームで選択しているオブジェクトが異なる場合に処理を実行する。
         if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
         {
             //カレントオブジェクトの処理
-            if (_eventSystem.currentSelectedGameObject != null && _eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton currentButton))
+            //「装備」ボタン(EquipmentButton)の場合
+            if (_eventSystem.currentSelectedGameObject != null)
             {
-                ForcedUpdate_RiseValueText(currentButton._myEquipment);
+                //「装備」ボタンの場合
+                if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton currentEquipmentButton))
+                {
+                    Update_RiseValueText(currentEquipmentButton._myEquipment);
 
-                //新しい装備の「装備」ボタンをアクティブにし、古い装備の「装備」ボタンを非アクティブにする。
-                if (currentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
-                {
-                    currentButton.OnEnabled_EquipButton_OtherArm();
-                }
-                else
-                {
-                    currentButton.OnEnabled_EquipButton_LeftArm();
-                    currentButton.OnEnabled_EquipButton_RightArm();
+                    //現在選択中のパーツの「装備する」ボタンをアクティブにする。
+                    OnEnabled_EquipButton(currentEquipmentButton);
                 }
             }
-            if (_beforeSelectedGameObject != null && _beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeButton))
+            //「装備する」ボタンの場合
+            if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton currentEquipButton))
             {
-                if (beforeButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+                //ここに処理を記述する。
+            }
+
+
+            //前フレームで選択されていたボタンの処理
+            if (_beforeSelectedGameObject != null)
+            {
+                //「装備」ボタンの場合
+                if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipmentButton))
                 {
-                    beforeButton.OffEnabled_EquipButton_OtherArm();
+                    if ((_beforeSelectedGameObject.transform.parent.gameObject != _eventSystem.currentSelectedGameObject) &&
+                        (_eventSystem.currentSelectedGameObject.transform.parent.gameObject != _beforeSelectedGameObject))
+                    {
+                        Debug.Log("前フレームに選択されていたゲームオブジェクトの名前" + _beforeSelectedGameObject.name);
+                        Debug.Log("今フレームに選択されているゲームオブジェクトの名前" + _eventSystem.currentSelectedGameObject.name);
+                        //親子関係でなければ、「装備する」ボタンを非アクティブにする。
+                        OffEnabled_EquipButton(beforeEquipmentButton);
+                    }
                 }
-                else
+                //「装備する」ボタンの場合
+                if (_beforeSelectedGameObject.TryGetComponent(out EquipButton beforeEquipButton))
                 {
-                    beforeButton.OffEnabled_EquipButton_LeftArm();
-                    beforeButton.OffEnabled_EquipButton_RightArm();
+                    foreach (var button in beforeEquipButton.transform.parent.GetComponentsInChildren<EquipButton>())
+                    {
+                        if (button.gameObject.activeSelf) button.gameObject.SetActive(false);
+                    }
                 }
             }
         }
@@ -158,9 +177,9 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
 
-    //強制的に装備の上昇値テキストを更新する
+    /// <summary> 上昇値テキストを更新する </summary>
     /// <param name="equipment"> 上昇値を表示する装備 </param>
-    public void ForcedUpdate_RiseValueText(Equipment equipment)
+    public void Update_RiseValueText(Equipment equipment)
     {
         //装備の種類
         _riseValueTexts[0].text = "装備の種類 : " + equipment._myTypeName;
@@ -183,4 +202,34 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
         //説明文を設定
         _ExplanatoryTextArea.text = equipment._explanatoryText;
     }
+
+    /// <summary>「装備する」ボタンをアクティブにする </summary>
+    /// <param name="equipmentButton"> 対象の「装備」ボタン </param>
+    void OnEnabled_EquipButton(EquipmentButton equipmentButton)
+    {
+        if (equipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+        {
+            equipmentButton.OnEnabled_EquipButton_OtherArm();
+        }
+        else
+        {
+            equipmentButton.OnEnabled_EquipButton_LeftArm();
+            equipmentButton.OnEnabled_EquipButton_RightArm();
+        }
+    }
+    /// <summary>「装備する」ボタンを非アクティブにする </summary>
+    /// <param name="equipmentButton"> 対象の「装備」ボタン </param>
+    void OffEnabled_EquipButton(EquipmentButton equipmentButton)
+    {
+        if (equipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+        {
+            equipmentButton.OffEnabled_EquipButton_OtherArm();
+        }
+        else
+        {
+            equipmentButton.OffEnabled_EquipButton_LeftArm();
+            equipmentButton.OffEnabled_EquipButton_RightArm();
+        }
+    }
 }
+

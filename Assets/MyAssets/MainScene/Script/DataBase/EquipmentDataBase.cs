@@ -413,7 +413,7 @@ public class EquipmentDataBase : MonoBehaviour
             else button.Set_Equipment(null);
             //表示を更新する
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
-            if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
+            if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
         //腕の場合
         else
@@ -437,7 +437,7 @@ public class EquipmentDataBase : MonoBehaviour
             else button.Set_Equipment(null);
             //表示を更新する
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
-            if (temporary != -1) _managerOfPossessedEquipment.ForcedUpdate_RiseValueText(EquipmentData[temporary]);
+            if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
         ApplyEquipment_ALL();
         ReplacedEquipment();

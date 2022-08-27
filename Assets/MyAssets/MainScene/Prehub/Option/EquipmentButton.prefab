@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7677332181150928792}
   - component: {fileID: 8570382945143259177}
   - component: {fileID: 5334574534193946704}
+  - component: {fileID: 235841270767561496}
   m_Layer: 5
   m_Name: EquipButton RightArm
   m_TagString: Untagged
@@ -133,6 +134,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &235841270767561496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250496664967826146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bab69cc6a764923409daab48a4cb54b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &478725990892797947
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,6 +158,7 @@ GameObject:
   - component: {fileID: 9016125442890209453}
   - component: {fileID: 343362323183029566}
   - component: {fileID: 3908650141437339266}
+  - component: {fileID: 7984665528744994986}
   m_Layer: 5
   m_Name: EquipButton
   m_TagString: Untagged
@@ -266,6 +280,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7984665528744994986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478725990892797947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bab69cc6a764923409daab48a4cb54b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1109811453483182074
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,7 +653,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8071526735733986611}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8875178318913957653}
+        m_TargetAssemblyTypeName: EquipmentButton, Assembly-CSharp
+        m_MethodName: OnClick_EquipmentButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8875178318913957653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -731,6 +769,7 @@ GameObject:
   - component: {fileID: 2950938583579694667}
   - component: {fileID: 2575442515716238055}
   - component: {fileID: 1606072232980535267}
+  - component: {fileID: 6264737320177115359}
   m_Layer: 5
   m_Name: EquipButton LeftArm
   m_TagString: Untagged
@@ -852,3 +891,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6264737320177115359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052163977942053060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bab69cc6a764923409daab48a4cb54b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
