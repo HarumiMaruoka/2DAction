@@ -45,7 +45,7 @@ public class PlayerStatusManager : MonoBehaviour
             get => new PlayerStatus();
         }
 
-        /// <summary> PlayerStatus型 : +演算子のオーバーライド </summary>
+        /// <summary> PlayerStatus型 : +演算子のオーバーロード </summary>
         public static PlayerStatus operator +(PlayerStatus p1, PlayerStatus p2)
         {
             p1._maxHp += p2._maxHp;
@@ -82,13 +82,19 @@ public class PlayerStatusManager : MonoBehaviour
     /// <summary> 基礎ステータス </summary>
     public PlayerStatus BaseStatus { get => _baseStatus; set => _baseStatus = value; }
     /// <summary> 装備分の上昇値 </summary>
-    public PlayerStatus _equipment_RisingValue { get; set; }
+    [Header("確認用 : 装備分の上昇値"), SerializeField] PlayerStatus _equipment_RisingValue;
+    /// <summary> 装備分の上昇値 </summary>
+    public PlayerStatus Equipment_RisingValue { get => _equipment_RisingValue; set => _equipment_RisingValue = value; }
     /// <summary> レベル分の上昇値 </summary>
-    public PlayerStatus _level_RisingValue { get; set; }
+    [Header("確認用 : レベル分の上昇値"), SerializeField] PlayerStatus _level_RisingValue;
+    /// <summary> レベル分の上昇値 </summary>
+    public PlayerStatus Level_RisingValue { get=> _level_RisingValue; set=> _level_RisingValue=value; }
     /// <summary> その他(アイテム使用時の一時的な上昇値等)の上昇値 </summary>
-    public PlayerStatus _other_RisingValue { get; set; }
+    [Header("その他(アイテム使用時の一時的な上昇値等)の上昇値"), SerializeField] PlayerStatus _other_RisingValue;
+    /// <summary> その他(アイテム使用時の一時的な上昇値等)の上昇値 </summary>
+    public PlayerStatus Other_RisingValue { get=> _other_RisingValue; set=> _other_RisingValue=value; }
     /// <summary> 諸々を合計した、最終的なステータス </summary>
-    public PlayerStatus ConsequentialPlayerStatus { get => _baseStatus + _equipment_RisingValue + _level_RisingValue + _other_RisingValue; }
+    public PlayerStatus ConsequentialPlayerStatus { get => _baseStatus + Equipment_RisingValue + Level_RisingValue + Other_RisingValue; }
 
     [Header("プレイヤーの現在の体力"), SerializeField] float _playerHealthPoint;
     /// <summary> プレイヤーの現在の体力 </summary>
