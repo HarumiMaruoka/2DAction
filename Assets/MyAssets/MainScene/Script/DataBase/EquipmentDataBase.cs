@@ -277,7 +277,7 @@ public class EquipmentDataBase : MonoBehaviour
     void ApplyEquipment_ALL()
     {
         //リセットする。
-        PlayerStatusManager.Instance._equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
+        PlayerStatusManager.Instance.Equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
         //増加値を適用する。
         ApplyEquipment_SpecificParts(_equipped._headPartsID);//頭
         ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//胴
@@ -291,7 +291,7 @@ public class EquipmentDataBase : MonoBehaviour
     {
         if (equipmentID >= 0)
         {
-            PlayerStatusManager.Instance._equipment_RisingValue += EquipmentData[equipmentID].ThisEquipment_StatusRisingValue;
+            PlayerStatusManager.Instance.Equipment_RisingValue += EquipmentData[equipmentID].ThisEquipment_StatusRisingValue;
         }
         else
         {
@@ -423,7 +423,7 @@ public class EquipmentDataBase : MonoBehaviour
                 temporary = _equipped._armLeftPartsID;
                 _equipped._armLeftPartsID = fromNowEquipmentID;
             }
-            else if(armFlag == 1)
+            else if (armFlag == 1)
             {
                 temporary = _equipped._armRightPartsID;
                 _equipped._armRightPartsID = fromNowEquipmentID;
@@ -493,5 +493,17 @@ public class EquipmentDataBase : MonoBehaviour
             + "/" +
             "足パーツ : " + _equipped._footPartsID
             );
+    }
+
+    /// <summary> 選択中の装備のステータス上昇値の差を取得する。 </summary>
+    /// <returns> 現在の総合ステータスと、選択中のパーツを装備することによるステータスの差 </returns>
+    public PlayerStatusManager.PlayerStatus Get_SelectedStatusDifference(Equipment selectedEquipment,bool armFlag)
+    {
+        //現在のステータスを取得する。
+        PlayerStatusManager.PlayerStatus result = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
+        //選択中の装備の種類を取得する。
+        Equipment.EquipmentType type = selectedEquipment._myType;
+
+        return result;
     }
 }
