@@ -28,6 +28,9 @@ public class PlayerStatusManager : MonoBehaviour
         /// <summary> 吹っ飛びにくさ </summary>
         public float _difficultToBlowOff;
 
+
+        static public PlayerStatus Zero = new PlayerStatus();
+
         //コンストラクタ
         public PlayerStatus(string name = "", float hp = 0f, float stamina = 0f, float shortAttackPow = 0f, float longAttackPow = 0f, float defensePow = 0f, float moveSpeed = 0f, float difficultToBlowOff = 0f)
         {
@@ -40,7 +43,7 @@ public class PlayerStatusManager : MonoBehaviour
             _moveSpeed = moveSpeed;
             _difficultToBlowOff = difficultToBlowOff;
         }
-        public static PlayerStatus zero
+        public static PlayerStatus _zero
         {
             get => new PlayerStatus();
         }
@@ -55,6 +58,18 @@ public class PlayerStatusManager : MonoBehaviour
             p1._defensePower += p2._defensePower;
             p1._moveSpeed += p2._moveSpeed;
             p1._difficultToBlowOff += p2._difficultToBlowOff;
+            return p1;
+        }
+        /// <summary> PlayerStatus型 : -演算子のオーバーロード </summary>
+        public static PlayerStatus operator -(PlayerStatus p1, PlayerStatus p2)
+        {
+            p1._maxHp -= p2._maxHp;
+            p1._maxStamina -= p2._maxStamina;
+            p1._shortRangeAttackPower -= p2._shortRangeAttackPower;
+            p1._longRangeAttackPower -= p2._longRangeAttackPower;
+            p1._defensePower -= p2._defensePower;
+            p1._moveSpeed -= p2._moveSpeed;
+            p1._difficultToBlowOff -= p2._difficultToBlowOff;
             return p1;
         }
     }

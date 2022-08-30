@@ -30410,6 +30410,33 @@ MonoBehaviour:
     _defensePower: 0
     _moveSpeed: 0
     _difficultToBlowOff: 0
+  _equipment_RisingValue:
+    _playerName: 
+    _maxHp: 0
+    _maxStamina: 0
+    _shortRangeAttackPower: 0
+    _longRangeAttackPower: 0
+    _defensePower: 0
+    _moveSpeed: 0
+    _difficultToBlowOff: 0
+  _level_RisingValue:
+    _playerName: 
+    _maxHp: 0
+    _maxStamina: 0
+    _shortRangeAttackPower: 0
+    _longRangeAttackPower: 0
+    _defensePower: 0
+    _moveSpeed: 0
+    _difficultToBlowOff: 0
+  _other_RisingValue:
+    _playerName: 
+    _maxHp: 0
+    _maxStamina: 0
+    _shortRangeAttackPower: 0
+    _longRangeAttackPower: 0
+    _defensePower: 0
+    _moveSpeed: 0
+    _difficultToBlowOff: 0
   _playerHealthPoint: 100
   _playerStamina: 0
 --- !u!1 &821420099
@@ -54042,6 +54069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d88fc8359a17994ab6b1c8d13f7f080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _eventSystem: {fileID: 1216641984}
 --- !u!1 &1460723106
 GameObject:
   m_ObjectHideFlags: 0

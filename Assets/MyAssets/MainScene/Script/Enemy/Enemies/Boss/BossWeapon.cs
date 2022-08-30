@@ -118,12 +118,12 @@ public class BossWeapon : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
         {
-            Debug.LogError($"SpriteRendererコンポーネントの取得に失敗しました。 \n このクラスでSpriteRendererコンポーネントを使用しますか？ : オブジェクト名 \"{gameObject.name}\"");
+            Debug.LogWarning($"SpriteRendererコンポーネントの取得に失敗しました。 \n このクラスでSpriteRendererコンポーネントを使用しますか？ : オブジェクト名 \"{gameObject.name}\"");
         }
         _animator = GetComponent<Animator>();
         if (_animator == null)
         {
-            Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 \n このクラスでAnimatorコンポーネントを使用しますか？ : オブジェクト名 \" {gameObject.name}\"");
+            Debug.LogWarning($"Animatorコンポーネントの取得に失敗しました。 \n このクラスでAnimatorコンポーネントを使用しますか？ : オブジェクト名 \" {gameObject.name}\"");
         }
         return true;
     }

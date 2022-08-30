@@ -277,7 +277,7 @@ public class EquipmentDataBase : MonoBehaviour
     void ApplyEquipment_ALL()
     {
         //リセットする。
-        PlayerStatusManager.Instance.Equipment_RisingValue = PlayerStatusManager.PlayerStatus.zero;
+        PlayerStatusManager.Instance.Equipment_RisingValue = PlayerStatusManager.PlayerStatus._zero;
         //増加値を適用する。
         ApplyEquipment_SpecificParts(_equipped._headPartsID);//頭
         ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//胴
@@ -295,7 +295,7 @@ public class EquipmentDataBase : MonoBehaviour
         }
         else
         {
-            Debug.LogError("未装備の箇所はありますか?そうでなければエラーです! : 装備マネージャーコンポーネントより");
+            Debug.LogWarning("未装備の箇所はありますか?そうでなければエラーです! : 装備マネージャーコンポーネントより");
         }
     }
 
