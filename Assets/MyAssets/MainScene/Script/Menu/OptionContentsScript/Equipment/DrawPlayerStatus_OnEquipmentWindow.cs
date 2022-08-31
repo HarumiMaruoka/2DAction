@@ -78,38 +78,6 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 
         return true;
     }
-
-    /// <summary> プレイヤーのステータスを、テキストに設定する。 </summary>
-    //void SetALL_PlayerStatusText()
-    //{
-    //    //プレイヤーの名前を設定する
-    //    _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.BaseStatus._playerName;
-
-    //    //繰り返し使用するので変数に保存。
-    //    var status = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
-    //    //プレイヤーの最大体力を設定する
-    //    _playerStatusText[(int)StatusName.MaxHP].text =
-    //        $"最大体力 : {status._maxHp}";
-    //    //プレイヤーの最大スタミナを設定する
-    //    _playerStatusText[(int)StatusName.MaxStamina].text =
-    //        $"最大スタミナ : {status._maxStamina}";
-    //    //プレイヤーの近距離攻撃力を設定する
-    //    _playerStatusText[(int)StatusName.ShortRangeAttackPower].text =
-    //        $"近距離攻撃力 : {status._shortRangeAttackPower}";
-    //    //プレイヤーの遠距離攻撃力を設定する
-    //    _playerStatusText[(int)StatusName.LongRangeAttackPower].text =
-    //        $"遠距離攻撃力 : {status._longRangeAttackPower}";
-    //    //プレイヤーの防御力を設定する
-    //    _playerStatusText[(int)StatusName.DefensePower].text =
-    //        $"防御力 : {status._defensePower}";
-    //    //プレイヤーの移動速度を設定する
-    //    _playerStatusText[(int)StatusName.MoveSpeed].text =
-    //        $"移動速度 : {status._moveSpeed}";
-    //    //プレイヤーの吹っ飛びにくさを設定する
-    //    _playerStatusText[(int)StatusName.DifficultToBlowOff].text =
-    //        $"吹っ飛びにくさ : {status._defensePower}";
-    //}
-
     void SetALL_PlayerStatusText()
     {
         var status = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
@@ -173,7 +141,6 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
         }
         else
         {
-            Debug.Log("じゃじゃっじゃじゃじゃじゃじゃっじゃじゃじゃｊ");
             //ステータスの変化幅を表示しない版の処理
             _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.BaseStatus._playerName;
 
@@ -192,76 +159,6 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
             _playerStatusText[(int)StatusName.DifficultToBlowOff].text = $"吹っ飛びにくさ : {status._difficultToBlowOff}";
         }
     }
-
-    /// <summary> ターゲットのステータステキストを設定する。 </summary>
-    /// <param name="target"></param>
-    //void Update_TargetPlayerStatusText(StatusName target)
-    //{
-    //    var status = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
-    //    var amountOfChange = Get_RiseDifference();
-    //    if (!_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment))
-    //    {
-    //        switch (target)
-    //        {
-    //            //ステータスの変化幅を表示しない版の処理
-    //            case StatusName.PlayerName: _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.BaseStatus._playerName; break;
-    //            case StatusName.MaxHP:
-    //                _playerStatusText[(int)StatusName.MaxHP].text = $"最大体力 : {status._maxHp}"; break;
-    //            case StatusName.MaxStamina:
-    //                _playerStatusText[(int)StatusName.MaxStamina].text = $"最大スタミナ : {status._maxStamina}"; break;
-    //            case StatusName.ShortRangeAttackPower:
-    //                _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = $"近距離攻撃力 : {status._shortRangeAttackPower}"; break;
-    //            case StatusName.LongRangeAttackPower:
-    //                _playerStatusText[(int)StatusName.LongRangeAttackPower].text = $"遠距離攻撃力 : {status._longRangeAttackPower}"; break;
-    //            case StatusName.DefensePower:
-    //                _playerStatusText[(int)StatusName.DefensePower].text = $"防御力 : {status._defensePower}"; break;
-    //            case StatusName.MoveSpeed:
-    //                _playerStatusText[(int)StatusName.MoveSpeed].text = $"移動速度 : {status._moveSpeed}"; break;
-    //            case StatusName.DifficultToBlowOff:
-    //                _playerStatusText[(int)StatusName.DifficultToBlowOff].text = $"吹っ飛びにくさ : {status._difficultToBlowOff}"; break;
-    //            default: Debug.LogError("無効な値です。 : Set_PlayerStatusText(StatusName target);"); break;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        string drawPlus = "";
-    //        switch (target)
-    //        {
-    //            //ステータスの変化幅を表示する版の処理
-    //            case StatusName.PlayerName:
-    //                _playerStatusText[(int)StatusName.PlayerName].text = PlayerStatusManager.Instance.BaseStatus._playerName; break;
-
-    //            case StatusName.MaxHP:
-    //                drawPlus = Get_RiseDifference()._maxHp > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.MaxHP].text = $"最大体力 : {status._maxHp} {drawPlus}{Get_RiseDifference()._maxHp}"; break;
-
-    //            case StatusName.MaxStamina:
-    //                drawPlus = Get_RiseDifference()._maxStamina > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.MaxStamina].text = $"最大スタミナ : {status._maxStamina} {drawPlus}{Get_RiseDifference()._maxStamina}"; break;
-
-    //            case StatusName.ShortRangeAttackPower:
-    //                drawPlus = Get_RiseDifference()._shortRangeAttackPower > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.ShortRangeAttackPower].text = $"近距離攻撃力 : {status._shortRangeAttackPower} {drawPlus}{Get_RiseDifference()._shortRangeAttackPower}"; break;
-
-    //            case StatusName.LongRangeAttackPower:
-    //                drawPlus = Get_RiseDifference()._longRangeAttackPower > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.LongRangeAttackPower].text = $"遠距離攻撃力 : {status._longRangeAttackPower} {drawPlus}{Get_RiseDifference()._longRangeAttackPower}"; break;
-
-    //            case StatusName.DefensePower:
-    //                drawPlus = Get_RiseDifference()._defensePower > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.DefensePower].text = $"防御力 : {status._defensePower} {drawPlus}{Get_RiseDifference()._defensePower}"; break;
-
-    //            case StatusName.MoveSpeed:
-    //                drawPlus = Get_RiseDifference()._moveSpeed > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.MoveSpeed].text = $"移動速度 : {status._moveSpeed} {drawPlus}{Get_RiseDifference()._moveSpeed}"; break;
-
-    //            case StatusName.DifficultToBlowOff:
-    //                drawPlus = Get_RiseDifference()._difficultToBlowOff > 0 ? "+" : "";
-    //                _playerStatusText[(int)StatusName.DifficultToBlowOff].text = $"吹っ飛びにくさ : {status._difficultToBlowOff} {drawPlus}{Get_RiseDifference()._difficultToBlowOff}"; break;
-    //            default: Debug.LogError("無効な値です。 : Set_PlayerStatusText(StatusName target);"); break;
-    //        }
-    //    }
-    //}
     /// <summary> 選択中のパーツを装備した場合のパラメータの変化量を取得する。 </summary>
     /// <returns> 変化量 </returns>
     PlayerStatusManager.PlayerStatus Get_RiseDifference(int armFrag = NOT_ARM)

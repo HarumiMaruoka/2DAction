@@ -77,6 +77,7 @@ public class EquipmentDataBase : MonoBehaviour
     [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
     GameObject _beforeSelectedGameObject;
 
+    /// <summary> プレイヤーステータステキストを更新するかどうかを表す変数。 </summary>
     bool _isTextUpdate = true;
     public bool IsTextUpdate { get => _isTextUpdate; set => _isTextUpdate = value; }
 
@@ -103,8 +104,6 @@ public class EquipmentDataBase : MonoBehaviour
     }
     //プライベートなコンストラクタ
     private EquipmentDataBase() { }
-
-
 
     //<======= Unityメッセージ =======>//
     private void Awake()
@@ -182,7 +181,7 @@ public class EquipmentDataBase : MonoBehaviour
         _equipped._armLeftPartsID = (int)EquipmentID.Nan;
         _equipped._footPartsID = (int)EquipmentID.Nan;
 
-        /*jsonファイルから所持している装備と着用している装備の*/
+        /*jsonファイルから所持している装備と着用している装備の情報を読み込む。*/
         //OnLoad_EquipmentHaveData_Json();
         //OnLoad_EquippedData_Json();
 
@@ -318,10 +317,10 @@ public class EquipmentDataBase : MonoBehaviour
     }
 
     //<===== publicメンバー関数 =====>//
-    /// <summary> 所持している装備を、jsonファイルからデータを読み込み、メンバー変数に格納する処理。 </summary>
+    /// <summary> "所持"している装備を、jsonファイルからデータを読み込み、メンバー変数に格納する処理。 </summary>
     public void OnLoad_EquipmentHaveData_Json()
     {
-        Debug.Log("所持している装備データをロードします！");
+        //Debug.Log("所持している装備データをロードします！");
         // 念のためファイルの存在チェック
         if (!File.Exists(_equipmentHaveJsonFilePath))
         {
@@ -331,27 +330,26 @@ public class EquipmentDataBase : MonoBehaviour
             //処理を抜ける
             return;
         }
-        // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をセット。
+        // ファイルが存在する場合の処理。
+        // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をメンバー変数にセットする。
         _haveEquipmentID = JsonUtility.FromJson<HaveEquipped>(File.ReadAllText(_equipmentHaveJsonFilePath));
+
+        //***以下デバッグ用のコード。***
+        //所持している装備をコンソールに表示する。
         foreach (var i in _haveEquipmentID._equipmentsID)
         {
             if (i == -1) { Debug.Log("この要素は空です。"); }
             else Debug.Log(_equipmentData[i]._myName);
         }
     }
-    /// <summary> 所持している装備のデータを、jsonファイルに保存する処理。 </summary>
+    /// <summary> "所持"している装備のデータを、jsonファイルに保存する処理。 </summary>
     public void OnSave_EquipmentHaveData_Json()
     {
         Debug.Log("所持している装備データをセーブします！");
-        // 所持している装備データを、JSON形式にシリアライズし、ファイルに保存
+        // 所持している装備データを、JSON形式にシリアライズし、jsonファイルに保存
         File.WriteAllText(_equipmentHaveJsonFilePath, JsonUtility.ToJson(_haveEquipmentID, false));
-        foreach (var i in _haveEquipmentID._equipmentsID)
-        {
-            if (i == -1) { Debug.Log("この要素は空です。"); }
-            else Debug.Log(_equipmentData[i]._myName);
-        }
     }
-    /// <summary> 所持している装備をjsonファイルから取得し、メンバー変数に格納する処理。 </summary>
+    /// <summary> "着用"している装備をjsonファイルから取得し、メンバー変数に格納する処理。 </summary>
     public void OnLoad_EquippedData_Json()
     {
         Debug.Log("現在装備している装備データをロードします！");
@@ -367,15 +365,15 @@ public class EquipmentDataBase : MonoBehaviour
         // JSONオブジェクトを、デシリアライズ(C#形式に変換)し、値をセット。
         _equipped = JsonUtility.FromJson<MyEquipped>(File.ReadAllText(_equippedJsonFilePath));
     }
-    /// <summary> 現在装備している装備のデータを、jsonファイルに保存する処理。 </summary>
+    /// <summary> "着用"している装備のデータを、jsonファイルに保存する処理。 </summary>
     public void OnSave_EquippedData_Json()
     {
         Debug.Log("現在装備している装備データをセーブします！");
         // 現在装備している装備データを、JSON形式にシリアライズし、ファイルに保存
         File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
-    /// <summary> string を enum に変換する </summary>
-    /// <param name="str"></param>
+    /// <summary> レアリティを表す string を enum に変換する。 </summary>
+    /// <param name="str"> 対象の文字列 </param>
     /// <returns></returns>
     Equipment.EquipmentRarity Conversion_EquipmentRarity(string str)
     {
@@ -396,12 +394,10 @@ public class EquipmentDataBase : MonoBehaviour
     /// <param name="armFlag"> どちらの腕装備するか判断する値、0なら左腕、1なら右腕。 </param>
     public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = -1)
     {
-        Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
-        Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
+        //Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
+        //Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
 
-        //ここに装備を交換するコードを書く
-
-        int temporary = -1;
+        int temporary = -1;//仮の入れ物
         //Typeを基に着用する
         //腕以外の場合
         if (fromNowEquipmentType != Equipment.EquipmentType.ARM_PARTS)
@@ -459,9 +455,6 @@ public class EquipmentDataBase : MonoBehaviour
         }
         ApplyEquipment_ALL(); 
         ReplacedEquipment();
-        //以下要修正
-        Debug.Log("着用した装備のID : " + fromNowEquipmentType);
-        Debug.Log("着用した装備のID : " + fromNowEquipmentID);
     }
 
 
@@ -496,7 +489,7 @@ public class EquipmentDataBase : MonoBehaviour
         }
         return false;
     }
-    /// <summary> 現在装備している装備をConsoleに表示する。テスト用。 </summary>
+    /// <summary> テスト用スクリプト。現在装備している装備をConsoleに表示する。 </summary>
     public void DrawDebugLog_Equipped()
     {
         Debug.Log(
@@ -511,23 +504,5 @@ public class EquipmentDataBase : MonoBehaviour
             + "/" +
             "足パーツ : " + _equipped._footPartsID
             );
-    }
-
-    /// <summary> 選択中の装備のステータス上昇値の差を取得する。 </summary>
-    /// <returns> 現在の総合ステータスと、選択中のパーツを装備することによるステータスの差 </returns>
-    public PlayerStatusManager.PlayerStatus Get_SelectedStatusDifference(Equipment selectedEquipment, bool armFlag)
-    {
-        //現在のステータスを取得する。
-        PlayerStatusManager.PlayerStatus result = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
-        //選択中の装備の種類を取得する。
-        Equipment.EquipmentType type = selectedEquipment._myType;
-
-        return result;
-    }
-
-    IEnumerator WaitOneFrame_UpdateText()
-    {
-        yield return null;
-        ReplacedEquipment();
     }
 }
