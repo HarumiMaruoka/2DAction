@@ -84,9 +84,6 @@ public class EquipmentDataBase : MonoBehaviour
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
-    public const int LEFT_ARM = 0;
-    public const int RIGHT_ARM = 1;
-
     //<======シングルトンパターン関連======>//
     //インスタンス
     private static EquipmentDataBase _instance;
@@ -163,7 +160,7 @@ public class EquipmentDataBase : MonoBehaviour
 
         /***** 配列用のメモリを確保する。 *****/
         _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
-        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
+        if (_equipmentData == null) _equipmentData = new Equipment[(int)EquipmentID.ID_END];
 
         // ***** テスト用コード ***** // : テキトーに所持していることにする。
         for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
@@ -192,7 +189,7 @@ public class EquipmentDataBase : MonoBehaviour
     /// <returns> 読み込んだ結果を返す。失敗した場合はnullを返す。 </returns>
     void OnLoad_EquipmentData_csv()
     {
-        _equipmentData = new Equipment[(int)EquipmentID.ID_END];
+        if (_equipmentData == null) _equipmentData = new Equipment[(int)EquipmentID.ID_END];
 
         int index = 0;
         bool isFirstLine = true;//一行目かどうかを判断する値
@@ -453,44 +450,14 @@ public class EquipmentDataBase : MonoBehaviour
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
             if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
-        ApplyEquipment_ALL(); 
+        ApplyEquipment_ALL();
         ReplacedEquipment();
     }
 
 
-    //<===== 以下テスト用、実際に使えるモノと判断したら本番移行する。 =====>//
-    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を取得する。 </summary>
-    /// <param name="id"> 取得する装備のID </param>
-    public bool Get_Equipment(int id)
-    {
-        //装備の取得処理
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
-        {
-            if (i == -1)
-            {
-                _haveEquipmentID._equipmentsID[i] = id;
-                return true;
-            }
-        }
-        return false;
-    }
-    /// <summary> テスト用スクリプト。(今は)ボタンから呼び出す。特定の装備を失う。 </summary>
-    /// <param name="id"> 減らす装備のID </param>
-    public bool Lost_Equipment(int id)
-    {
-        //装備の喪失処理
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
-        {
-            if (i == id)
-            {
-                _haveEquipmentID._equipmentsID[i] = -1;
-                return true;
-            }
-        }
-        return false;
-    }
+    //<===== 以下テスト用。 =====>//
     /// <summary> テスト用スクリプト。現在装備している装備をConsoleに表示する。 </summary>
-    public void DrawDebugLog_Equipped()
+    void DrawDebugLog_Equipped()
     {
         Debug.Log(
             "現在着用している装備\n" +

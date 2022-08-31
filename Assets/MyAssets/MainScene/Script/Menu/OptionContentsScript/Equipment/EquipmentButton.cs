@@ -91,7 +91,7 @@ public class EquipmentButton : MonoBehaviour
     public void OnClick_ExecutionSwap_LeftArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.LEFT_ARM);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.LEFT_ARM);
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();
@@ -100,7 +100,7 @@ public class EquipmentButton : MonoBehaviour
     public void OnClick_ExecutionSwap_RightArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, EquipmentDataBase.RIGHT_ARM);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.RIGHT_ATM);
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();
