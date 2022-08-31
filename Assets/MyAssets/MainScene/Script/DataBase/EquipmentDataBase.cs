@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary> 
 /// 全ての装備の情報と、
@@ -71,6 +72,14 @@ public class EquipmentDataBase : MonoBehaviour
     [Header("確認用 : 所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
     [Header("確認用 : 現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
     [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveVolume;
+
+    /// <summary> イベントシステム </summary>
+    [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
+    GameObject _beforeSelectedGameObject;
+
+    bool _isTextUpdate = true;
+    public bool IsTextUpdate { get => _isTextUpdate; set => _isTextUpdate = value; }
+
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
@@ -119,6 +128,15 @@ public class EquipmentDataBase : MonoBehaviour
             OnLoad_EquipmentHaveData_Json();
             OnLoad_EquippedData_Json();
         }
+
+        _isTextUpdate = _beforeSelectedGameObject != _eventSystem.currentSelectedGameObject;
+        if (_isTextUpdate)
+        {
+            _isTextUpdate = false;
+            //StartCoroutine(WaitOneFrame_UpdateText());
+            ReplacedEquipment();
+        }
+        _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
 
 
@@ -439,7 +457,7 @@ public class EquipmentDataBase : MonoBehaviour
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
             if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
-        ApplyEquipment_ALL();
+        ApplyEquipment_ALL(); 
         ReplacedEquipment();
         //以下要修正
         Debug.Log("着用した装備のID : " + fromNowEquipmentType);
@@ -497,7 +515,7 @@ public class EquipmentDataBase : MonoBehaviour
 
     /// <summary> 選択中の装備のステータス上昇値の差を取得する。 </summary>
     /// <returns> 現在の総合ステータスと、選択中のパーツを装備することによるステータスの差 </returns>
-    public PlayerStatusManager.PlayerStatus Get_SelectedStatusDifference(Equipment selectedEquipment,bool armFlag)
+    public PlayerStatusManager.PlayerStatus Get_SelectedStatusDifference(Equipment selectedEquipment, bool armFlag)
     {
         //現在のステータスを取得する。
         PlayerStatusManager.PlayerStatus result = PlayerStatusManager.Instance.ConsequentialPlayerStatus;
@@ -505,5 +523,11 @@ public class EquipmentDataBase : MonoBehaviour
         Equipment.EquipmentType type = selectedEquipment._myType;
 
         return result;
+    }
+
+    IEnumerator WaitOneFrame_UpdateText()
+    {
+        yield return null;
+        ReplacedEquipment();
     }
 }

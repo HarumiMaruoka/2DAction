@@ -120,5 +120,6 @@ public class EquipmentButton : MonoBehaviour
             currentEquipmentButton.OnEnabled_EquipButton_LeftArm();
             currentEquipmentButton.OnEnabled_EquipButton_RightArm();
         }
+        EquipmentDataBase.Instance.IsTextUpdate = true;
     }
 }
