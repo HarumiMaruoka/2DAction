@@ -49237,6 +49237,7 @@ MonoBehaviour:
   _equipmentHaveJsonFilePath: 
   _equippedJsonFilePath: 
   _maxHaveVolume: 20
+  _eventSystem: {fileID: 1216641984}
 --- !u!1001 &981030774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54069,7 +54070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d88fc8359a17994ab6b1c8d13f7f080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventSystem: {fileID: 1216641984}
 --- !u!1 &1460723106
 GameObject:
   m_ObjectHideFlags: 0

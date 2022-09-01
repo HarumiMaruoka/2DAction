@@ -65,7 +65,7 @@ public class DrawPlayerStatus_OnEquipmentWindow : UseEventSystemBehavior
     bool Initialize_ThisClass()
     {
         //基底クラスを初期化
-        Initialized_EventSystemBehavior();
+        base.Initialized_UseEventSystemBehavior();
         //テキストを持つ全ての子オブジェクトを取得する。
         _playerStatusText = GetComponentsInChildren<Text>();
         UpdateALL_PlayerStatusText();
@@ -80,18 +80,18 @@ public class DrawPlayerStatus_OnEquipmentWindow : UseEventSystemBehavior
             if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment))
             {
                 //ステータスの変化幅を表示する版の処理
-                Update_StatusText(true);
+                Update_StatusText(Constants.DRAW_AMPLITUDE);
             }
             else
             {
                 //ステータスの変化幅を表示しない版の処理
-                Update_StatusText(false);
+                Update_StatusText(Constants.NOT_DRAW_AMPLITUDE);
             }
         }
         else
         {
             ////ステータスの変化幅を表示しない版の処理
-            Update_StatusText(false);
+            Update_StatusText(Constants.NOT_DRAW_AMPLITUDE);
         }
     }
     /// <summary> プレイヤーステータステキストを更新する処理 </summary>

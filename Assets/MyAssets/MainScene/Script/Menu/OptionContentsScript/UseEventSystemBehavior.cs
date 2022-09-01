@@ -18,9 +18,8 @@ public class UseEventSystemBehavior : MonoBehaviour
     //<===== 初期化処理系 =====>//
     /// <summary> UseEventSystemBehaviorクラスの初期化処理 </summary>
     /// <returns> 初期化成功の可否を返す。成功したら true 。 </returns>
-    protected bool Initialized_EventSystemBehavior()
+    protected bool Initialized_UseEventSystemBehavior()
     {
-        Debug.Log("ggggggggggggggggggggggggggggggg");
         if (!(_eventSystem = GameObject.FindObjectOfType<EventSystem>())) return false;
         return true;
     }

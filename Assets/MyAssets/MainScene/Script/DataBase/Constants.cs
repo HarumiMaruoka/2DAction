@@ -13,4 +13,8 @@ public class Constants
     public const int RIGHT_ATM = 1;
     /// <summary> 腕以外を表す定数。 </summary>
     public const int NOT_ARM = -1;
+    /// <summary> 変化幅を描画する </summary>
+    public const bool DRAW_AMPLITUDE = true;
+    /// <summary> 変化幅を表示しない </summary>
+    public const bool NOT_DRAW_AMPLITUDE = false;
 }

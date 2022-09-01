@@ -5,17 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /// <summary> 所持している装備のボタンを管理するクラス </summary>
-public class ManagerOfPossessedEquipment : MonoBehaviour
+public class ManagerOfPossessedEquipment : UseEventSystemBehavior
 {
     //<===== メンバー変数 =====>//
     [Header("ボタンの親となるべきコンテント"), SerializeField] Transform _content;
     [Header("装備ボタンのプレハブ"), SerializeField] GameObject _equipmentButtonPrefab;
-    [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
     [Header("装備の情報を表示するテキストの親"), SerializeField] GameObject _equipmentInformationParents;
     [Header("選択中の装備の説明文を表示するエリアのゲームオブジェクト"), SerializeField] Text _ExplanatoryTextArea;
 
     GameObject[] _equipmentButtons;
-    GameObject _beforeSelectedGameObject;
     EquipmentButton _beforeEquipmentButton;
     Text[] _riseValueTexts;
 
@@ -27,12 +25,15 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     void Update()
     {
         Update_DrawEquipmentInformation();
+        Debug.Log(_eventSystem.currentSelectedGameObject);
     }
 
     //<===== privateメンバー関数 =====>//
     /// <summary> このクラスの初期化関数 </summary>
     void Initialized_ThisClass()
     {
+        //基底クラスを初期化
+        base.Initialized_UseEventSystemBehavior();
         //配列分のメモリを確保
         _equipmentButtons = new GameObject[EquipmentDataBase.Instance.MaxHaveValue];
         //所持できる数だけボタンを生成し、配列に保存しておく。
@@ -97,7 +98,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
     public void Update_DrawEquipmentInformation()
     {
         // 前フレームと今フレームで選択しているオブジェクトが異なる場合に処理を実行する。
-        if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
+        if (IsChangeSelectedObject())
         {
             //カレントオブジェクトの処理
             if (_eventSystem.currentSelectedGameObject != null)
@@ -110,11 +111,11 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
                     //現在選択中のパーツの「装備する」ボタンをアクティブにする。
                     OnEnabled_EquipButton(currentEquipmentButton);
                 }
-            }
-            //「装備する」ボタンの場合
-            if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton currentEquipButton))
-            {
-                //ここに処理を記述する。
+                //「装備する」ボタンの場合
+                if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton currentEquipButton))
+                {
+                    //ここに処理を記述する。
+                }
             }
 
             //前フレームで選択されていたボタンの処理
@@ -123,11 +124,15 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
                 //「装備」ボタンの場合
                 if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipmentButton))
                 {
-                    if ((_beforeSelectedGameObject.transform.parent.gameObject != _eventSystem.currentSelectedGameObject) &&
-                        (_eventSystem.currentSelectedGameObject.transform.parent.gameObject != _beforeSelectedGameObject))
+                    //親子関係でないことを確認する。
+                    if (_eventSystem.currentSelectedGameObject != null)
                     {
-                        //親子関係でなければ、「装備する」ボタンを非アクティブにする。
-                        OffEnabled_EquipButton(beforeEquipmentButton);
+                        if ((_beforeSelectedGameObject.transform.parent.gameObject != _eventSystem.currentSelectedGameObject) &&
+                            (_eventSystem.currentSelectedGameObject.transform.parent.gameObject != _beforeSelectedGameObject))
+                        {
+                            //親子関係でなければ、「装備する」ボタンを非アクティブにする。
+                            OffEnabled_EquipButton(beforeEquipmentButton);
+                        }
                     }
                 }
                 //「装備する」ボタンの場合
@@ -142,7 +147,7 @@ public class ManagerOfPossessedEquipment : MonoBehaviour
         }
 
         //古いオブジェクトを保存しておく。
-        _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
+        Update_UseEventSystemBehavior();
     }
     /// <summary> 上昇値テキストを更新する </summary>
     /// <param name="equipment"> 上昇値を表示する装備 </param>

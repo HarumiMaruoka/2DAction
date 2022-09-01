@@ -125,11 +125,9 @@ public class EquipmentDataBase : MonoBehaviour
             OnLoad_EquippedData_Json();
         }
 
-        _isTextUpdate = _beforeSelectedGameObject != _eventSystem.currentSelectedGameObject;
-        if (_isTextUpdate)
+        if (_isTextUpdate || _beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
         {
             _isTextUpdate = false;
-            //StartCoroutine(WaitOneFrame_UpdateText());
             ReplacedEquipment();
         }
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;

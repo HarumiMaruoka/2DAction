@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary> 「装備」のボタン </summary>
-public class EquipmentButton : MonoBehaviour
+public class EquipmentButton : UseEventSystemBehavior
 {
     //<===== このクラスで使用する型 =====>//
     /// <summary> このボタンの装備 </summary>
@@ -21,6 +21,7 @@ public class EquipmentButton : MonoBehaviour
     //<===== Unityメッセージ =====>//
     private void Start()
     {
+        base.Initialized_UseEventSystemBehavior();
         //テキストを取得
         _myText = transform.GetComponentInChildren<Text>();
         UpdateText();
@@ -79,15 +80,22 @@ public class EquipmentButton : MonoBehaviour
     }
 
     //<====== 以下ボタンを押したときに実行する関数 : 他のクラスに移すかも ======>//
-    /// <summary> 着用している装備と所持している装備を交換する。 : 腕以外 </summary>
+    /// <summary> 
+    /// 「装備する」ボタンをクリック時に実行する。
+    /// 着用している装備と所持している装備を交換する。 : 腕以外 
+    /// </summary>
     public void OnClick_ExecutionSwap_OtherArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
         UpdateText();
         OffEnabled_EquipButton_OtherArm();
+        _eventSystem.SetSelectedGameObject(null);
     }
-    /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
+    /// <summary>
+    /// 「装備する」ボタンをクリック時に実行する。
+    /// 着用している装備と所持している装備を交換する。 : 左腕 
+    /// </summary>
     public void OnClick_ExecutionSwap_LeftArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
@@ -95,8 +103,12 @@ public class EquipmentButton : MonoBehaviour
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();
+        _eventSystem.SetSelectedGameObject(null);
     }
-    /// <summary> 着用している装備と所持している装備を交換する。 : 左腕 </summary>
+    /// <summary> 
+    /// 「装備する」ボタンをクリック時に実行する。
+    /// 着用している装備と所持している装備を交換する。 : 左腕 
+    /// </summary>
     public void OnClick_ExecutionSwap_RightArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
@@ -104,21 +116,20 @@ public class EquipmentButton : MonoBehaviour
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();
+        _eventSystem.SetSelectedGameObject(null);
     }
     /// <summary> 「装備」ボタンをクリック時に実行する。 </summary>
     public void OnClick_EquipmentButton()
     {
-        TryGetComponent(out EquipmentButton currentEquipmentButton);
-
         //現在選択中のパーツの「装備する」ボタンをアクティブにする。
-        if (currentEquipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
+        if (_myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
         {
-            currentEquipmentButton.OnEnabled_EquipButton_OtherArm();
+            OnEnabled_EquipButton_OtherArm();
         }
         else
         {
-            currentEquipmentButton.OnEnabled_EquipButton_LeftArm();
-            currentEquipmentButton.OnEnabled_EquipButton_RightArm();
+            OnEnabled_EquipButton_LeftArm();
+            OnEnabled_EquipButton_RightArm();
         }
         EquipmentDataBase.Instance.IsTextUpdate = true;
     }
