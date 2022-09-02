@@ -18,6 +18,7 @@ public class EquipmentButton : UseEventSystemBehavior
     GameObject _equipButton_LeftArm;
     GameObject _equipButton_RightArm;
 
+
     //<===== Unityメッセージ =====>//
     private void Start()
     {
@@ -131,6 +132,5 @@ public class EquipmentButton : UseEventSystemBehavior
             OnEnabled_EquipButton_LeftArm();
             OnEnabled_EquipButton_RightArm();
         }
-        EquipmentDataBase.Instance.IsTextUpdate = true;
     }
 }

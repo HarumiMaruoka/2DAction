@@ -77,10 +77,6 @@ public class EquipmentDataBase : MonoBehaviour
     [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
     GameObject _beforeSelectedGameObject;
 
-    /// <summary> プレイヤーステータステキストを更新するかどうかを表す変数。 </summary>
-    bool _isTextUpdate = true;
-    public bool IsTextUpdate { get => _isTextUpdate; set => _isTextUpdate = value; }
-
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
@@ -94,7 +90,7 @@ public class EquipmentDataBase : MonoBehaviour
         {
             if (_instance == null)
             {
-                Debug.LogError("PlayerManager._instanceはnullです。");
+                Debug.LogError("EquipmentDataBase._instanceはnullです。");
             }
             return _instance;
         }
@@ -103,7 +99,7 @@ public class EquipmentDataBase : MonoBehaviour
     private EquipmentDataBase() { }
 
     //<======= Unityメッセージ =======>//
-    private void Awake()
+    void Awake()
     {
         //クラスを初期化
         Initialize_EquipmentBase();
@@ -125,9 +121,8 @@ public class EquipmentDataBase : MonoBehaviour
             OnLoad_EquippedData_Json();
         }
 
-        if (_isTextUpdate || _beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
+        if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
         {
-            _isTextUpdate = false;
             ReplacedEquipment();
         }
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;

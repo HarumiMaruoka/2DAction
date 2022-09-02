@@ -25,7 +25,6 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
     void Update()
     {
         Update_DrawEquipmentInformation();
-        Debug.Log(_eventSystem.currentSelectedGameObject);
     }
 
     //<===== privateƒƒ“ƒo[ŠÖ” =====>//
