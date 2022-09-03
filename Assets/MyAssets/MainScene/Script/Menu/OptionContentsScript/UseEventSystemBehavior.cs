@@ -34,12 +34,4 @@ public class UseEventSystemBehavior : MonoBehaviour
     {
         return _eventSystem.currentSelectedGameObject != _beforeSelectedGameObject;
     }
-    /// <summary> 
-    /// UseEventSystemBehaviorのアップデート関数。
-    /// </summary>
-    protected void Update_UseEventSystemBehavior()
-    {
-        //今フレームで選択していたオブジェクトを保存。
-        _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
-    }
 }

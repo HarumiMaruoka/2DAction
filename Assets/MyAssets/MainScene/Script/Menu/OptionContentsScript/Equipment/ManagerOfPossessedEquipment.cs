@@ -134,10 +134,11 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
                         }
                     }
                 }
-                //「装備する」ボタンの場合
-                if (_beforeSelectedGameObject.TryGetComponent(out EquipButton beforeEquipButton))
+                //「装備する」ボタンの場合の処理/新しく選択したボタンが「装備する」ボタンでなければ実行する。
+                if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipButton)&&
+                    !_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton equip))
                 {
-                    foreach (var button in beforeEquipButton.transform.parent.GetComponentsInChildren<EquipButton>())
+                    foreach (var button in beforeEquipButton.transform.GetComponentsInChildren<EquipButton>())
                     {
                         if (button.gameObject.activeSelf) button.gameObject.SetActive(false);
                     }
@@ -146,7 +147,7 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
         }
 
         //古いオブジェクトを保存しておく。
-        Update_UseEventSystemBehavior();
+        _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
     /// <summary> 上昇値テキストを更新する </summary>
     /// <param name="equipment"> 上昇値を表示する装備 </param>
