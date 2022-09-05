@@ -6,7 +6,6 @@ using UnityEngine;
 public class EnemyBase : MonoBehaviour
 {
     //<=========== このクラスで使用する型 ===========>//
-
     /// <summary> Enemyのステータス </summary>
     public struct EnemyStatus
     {
@@ -40,6 +39,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] protected Vector2 _blowingPower;
     /// <summary> 重さ : 吹っ飛ばされにくさ </summary>
     [SerializeField] public float _weight;
+    [Header("ドロップ品と確率"), SerializeField] 
+    protected DropItemAndProbability[] _dropItemAndProbabilities;
 
     //このエネミーが向いている方向
     protected bool _isRight;
@@ -234,4 +235,19 @@ public class EnemyBase : MonoBehaviour
     //<============= 仮想関数 =============>//
     /// <summary> Enemy移動用関数 : オーバーライド可 </summary>
     protected virtual void Move() { }
+}
+
+/// <summary>
+/// この型は、倒せる、壊せるものが持つべき構造体。
+/// 落とすアイテム、落とす装備、ドロップ率変数をメンバーに持つ。
+/// </summary>
+[System.Serializable]
+public struct DropItemAndProbability
+{
+    /// <summary> 落とすアイテム </summary>
+    Item.ItemID _itemID;
+    /// <summary> 落とす装備 </summary>
+    EquipmentDataBase.EquipmentID _equipmentID;
+    /// <summary> ドロップ率(%) </summary>
+    float _probability;
 }

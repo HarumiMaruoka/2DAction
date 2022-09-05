@@ -52444,6 +52444,7 @@ GameObject:
   - component: {fileID: 1291259329}
   - component: {fileID: 1291259328}
   - component: {fileID: 1291259331}
+  - component: {fileID: 1291259332}
   m_Layer: 5
   m_Name: Draw Alteration Area
   m_TagString: Untagged
@@ -52554,6 +52555,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fed6f4d7b222a934c9c8250e98b6fd61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1291259332
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291259326}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 17416bec7d6c9e8498716d0514d6625b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1303529387
 GameObject:
   m_ObjectHideFlags: 0

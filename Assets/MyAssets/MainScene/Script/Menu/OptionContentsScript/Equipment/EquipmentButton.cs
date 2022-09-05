@@ -113,7 +113,7 @@ public class EquipmentButton : UseEventSystemBehavior
     public void OnClick_ExecutionSwap_RightArm()
     {
         // このボタンが持つ装備を着用する。この機能は「装備」ボタンに持たせるべきか？
-        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.RIGHT_ATM);
+        EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.RIGHT_ARM);
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();

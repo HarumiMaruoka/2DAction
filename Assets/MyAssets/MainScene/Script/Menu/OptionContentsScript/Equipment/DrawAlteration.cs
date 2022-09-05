@@ -11,6 +11,11 @@ public class DrawAlteration : UseEventSystemBehavior
     //<===== メンバー変数 =====>//
     /// <summary> 子オブジェクトのテキスト群 </summary>
     Text[] _childrenText;
+    Animator _animator;
+    //左腕か右腕かを表す
+    int _armType;
+    string _animName_None = "None";
+    string _animName_EquipmentAlterationValue = "EquipmentAlterationValue";
 
     /// <summary> 描画するかしないかを表す値 </summary>
     bool _isAmountOfChange = false;
@@ -25,7 +30,10 @@ public class DrawAlteration : UseEventSystemBehavior
     }
     void Update()
     {
-
+        if (_childrenText[0].color.a < 0.01f)
+        {
+            ChangeAlterationValue(true);
+        }
     }
     void OnEnable()
     {
@@ -40,6 +48,7 @@ public class DrawAlteration : UseEventSystemBehavior
     //<===== privateメンバー関数 =====>//
     bool Initialized()
     {
+        _animator = GetComponent<Animator>();
         _childrenText = transform.GetComponentsInChildren<Text>();
         if (_childrenText == null) return false;
         return true;
@@ -50,6 +59,15 @@ public class DrawAlteration : UseEventSystemBehavior
         if (_eventSystem.currentSelectedGameObject != null)
         {
             ChangeAlterationValue(_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment));
+            if (equipment?._myEquipment._myType == Equipment.EquipmentType.ARM_PARTS)
+            {
+                _armType = Constants.RIGHT_ARM;
+                _animator.Play(_animName_EquipmentAlterationValue);
+            }
+            else
+            {
+                _animator.Play(_animName_None);
+            }
         }
         else
         {
@@ -61,13 +79,14 @@ public class DrawAlteration : UseEventSystemBehavior
     {
         if (drawAmountOfChangeFlag)
         {
-            var riseDifference = Get_RiseDifference();
+            var riseDifference = Get_RiseDifference(_armType);
 
             //種類
             _childrenText[Constants.EQUIPMENT_TYPE_DRAW_AREA].text =
                 Conversion_EquipmentTypeToString
                 (
-                    _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._myType
+                    _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._myType,
+                    _armType
                 );
 
             //体力
@@ -156,7 +175,7 @@ public class DrawAlteration : UseEventSystemBehavior
                             ThisEquipment_StatusRisingValue;
                 }
                 //右腕の場合の処理
-                else if (armFrag == Constants.RIGHT_ATM)
+                else if (armFrag == Constants.RIGHT_ARM)
                 {
                     if (EquipmentDataBase.Instance.Equipped._armRightPartsID != -1)
                         result =
@@ -195,6 +214,7 @@ public class DrawAlteration : UseEventSystemBehavior
                     type == Equipment.EquipmentType.TORSO_PARTS ||
                     type == Equipment.EquipmentType.FOOT_PARTS)
                 {
+                    _animator.Play(_animName_None);
                     result = button._myEquipment.ThisEquipment_StatusRisingValue;
                     result -= Get_SelectedEquipment(type);
                 }
@@ -211,10 +231,10 @@ public class DrawAlteration : UseEventSystemBehavior
                     result = button._myEquipment.ThisEquipment_StatusRisingValue;
                     result -= Get_SelectedEquipment(type, Constants.LEFT_ARM);
                 }
-                else if (armFrag == Constants.RIGHT_ATM)
+                else if (armFrag == Constants.RIGHT_ARM)
                 {
                     result = button._myEquipment.ThisEquipment_StatusRisingValue;
-                    result -= Get_SelectedEquipment(type, Constants.RIGHT_ATM);
+                    result -= Get_SelectedEquipment(type, Constants.RIGHT_ARM);
                 }
                 else
                 {
@@ -225,15 +245,29 @@ public class DrawAlteration : UseEventSystemBehavior
         return result;
     }
 
-    string Conversion_EquipmentTypeToString(Equipment.EquipmentType type)
+    string Conversion_EquipmentTypeToString(Equipment.EquipmentType type,int armType=Constants.RIGHT_ARM)
     {
         switch (type)
         {
-            case Equipment.EquipmentType.HEAD_PARTS: return "頭パーツ";
-            case Equipment.EquipmentType.TORSO_PARTS: return "胴パーツ";
-            case Equipment.EquipmentType.ARM_PARTS: return "腕パーツ";
-            case Equipment.EquipmentType.FOOT_PARTS: return "足パーツ";
+            case Equipment.EquipmentType.HEAD_PARTS: return "頭";
+            case Equipment.EquipmentType.TORSO_PARTS: return "胴";
+            case Equipment.EquipmentType.ARM_PARTS: 
+                if(armType==Constants.RIGHT_ARM)return "右腕の場合";
+                else return "左腕の場合";
+            case Equipment.EquipmentType.FOOT_PARTS: return "足";
             default: return "";
+        }
+    }
+
+    void ChangeArmType()
+    {
+        if (_armType == Constants.LEFT_ARM)
+        {
+            _armType = Constants.RIGHT_ARM;
+        }
+        else
+        {
+            _armType = Constants.LEFT_ARM;
         }
     }
 }

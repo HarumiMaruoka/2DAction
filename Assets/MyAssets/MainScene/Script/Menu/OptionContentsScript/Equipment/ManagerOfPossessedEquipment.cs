@@ -135,8 +135,9 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
                     }
                 }
                 //「装備する」ボタンの場合の処理/新しく選択したボタンが「装備する」ボタンでなければ実行する。
-                if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipButton)&&
-                    !_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton equip))
+                if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipButton) &&(
+                    _eventSystem.currentSelectedGameObject == null ||
+                    !_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton equip)))
                 {
                     foreach (var button in beforeEquipButton.transform.GetComponentsInChildren<EquipButton>())
                     {
