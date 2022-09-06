@@ -28,4 +28,9 @@ public class Constants
     public const int DEFENSE_POWER_DRAW_AREA = 5;
     public const int MOVE_SPEED_DRAW_AREA = 6;
     public const int DIFFICULT_TO_BLOW_OFF_DRAW_AREA = 7;
+
+    /// <summary> Fireボタンを瞬間だけ実行することを表す値。</summary>
+    public const bool ON_FIRE_PRESS_TYPE_MOMENT = true;
+    /// <summary> Fireボタンを押している間、継続して実行することを表す値。 </summary>
+    public const bool ON_FIRE_PRESS_TYPE_CONSECUTIVELY = false;
 }

@@ -35,8 +35,7 @@ public class Shot : MonoBehaviour
     bool _isDethMode;
     float _dethTimer2;
 
-
-    // Start is called before the first frame update
+    //<===== Unityメッセージ =====>//
     void Start()
     {
         //各変数の初期化
@@ -81,8 +80,6 @@ public class Shot : MonoBehaviour
         //GetComponent<AudioSource>().Play();
         AudioSource.PlayClipAtPoint(shot, transform.position, _soundVolume);
     }
-
-    // Update is called once per frame
     void Update()
     {
         Destroy(this.gameObject,1.5f);
@@ -105,7 +102,7 @@ public class Shot : MonoBehaviour
         if (collision.TryGetComponent(out EnemyBase enemy))//敵に接触したときの処理
         {
             AudioSource.PlayClipAtPoint(_hitShot, transform.position, _hitEnemySoundVolume);
-            enemy.HitPlayerAttadk(_barrettPower);
+            enemy.HitPlayerAttack(_barrettPower);
             _isDeth = true;
         }
         if (collision.TryGetComponent(out BossBase boss))
