@@ -67,7 +67,6 @@ public class EnemyBase : MonoBehaviour
     //全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す
     protected void Update_Enemy()
     {
-
         //色を変える必要があれば変える
         if (_isColorChange)
         {
@@ -79,7 +78,7 @@ public class EnemyBase : MonoBehaviour
             _spriteRenderer.color = new Color(255, 255, 255, 255);
         }
     }
-    protected void StartKnockback(float knockBackPower)
+    protected void StartKnockBack(float knockBackPower)
     {
         _rigidBody2d.velocity = Vector2.zero;
         _rigidBody2d.AddForce((Vector2.up + Vector2.right) * knockBackPower, ForceMode2D.Impulse);
@@ -180,7 +179,7 @@ public class EnemyBase : MonoBehaviour
         _knockBackModeTime = (knockBackTimer - _status._weight) > 0f ? (knockBackTimer - _status._weight) : 0f;
         StartCoroutine(MoveStop());
         //ノックバック処理。
-        StartKnockback((knockBackPower - _status._weight) < 0f ? knockBackPower - _status._weight : 0f);
+        StartKnockBack((knockBackPower - _status._weight) > 0f ? knockBackPower - _status._weight : 0f);
     }
     /// <summary> プレイヤーに対する攻撃処理 : オーバーライド可 </summary>
     public virtual void HitPlayer()
@@ -219,7 +218,7 @@ public class EnemyBase : MonoBehaviour
     /// <summary> Enemy移動用関数 : オーバーライド可 </summary>
     protected virtual void Move() { }
 }
-/// <summary> Enemyのステータス </summary>
+/// <summary> Enemyのステータスを表す型 </summary>
 [System.Serializable]
 public struct EnemyStatus
 {

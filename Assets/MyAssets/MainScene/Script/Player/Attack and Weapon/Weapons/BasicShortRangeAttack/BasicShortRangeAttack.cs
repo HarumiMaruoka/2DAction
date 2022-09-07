@@ -22,7 +22,7 @@ public class BasicShortRangeAttack : FireBehavior
     /// <summary> コンボ間のインターバル </summary>
     [Header("各コンボ間のインターバル"), SerializeField] float _intervalBetweenCombos = 0.8f;
 
-    //<===== Unityメッセージ =====>//
+    //<===== Unity Message =====>//
     void Start()
     {
         Initialized(Constants.ON_FIRE_PRESS_TYPE_MOMENT);
@@ -47,13 +47,13 @@ public class BasicShortRangeAttack : FireBehavior
         //3撃目を撃つ
         if (_isThirdCombo)
         {
-            Instantiate(_shortRangeAttack_ThirdComboPrefab);
+            Instantiate(_shortRangeAttack_ThirdComboPrefab,transform);
             _isThirdCombo = false;
         }
         //2撃目を撃つ
         else if (_isSecondCombo)
         {
-            Instantiate(_shortRangeAttack_SecondComboPrefab);
+            Instantiate(_shortRangeAttack_SecondComboPrefab, transform);
             //3撃目準備完了
             StartCoroutine(ThirdShotReady());
             _isSecondCombo = false;
@@ -61,7 +61,7 @@ public class BasicShortRangeAttack : FireBehavior
         //1撃目を撃つ
         else
         {
-            Instantiate(_shortRangeAttack_FirstComboPrefab);
+            Instantiate(_shortRangeAttack_FirstComboPrefab, transform);
             //2撃目準備完了
             StartCoroutine(SecondShotReady());
         }

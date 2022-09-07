@@ -7,10 +7,12 @@ using UnityEngine;
 /// </summary>
 public class ShortRangeWeaponBase : WeaponBase
 {
+    /// <summary> エネミーに対して攻撃がヒットした際の硬直時間 </summary>
     [Header("エネミーに対して攻撃がヒットした際の硬直時間"), SerializeField]
-    float _basicRecoveryTime;
+    protected float _basicRecoveryTime;
+    /// <summary> エネミーに対して攻撃がヒットした際のノックバック力 </summary>
     [Header("エネミーに対して攻撃がヒットした際のノックバック力"), SerializeField]
-    float _basicKnockbackForce;
+    protected float _basicKnockbackForce;
     protected override void OnHitEnemy(EnemyBase enemy)
     {
         //プレイヤーの近距離攻撃力に応じて、対象にダメージを与える。

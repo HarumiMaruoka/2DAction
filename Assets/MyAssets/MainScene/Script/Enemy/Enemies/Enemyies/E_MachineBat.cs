@@ -18,9 +18,9 @@ public class E_MachineBat : EnemyBase
             Debug.LogError($"初期化に失敗しました。{gameObject.name}");
         }
     }
-    void Update()
+    protected override void Update()
     {
-        Update_Enemy();
+        base.Update();
         Move();
     }
 
@@ -32,7 +32,7 @@ public class E_MachineBat : EnemyBase
         _spriteRenderer.flipX = (transform.position.x < _playerPos.transform.position.x);
 
         // ノックバック中でなければ、プレイヤーに向かって移動する。
-        if (!_isKnockBackNow)
+        if (!_isMove)
         {
             // Enemyから見てどの方向にプレイヤーがいるかを取得する。
             float moveX = _playerPos.transform.position.x - transform.position.x;
@@ -45,16 +45,7 @@ public class E_MachineBat : EnemyBase
             if (!Mathf.Approximately(moveY, 0f)) moveY = (moveY > 0) ? _moveSpeed : -_moveSpeed;
 
             // 移動処理
-            _rigidBody2d.velocity = new Vector2(moveX / 50, moveY / 150);
-        }
-        else//ノックバック処理
-        {
-            // 速度をリセット
-            _rigidBody2d.velocity = Vector2.zero;
-            // ノックバックする方向を指定する
-            Vector2 knockBack = _spriteRenderer.flipX ? new Vector2(-1, 1) : new Vector2(1, 1);
-            // 指定された方向に力を加える : ***** 今のままだとノックバック中ずっと力を加えるので一度だけ加えるようにするか検討する。 *****
-            _rigidBody2d.AddForce(knockBack, ForceMode2D.Impulse);
+            _rigidBody2d.velocity = new Vector2(moveX, moveY).normalized;
         }
     }
 }

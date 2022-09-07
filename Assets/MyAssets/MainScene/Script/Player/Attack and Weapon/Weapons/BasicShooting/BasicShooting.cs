@@ -26,7 +26,7 @@ public class BasicShooting : FireBehavior
     }
     void Update()
     {
-        
+
     }
 
     //<===== overrides =====>//
@@ -40,7 +40,7 @@ public class BasicShooting : FireBehavior
         if (_isFire)
         {
             // 弾を生成する。
-            Instantiate(_bulletPrefab);
+            Instantiate(_bulletPrefab, transform);
             // インターバルを待つ。
             StartCoroutine(WaitInterval());
         }

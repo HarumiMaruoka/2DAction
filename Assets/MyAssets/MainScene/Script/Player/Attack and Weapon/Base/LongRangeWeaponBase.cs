@@ -15,6 +15,8 @@ public class LongRangeWeaponBase : WeaponBase
     {
         //プレイヤーの遠距離攻撃力に応じて、対象にダメージを与える。
         enemy.HitPlayerAttack(PlayerStatusManager.Instance.ConsequentialPlayerStatus._longRangeAttackPower);
+        //ダメージを与えたら消滅する。
+        Destroy(gameObject);
     }
 
     /// <summary> 初期化処理 </summary>
@@ -29,5 +31,4 @@ public class LongRangeWeaponBase : WeaponBase
     {
 
     }
-
 }

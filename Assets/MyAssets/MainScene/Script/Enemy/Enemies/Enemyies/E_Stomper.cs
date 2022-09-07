@@ -31,7 +31,7 @@ public class E_Stomper : EnemyBase
         }
         
     }
-    void Update()
+    protected override void Update()
     {
         Update_Enemy();
         Move();

@@ -1,23 +1,30 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// BasicShooting‚ª•ú‚Â’e‚ÌƒRƒ“ƒgƒ[ƒ‰[
+/// BasicShootingãŒæ”¾ã¤å¼¾ãŒæŒã¤ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class BasicBullet : LongRangeWeaponBase
 {
-    [Header("’e‚Ì‘¬“x"), SerializeField] float _moveSpeed = 5f;
-    [Header("ƒ_ƒbƒVƒ…‚Ì‰Á‘¬“x"), SerializeField] float _dashAcceleration = 1.5f;
+    [Header("å¼¾ã®é€Ÿåº¦"), SerializeField] float _moveSpeed = 5f;
+    [Header("ãƒ€ãƒƒã‚·ãƒ¥æ™‚ã®åŠ é€Ÿåº¦"), SerializeField] float _dashAcceleration = 1.5f;
 
+    const float RIGHT = 1f;
+    const float LEFT = -1f;
 
     void Start()
     {
-
+        Initialized();
     }
 
-    void Update()
+    protected override bool Initialized()
     {
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ãã«å¿œã˜ã¦é£›ã‚“ã§ã„ãæ–¹å‘ã‚’æ±ºã‚ã‚‹ã€‚
+        GetComponent<Rigidbody2D>().velocity =
+            Vector2.right * _moveSpeed * (PlayerStatusManager.Instance.IsRight ? RIGHT : LEFT);
 
+        return true;
     }
 }
