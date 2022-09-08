@@ -1,21 +1,25 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ����̊��N���X
+/// 武器の基底クラス
 /// </summary>
 public abstract class WeaponBase : MonoBehaviour
 {
-    /// <summary> Enemy�ڐG���̏��� </summary>
+    [Header("敵と接触したときに鳴らす音"), SerializeField] AudioClip clip;
+    /// <summary> Enemy接触時の処理 : オーバーライド可 </summary>
     protected abstract void OnHitEnemy(EnemyBase enemy);
-    /// <summary> ����ڐG���̏��� </summary>
-    /// <param name="collision"> �ڐG�Ώ� </param>
+    /// <summary> 武器接触時の処理 : オーバーライド可 </summary>
+    /// <param name="collision"> 接触対象 </param>
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out EnemyBase enemy))
+        if (collision.TryGetComponent(out EnemyBase enemy))
         {
+            // 敵接触時の処理
             OnHitEnemy(enemy);
+            // 敵に当たったら音を鳴らす。
+            if (clip != null) AudioSource.PlayClipAtPoint(clip, transform.position);
         }
     }
 }

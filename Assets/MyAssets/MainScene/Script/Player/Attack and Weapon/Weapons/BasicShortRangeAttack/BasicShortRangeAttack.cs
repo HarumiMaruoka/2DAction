@@ -1,34 +1,34 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Šî–{“I‚È‹ß‹——£UŒ‚ƒNƒ‰ƒXB
+/// åŸºæœ¬çš„ãªæ–¬æ’ƒ(è¿‘è·é›¢)æ”»æ’ƒã‚¯ãƒ©ã‚¹ã€‚
 /// </summary>
 public class BasicShortRangeAttack : FireBehavior
 {
-    //<===== ƒƒ“ƒo[•Ï” =====>//
-    [Header("‹ß‹——£UŒ‚ : ƒRƒ“ƒ{ˆêŒ‚–Ú‚ÌƒvƒŒƒnƒu"), SerializeField]
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =====>//
+    [Header("è¿‘è·é›¢æ”»æ’ƒ : ã‚³ãƒ³ãƒœä¸€æ’ƒç›®ã®ãƒ—ãƒ¬ãƒãƒ–"), SerializeField]
     GameObject _shortRangeAttack_FirstComboPrefab = default;
-    [Header("‹ß‹——£UŒ‚ : ƒRƒ“ƒ{“ñŒ‚–Ú‚ÌƒvƒŒƒnƒu"), SerializeField]
+    [Header("è¿‘è·é›¢æ”»æ’ƒ : ã‚³ãƒ³ãƒœäºŒæ’ƒç›®ã®ãƒ—ãƒ¬ãƒãƒ–"), SerializeField]
     GameObject _shortRangeAttack_SecondComboPrefab = default;
-    [Header("‹ß‹——£UŒ‚ : ƒRƒ“ƒ{OŒ‚–Ú‚ÌƒvƒŒƒnƒu"), SerializeField]
+    [Header("è¿‘è·é›¢æ”»æ’ƒ : ã‚³ãƒ³ãƒœä¸‰æ’ƒç›®ã®ãƒ—ãƒ¬ãƒãƒ–"), SerializeField]
     GameObject _shortRangeAttack_ThirdComboPrefab = default;
 
-    /// <summary> 2ƒRƒ“ƒ{–Ú‚ªŒ‚‚Ä‚é‚©‚Ç‚¤‚© </summary>
+    /// <summary> 2ã‚³ãƒ³ãƒœç›®ãŒæ’ƒã¦ã‚‹ã‹ã©ã†ã‹ </summary>
     bool _isSecondCombo = false;
-    /// <summary> 3ƒRƒ“ƒ{–Ú‚ªŒ‚‚Ä‚é‚©‚Ç‚¤‚© </summary>
+    /// <summary> 3ã‚³ãƒ³ãƒœç›®ãŒæ’ƒã¦ã‚‹ã‹ã©ã†ã‹ </summary>
     bool _isThirdCombo = false;
-    /// <summary> ƒRƒ“ƒ{ŠÔ‚ÌƒCƒ“ƒ^[ƒoƒ‹ </summary>
-    [Header("ŠeƒRƒ“ƒ{ŠÔ‚ÌƒCƒ“ƒ^[ƒoƒ‹"), SerializeField] float _intervalBetweenCombos = 0.8f;
+    /// <summary> ã‚³ãƒ³ãƒœé–“ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ« </summary>
+    [Header("å„ã‚³ãƒ³ãƒœé–“ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«"), SerializeField] float _intervalBetweenCombos = 0.8f;
 
     //<===== Unity Message =====>//
     void Start()
     {
         Initialized(Constants.ON_FIRE_PRESS_TYPE_MOMENT);
 
-        //***ƒeƒXƒg—pˆ—***//
-        //*‰E˜r‚É‘•”õ‚·‚éB*//
+        //***ãƒ†ã‚¹ãƒˆç”¨å‡¦ç†***//
+        //*å³è…•ã«è£…å‚™ã™ã‚‹ã€‚*//
         SetEquip_RightArm();
         //******************//
     }
@@ -44,38 +44,38 @@ public class BasicShortRangeAttack : FireBehavior
     }
     protected override void OnFire_ThisWeapon()
     {
-        //3Œ‚–Ú‚ğŒ‚‚Â
+        //3æ’ƒç›®ã‚’æ’ƒã¤
         if (_isThirdCombo)
         {
             Instantiate(_shortRangeAttack_ThirdComboPrefab,transform);
             _isThirdCombo = false;
         }
-        //2Œ‚–Ú‚ğŒ‚‚Â
+        //2æ’ƒç›®ã‚’æ’ƒã¤
         else if (_isSecondCombo)
         {
             Instantiate(_shortRangeAttack_SecondComboPrefab, transform);
-            //3Œ‚–Ú€”õŠ®—¹
+            //3æ’ƒç›®æº–å‚™å®Œäº†
             StartCoroutine(ThirdShotReady());
             _isSecondCombo = false;
         }
-        //1Œ‚–Ú‚ğŒ‚‚Â
+        //1æ’ƒç›®ã‚’æ’ƒã¤
         else
         {
             Instantiate(_shortRangeAttack_FirstComboPrefab, transform);
-            //2Œ‚–Ú€”õŠ®—¹
+            //2æ’ƒç›®æº–å‚™å®Œäº†
             StartCoroutine(SecondShotReady());
         }
     }
 
-    //<===== ƒRƒ‹[ƒ`ƒ“ =====>//
-    /// <summary> ˆê’èŠÔA2ƒRƒ“ƒ{–Ú‚ğŒ‚‚Ä‚é‚æ‚¤‚É‚·‚éB </summary>
+    //<===== ã‚³ãƒ«ãƒ¼ãƒãƒ³ =====>//
+    /// <summary> ä¸€å®šæ™‚é–“ã€2ã‚³ãƒ³ãƒœç›®ã‚’æ’ƒã¦ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚ </summary>
     IEnumerator SecondShotReady()
     {
         _isSecondCombo = true;
         yield return new WaitForSeconds(_intervalBetweenCombos);
         _isSecondCombo = false;
     }
-    /// <summary> ˆê’èŠÔA3ƒRƒ“ƒ{–Ú‚ğŒ‚‚Ä‚é‚æ‚¤‚É‚·‚éB </summary>
+    /// <summary> ä¸€å®šæ™‚é–“ã€3ã‚³ãƒ³ãƒœç›®ã‚’æ’ƒã¦ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚ </summary>
     IEnumerator ThirdShotReady()
     {
         _isThirdCombo = true;

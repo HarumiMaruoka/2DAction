@@ -10,6 +10,21 @@ public class BasicAufschlitzen : ShortRangeWeaponBase
     /// <summary> この攻撃によるダメージ増加量 </summary>
     [Header("この攻撃によるダメージ増加量"), SerializeField] float _damageIncrease = 0f;
 
+    void Start()
+    {
+        //方向を修正
+        if (PlayerStatusManager.Instance.IsRight)
+        {
+            var l = transform.localScale;
+            l.x *= -1;
+            transform.localScale = l;
+
+            var p = transform.localPosition;
+            p.x *= -1;
+            transform.localPosition = p;
+        }
+    }
+
     protected override void OnHitEnemy(EnemyBase enemy)
     {
         //プレイヤーの近距離攻撃力に応じて、対象にダメージを与える。
@@ -20,5 +35,14 @@ public class BasicAufschlitzen : ShortRangeWeaponBase
             _basicRecoveryTime,
             _basicKnockbackForce
             );
+    }
+
+    /// <summary>
+    /// <para>このオブジェクトを破棄する。</para>
+    /// <para>アニメーションイベントから呼び出す。</para>
+    /// </summary>
+    void DestroyThisObject()
+    {
+        Destroy(gameObject);
     }
 }

@@ -1,52 +1,48 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// UŒ‚ˆ—
+/// æ”»æ’ƒå‡¦ç†
 /// </summary>
 public class NewPlayerAttack : MonoBehaviour
 {
-    //<===== ƒƒ“ƒo[•Ï” =====>//
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =====>//
 
-    /// <summary> <para>¶˜r‚É‘•”õ‚³‚ê‚½•Ší‚ÌUŒ‚ˆ—BƒfƒŠƒQ[ƒg•Ï”B</para>
-    /// <para>"¶ƒNƒŠƒbƒN‚Éˆê‰ñ‚¾‚¯Às‚·‚éB"</para> </summary>
+    /// <summary> <para>å·¦è…•ã«è£…å‚™ã•ã‚ŒãŸæ­¦å™¨ã®æ”»æ’ƒå‡¦ç†ã€‚ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã€‚</para>
+    /// <para>"å·¦ã‚¯ãƒªãƒƒã‚¯æ™‚ã«ä¸€å›ã ã‘å®Ÿè¡Œã™ã‚‹ã€‚"</para> </summary>
     static public System.Action _playerLeftArmWeapon_Moment;
-    /// <summary> <para>‰E˜r‚É‘•”õ‚³‚ê‚½•Ší‚ÌUŒ‚ˆ—BƒfƒŠƒQ[ƒg•Ï”B</para>
-    /// <para>"‰EƒNƒŠƒbƒN‚Éˆê‰ñ‚¾‚¯Às‚·‚éB"</para> </summary>
+    /// <summary> <para>å³è…•ã«è£…å‚™ã•ã‚ŒãŸæ­¦å™¨ã®æ”»æ’ƒå‡¦ç†ã€‚ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã€‚</para>
+    /// <para>"å³ã‚¯ãƒªãƒƒã‚¯æ™‚ã«ä¸€å›ã ã‘å®Ÿè¡Œã™ã‚‹ã€‚"</para> </summary>
     static public System.Action _playerRightArmWeapon_Moment;
 
-    /// <summary> <para>¶˜r‚É‘•”õ‚³‚ê‚½•Ší‚ÌUŒ‚ˆ—BƒfƒŠƒQ[ƒg•Ï”B</para>
-    /// <para>"¶ƒNƒŠƒbƒN’†‚¸‚Á‚ÆÀs‚·‚éB"</para> </summary>
+    /// <summary> <para>å·¦è…•ã«è£…å‚™ã•ã‚ŒãŸæ­¦å™¨ã®æ”»æ’ƒå‡¦ç†ã€‚ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã€‚</para>
+    /// <para>"å·¦ã‚¯ãƒªãƒƒã‚¯ä¸­ãšã£ã¨å®Ÿè¡Œã™ã‚‹ã€‚"</para> </summary>
     static public System.Action _playerLeftArmWeapon_Consecutively;
-    /// <summary> <para>‰E˜r‚É‘•”õ‚³‚ê‚½•Ší‚ÌUŒ‚ˆ—BƒfƒŠƒQ[ƒg•Ï”B</para>
-    /// <para>"‰EƒNƒŠƒbƒN’†‚¸‚Á‚ÆÀs‚·‚éB"</para> </summary>
+    /// <summary> <para>å³è…•ã«è£…å‚™ã•ã‚ŒãŸæ­¦å™¨ã®æ”»æ’ƒå‡¦ç†ã€‚ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã€‚</para>
+    /// <para>"å³ã‚¯ãƒªãƒƒã‚¯ä¸­ãšã£ã¨å®Ÿè¡Œã™ã‚‹ã€‚"</para> </summary>
     static public System.Action _playerRightArmWeapon_Consecutively;
 
-    /// <summary> FireOne“ü—Í”»’è—p </summary>
+    /// <summary> FireOneå…¥åŠ›åˆ¤å®šç”¨ </summary>
     bool _isFireOneDown = false;
-    /// <summary> FireTow“ü—Í”»’è—p </summary>
+    /// <summary> FireTowå…¥åŠ›åˆ¤å®šç”¨ </summary>
     bool _isFireTowDown = false;
-    /// <summary> FireOne“ü—Í”»’è—p </summary>
+    /// <summary> FireOneå…¥åŠ›åˆ¤å®šç”¨ </summary>
     bool _isFireOneDownNow = false;
-    /// <summary> FireTow“ü—Í”»’è—p </summary>
+    /// <summary> FireTowå…¥åŠ›åˆ¤å®šç”¨ </summary>
     bool _isFireTowDownNow = false;
 
-    [Header("¶ƒNƒŠƒbƒN‚Ìƒ{ƒ^ƒ“‚Ì–¼‘O"), SerializeField] string FireOneButtonName = "";
-    [Header("‰EƒNƒŠƒbƒN‚Ìƒ{ƒ^ƒ“‚Ì–¼‘O"), SerializeField] string FireTowButtonName = "";
+    [Header("å·¦ã‚¯ãƒªãƒƒã‚¯ã®ãƒœã‚¿ãƒ³ã®åå‰"), SerializeField] string FireOneButtonName = "Fire1";
+    [Header("å³ã‚¯ãƒªãƒƒã‚¯ã®ãƒœã‚¿ãƒ³ã®åå‰"), SerializeField] string FireTowButtonName = "Fire2";
 
-    //<===== UnityƒƒbƒZ[ƒW =====>//
-    void Start()
-    {
-
-    }
+    //<===== Unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =====>//
     void Update()
     {
         Input_Attack();
         Update_Attack();
     }
-    //<===== privateƒƒ“ƒo[ŠÖ” =====>//
-    /// <summary> “ü—Íˆ— </summary>
+    //<===== privateãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =====>//
+    /// <summary> å…¥åŠ›å‡¦ç† </summary>
     void Input_Attack()
     {
         _isFireOneDown = Input.GetButtonDown(FireOneButtonName);
@@ -54,25 +50,25 @@ public class NewPlayerAttack : MonoBehaviour
         _isFireOneDownNow = Input.GetButton(FireOneButtonName);
         _isFireTowDownNow = Input.GetButton(FireTowButtonName);
     }
-    /// <summary> XVˆ— </summary>
+    /// <summary> æ›´æ–°å‡¦ç† </summary>
     void Update_Attack()
     {
-        // ¶ƒNƒŠƒbƒN‰Ÿ‰º‚Ìˆ— ƒfƒŠƒQ[ƒg•Ï”‚É“o˜^‚³‚ê‚½ˆ—‚ğÀs‚·‚éB
+        // å·¦ã‚¯ãƒªãƒƒã‚¯æŠ¼ä¸‹æ™‚ã®å‡¦ç† ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã«ç™»éŒ²ã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
         if (_isFireOneDown && _playerLeftArmWeapon_Moment != null)
         {
             _playerLeftArmWeapon_Moment();
         }
-        // ‰EƒNƒŠƒbƒN‰Ÿ‰º‚Ìˆ— ƒfƒŠƒQ[ƒg•Ï”‚É“o˜^‚³‚ê‚½ˆ—‚ğÀs‚·‚éB
+        // å³ã‚¯ãƒªãƒƒã‚¯æŠ¼ä¸‹æ™‚ã®å‡¦ç† ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã«ç™»éŒ²ã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
         if (_isFireTowDown && _playerRightArmWeapon_Moment != null)
         {
             _playerRightArmWeapon_Moment();
         }
-        // ¶ƒNƒŠƒbƒN‰Ÿ‰º’†‚Ìˆ— ƒfƒŠƒQ[ƒg•Ï”‚É“o˜^‚³‚ê‚½ˆ—‚ğÀs‚·‚éB
+        // å·¦ã‚¯ãƒªãƒƒã‚¯æŠ¼ä¸‹ä¸­ã®å‡¦ç† ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã«ç™»éŒ²ã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
         if (_isFireOneDownNow && _playerLeftArmWeapon_Consecutively != null)
         {
             _playerLeftArmWeapon_Consecutively();
         }
-        // ‰EƒNƒŠƒbƒN‰Ÿ‰º’†‚Ìˆ— ƒfƒŠƒQ[ƒg•Ï”‚É“o˜^‚³‚ê‚½ˆ—‚ğÀs‚·‚éB
+        // å³ã‚¯ãƒªãƒƒã‚¯æŠ¼ä¸‹ä¸­ã®å‡¦ç† ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã«ç™»éŒ²ã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
         if (_isFireTowDownNow && _playerRightArmWeapon_Consecutively != null)
         {
             _playerRightArmWeapon_Consecutively();

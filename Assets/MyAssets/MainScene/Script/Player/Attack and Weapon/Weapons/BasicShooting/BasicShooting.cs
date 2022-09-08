@@ -1,32 +1,28 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ’ÊíËŒ‚UŒ‚ƒNƒ‰ƒX : •Šíƒx[ƒX‚ğŒp³‚·‚éB
+/// é€šå¸¸å°„æ’ƒæ”»æ’ƒã‚¯ãƒ©ã‚¹
 /// </summary>
 public class BasicShooting : FireBehavior
 {
-    //<===== ƒƒ“ƒo[•Ï” =====>//
-    [Header("’e‚ÌƒvƒŒƒnƒu"), SerializeField] GameObject _bulletPrefab = default;
-    /// <summary> ”­ËŠÔŠu </summary>
-    [Header("”­ËŠÔŠu"), SerializeField] float _fireInterval = 1f;
-    /// <summary> ’e‚ğŒ‚‚Ä‚é‚©‚Ç‚¤‚©‚ğ•\‚·•Ï”B </summary>
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =====>//
+    [Header("å¼¾ã®ãƒ—ãƒ¬ãƒãƒ–"), SerializeField] GameObject _bulletPrefab = default;
+    /// <summary> ç™ºå°„é–“éš” </summary>
+    [Header("ç™ºå°„é–“éš”"), SerializeField] float _fireInterval = 1f;
+    /// <summary> å¼¾ã‚’æ’ƒã¦ã‚‹ã‹ã©ã†ã‹ã‚’è¡¨ã™å¤‰æ•°ã€‚ </summary>
     bool _isFire = true;
 
-    //<===== UnityƒƒbƒZ[ƒW =====>//
+    //<===== Unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =====>//
     void Start()
     {
         Initialized(Constants.ON_FIRE_PRESS_TYPE_CONSECUTIVELY);
 
-        //***ƒeƒXƒg—pˆ—***//
-        //*¶˜r‚É‘•”õ‚·‚éB*//
+        //***ãƒ†ã‚¹ãƒˆç”¨å‡¦ç†***//
+        //*å·¦è…•ã«è£…å‚™ã™ã‚‹ã€‚*//
         SetEquip_LeftArm();
         //******************//
-    }
-    void Update()
-    {
-
     }
 
     //<===== overrides =====>//
@@ -36,18 +32,18 @@ public class BasicShooting : FireBehavior
     }
     protected override void OnFire_ThisWeapon()
     {
-        // UŒ‚‰Â”\‚Å‚ ‚ê‚ÎÀs‚·‚é
+        // æ”»æ’ƒå¯èƒ½ã§ã‚ã‚Œã°å®Ÿè¡Œã™ã‚‹
         if (_isFire)
         {
-            // ’e‚ğ¶¬‚·‚éB
+            // å¼¾ã‚’ç”Ÿæˆã™ã‚‹ã€‚
             Instantiate(_bulletPrefab, transform);
-            // ƒCƒ“ƒ^[ƒoƒ‹‚ğ‘Ò‚ÂB
+            // ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã‚’å¾…ã¤ã€‚
             StartCoroutine(WaitInterval());
         }
     }
 
-    //<===== ƒRƒ‹[ƒ`ƒ“ =====>//
-    /// <summary> ËŒ‚‚ÌƒCƒ“ƒ^[ƒoƒ‹‚ğ‘Ò‚ÂB </summary>
+    //<===== ã‚³ãƒ«ãƒ¼ãƒãƒ³ =====>//
+    /// <summary> å°„æ’ƒã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã‚’å¾…ã¤ã€‚ </summary>
     IEnumerator WaitInterval()
     {
         _isFire = false;
