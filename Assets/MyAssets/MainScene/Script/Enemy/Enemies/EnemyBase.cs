@@ -81,7 +81,8 @@ public class EnemyBase : MonoBehaviour
     protected void StartKnockBack(float knockBackPower)
     {
         _rigidBody2d.velocity = Vector2.zero;
-        _rigidBody2d.AddForce((Vector2.up + Vector2.right) * knockBackPower, ForceMode2D.Impulse);
+        float diff = PlayerStatusManager.Instance.IsRight ? Constants.LEFT : Constants.RIGHT;
+        _rigidBody2d.AddForce((Vector2.up + Vector2.right * diff) * knockBackPower, ForceMode2D.Impulse);
     }
     //<============= private関数 =============>//
     //***** 初期化関連 *****//
@@ -190,11 +191,13 @@ public class EnemyBase : MonoBehaviour
         //プレイヤーをノックバックする
         if (_isRight)
         {
-            _playersRigidBody2D.AddForce((Vector2.right + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
+            //_playersRigidBody2D.AddForce((Vector2.right + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce(Vector2.right * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
         else
         {
-            _playersRigidBody2D.AddForce((Vector2.left + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
+            //_playersRigidBody2D.AddForce((Vector2.left + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
+            _playersRigidBody2D.AddForce(Vector2.left * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
     }
 

@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5348122343562175753
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6090261488642947483}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -19.79, y: -0.22999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -144,11 +144,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0603e2f6a548f724593c288822d60e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoint: 100
-  _offensive_Power: 10
-  _playerKnockBackPower: {x: 100, y: 100}
-  _isKnockBackNow: 0
-  _tank: -2
+  _status:
+    _hitPoint: 0
+    _offensivePower: 0
+    _blowingPower: {x: 100, y: 100}
+    _weight: 0
+  _dropItemAndProbabilities: []
   _moveSpeed: 2
   _isGizmo: 1
   _overLapBoxOffsetRight: {x: 1.15, y: 0, z: 0}

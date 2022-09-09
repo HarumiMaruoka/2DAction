@@ -97,12 +97,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0af712693b2984b920e089765db061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoint: 15
-  _offensive_Power: 3
-  _playerKnockBackPower: {x: 50, y: 50}
-  _isKnockBackNow: 0
-  _tank: 0
-  moveSpeed: 100
+  _status:
+    _hitPoint: 10000
+    _offensivePower: 0
+    _blowingPower: {x: 100, y: 100}
+    _weight: 0
+  _dropItemAndProbabilities: []
+  _moveSpeed: 2
+  _distanceToStop: 0
 --- !u!50 &8771018621740978193
 Rigidbody2D:
   serializedVersion: 4

@@ -33,4 +33,10 @@ public class Constants
     public const bool ON_FIRE_PRESS_TYPE_MOMENT = true;
     /// <summary> Fireボタンを押している間、継続して実行することを表す値。 </summary>
     public const bool ON_FIRE_PRESS_TYPE_CONSECUTIVELY = false;
+
+    //向きを表す定数
+    public const float UP = 1f;
+    public const float DOWN = -1f;
+    public const float RIGHT = 1f;
+    public const float LEFT = -1;
 }

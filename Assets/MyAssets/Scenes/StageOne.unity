@@ -28764,7 +28764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611469588}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.552599, y: 9.292712, z: 36.92888}
+  m_LocalPosition: {x: -4.99, y: 2.1, z: 36.92888}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1018348363}
@@ -30645,7 +30645,7 @@ MonoBehaviour:
     _shortRangeAttackPower: 0
     _longRangeAttackPower: 0
     _defensePower: 0
-    _moveSpeed: 0
+    _moveSpeed: 1
     _difficultToBlowOff: 0
   _equipment_RisingValue:
     _playerName: 
@@ -49919,6 +49919,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6616842508434420329, guid: fb7d703560b161c40acd10d64c651fb9, type: 3}
+      propertyPath: _moveSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616842508434420329, guid: fb7d703560b161c40acd10d64c651fb9, type: 3}
+      propertyPath: _distanceToStop
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb7d703560b161c40acd10d64c651fb9, type: 3}
 --- !u!4 &1018348363 stripped
@@ -53363,9 +53371,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1393623424}
+  - component: {fileID: 1393623427}
   - component: {fileID: 1393623426}
   - component: {fileID: 1393623425}
-  - component: {fileID: 1393623427}
   m_Layer: 0
   m_Name: PlayerWeapons
   m_TagString: Untagged
@@ -53416,7 +53424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 1761726668855302954, guid: b34dafd60e05eb84d9697d3f43fd2cf8, type: 3}
-  _fireInterval: 1
+  _fireInterval: 0.4
 --- !u!114 &1393623427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59791,7 +59799,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2134968912
 Transform:
   m_ObjectHideFlags: 0
@@ -60008,10 +60016,6 @@ PrefabInstance:
     - target: {fileID: 6090261488642947483, guid: 39b2b2e1caaf7d04b93bf4720825e82c, type: 3}
       propertyPath: m_Name
       value: Stomper
-      objectReference: {fileID: 0}
-    - target: {fileID: 6090261488642947483, guid: 39b2b2e1caaf7d04b93bf4720825e82c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39b2b2e1caaf7d04b93bf4720825e82c, type: 3}

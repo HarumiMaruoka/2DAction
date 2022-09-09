@@ -24,7 +24,7 @@ public class BasicBullet : LongRangeWeaponBase
     {
         //プレイヤーの向きに応じて飛んでいく方向を決める。
         GetComponent<Rigidbody2D>().velocity =
-            Vector2.right * _moveSpeed * (PlayerStatusManager.Instance.IsRight ? LEFT : RIGHT);
+            Vector2.right * _moveSpeed * (PlayerStatusManager.Instance.IsRight ? LEFT : RIGHT) + Vector2.right * GameObject.Find("ChibiRobo").GetComponent<Rigidbody2D>().velocity.x;
         if (PlayerStatusManager.Instance.IsRight)
         {
             var l = transform.localScale;

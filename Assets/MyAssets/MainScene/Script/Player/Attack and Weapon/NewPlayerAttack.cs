@@ -35,6 +35,13 @@ public class NewPlayerAttack : MonoBehaviour
     [Header("左クリックのボタンの名前"), SerializeField] string FireOneButtonName = "Fire1";
     [Header("右クリックのボタンの名前"), SerializeField] string FireTowButtonName = "Fire2";
 
+    PlayerStateManagement _playerState;
+
+    void Start()
+    {
+        _playerState = transform.parent.GetComponent<PlayerStateManagement>();
+    }
+
     //<===== Unityメッセージ =====>//
     void Update()
     {
@@ -53,25 +60,28 @@ public class NewPlayerAttack : MonoBehaviour
     /// <summary> 更新処理 </summary>
     void Update_Attack()
     {
-        // 左クリック押下時の処理 デリゲート変数に登録された処理を実行する。
-        if (_isFireOneDown && _playerLeftArmWeapon_Moment != null)
+        if (!_playerState._isDead && _playerState._isMove)
         {
-            _playerLeftArmWeapon_Moment();
-        }
-        // 右クリック押下時の処理 デリゲート変数に登録された処理を実行する。
-        if (_isFireTowDown && _playerRightArmWeapon_Moment != null)
-        {
-            _playerRightArmWeapon_Moment();
-        }
-        // 左クリック押下中の処理 デリゲート変数に登録された処理を実行する。
-        if (_isFireOneDownNow && _playerLeftArmWeapon_Consecutively != null)
-        {
-            _playerLeftArmWeapon_Consecutively();
-        }
-        // 右クリック押下中の処理 デリゲート変数に登録された処理を実行する。
-        if (_isFireTowDownNow && _playerRightArmWeapon_Consecutively != null)
-        {
-            _playerRightArmWeapon_Consecutively();
+            // 左クリック押下時の処理 デリゲート変数に登録された処理を実行する。
+            if (_isFireOneDown && _playerLeftArmWeapon_Moment != null)
+            {
+                _playerLeftArmWeapon_Moment();
+            }
+            // 右クリック押下時の処理 デリゲート変数に登録された処理を実行する。
+            if (_isFireTowDown && _playerRightArmWeapon_Moment != null)
+            {
+                _playerRightArmWeapon_Moment();
+            }
+            // 左クリック押下中の処理 デリゲート変数に登録された処理を実行する。
+            if (_isFireOneDownNow && _playerLeftArmWeapon_Consecutively != null)
+            {
+                _playerLeftArmWeapon_Consecutively();
+            }
+            // 右クリック押下中の処理 デリゲート変数に登録された処理を実行する。
+            if (_isFireTowDownNow && _playerRightArmWeapon_Consecutively != null)
+            {
+                _playerRightArmWeapon_Consecutively();
+            }
         }
     }
 }

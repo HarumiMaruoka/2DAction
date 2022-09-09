@@ -252,6 +252,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 0}
-  _basicRecoveryTime: 0
-  _basicKnockbackForce: 0
+  _basicRecoveryTime: 0.5
+  _basicKnockbackForce: 2
   _damageIncrease: 50

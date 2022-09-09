@@ -360,5 +360,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 0}
-  _moveSpeed: 5
+  _moveSpeed: 10
   _dashAcceleration: 1.5
+  _dethTime: 1.5
