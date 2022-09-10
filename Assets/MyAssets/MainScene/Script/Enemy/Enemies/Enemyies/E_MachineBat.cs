@@ -8,7 +8,8 @@ public class E_MachineBat : EnemyBase
     //<=========== メンバー変数 ===========>//
     //移動スピード
     [Header("移動スピード"), SerializeField] float _moveSpeed = 120f;
-    [Header("〇軸方向の移動を停止する距離 : どっかで停止しないと、ぶるぶるするので"), SerializeField] float _distanceToStop;
+    [Header("X軸方向の移動を停止する距離"), SerializeField] float _distanceToStopX;
+    [Header("Y軸方向の移動を停止する距離"), SerializeField] float _distanceToStopY;
 
     //<=========== Unityメッセージ ===========>//
     void Start()
@@ -38,8 +39,8 @@ public class E_MachineBat : EnemyBase
             float moveX = _playerPos.transform.position.x - transform.position.x;
             float moveY = _playerPos.transform.position.y - transform.position.y;
             // 距離が近い時は停止するその方向の移動は、停止する。
-            if (Mathf.Abs(moveX) < _distanceToStop) moveX = 0f;
-            if (Mathf.Abs(moveY) < _distanceToStop) moveY = 0f;
+            if (Mathf.Abs(moveX) < _distanceToStopY) moveX = 0f;
+            if (Mathf.Abs(moveY) < _distanceToStopX) moveY = 0f;
             // そうで無い場合はプレイヤーに向かって移動する。
             if (!Mathf.Approximately(moveX, 0f)) moveX = (moveX > 0) ? Constants.RIGHT : Constants.LEFT;
             if (!Mathf.Approximately(moveY, 0f)) moveY = (moveY > 0) ? Constants.UP : Constants.DOWN;
