@@ -61,7 +61,11 @@ public class NewBossBase : EnemyBase
 
 
     //<============= protectedメンバー関数 =============>//
-    /// <summary> BossBaseの初期化関数 </summary>
+    /// <summary>
+    /// BossBaseの初期化関数<br/>
+    /// 基底クラスの初期化関数を実行し、<br/>
+    /// Animatorコンポーネントをメンバー変数に保存する。<br/>
+    /// </summary>
     /// <returns> 成功したら true を返す。 </returns>
     protected bool Initialize_BossBase()
     {
