@@ -9,18 +9,18 @@ public class NewPlayerAttack : MonoBehaviour
 {
     //<===== メンバー変数 =====>//
 
-    /// <summary> <para>左腕に装備された武器の攻撃処理。デリゲート変数。</para>
-    /// <para>"左クリック時に一回だけ実行する。"</para> </summary>
+    /// <summary> 左腕に装備された武器の攻撃処理。デリゲート変数。<br/>
+    /// "左クリック時に一回だけ実行する。"<br/> </summary>
     static public System.Action _playerLeftArmWeapon_Moment;
-    /// <summary> <para>右腕に装備された武器の攻撃処理。デリゲート変数。</para>
-    /// <para>"右クリック時に一回だけ実行する。"</para> </summary>
+    /// <summary> 右腕に装備された武器の攻撃処理。デリゲート変数。<br/>
+    /// "右クリック時に一回だけ実行する。"<br/> </summary>
     static public System.Action _playerRightArmWeapon_Moment;
 
-    /// <summary> <para>左腕に装備された武器の攻撃処理。デリゲート変数。</para>
-    /// <para>"左クリック中ずっと実行する。"</para> </summary>
+    /// <summary> 左腕に装備された武器の攻撃処理。デリゲート変数。<br/>
+    /// "左クリック中ずっと実行する。"<br/> </summary>
     static public System.Action _playerLeftArmWeapon_Consecutively;
-    /// <summary> <para>右腕に装備された武器の攻撃処理。デリゲート変数。</para>
-    /// <para>"右クリック中ずっと実行する。"</para> </summary>
+    /// <summary> 右腕に装備された武器の攻撃処理。デリゲート変数。<br/>
+    /// "右クリック中ずっと実行する。"<br/> </summary>
     static public System.Action _playerRightArmWeapon_Consecutively;
 
     /// <summary> FireOne入力判定用 </summary>

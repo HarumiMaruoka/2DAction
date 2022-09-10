@@ -1,108 +1,109 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Boss‚ÌŠî’êƒNƒ‰ƒX :
-/// V‚µ‚¢ABossBaseƒRƒ“ƒ|[ƒlƒ“ƒgB
-/// ¡‚Í‚Ü‚¾g—p‚µ‚Ä‚¢‚È‚¢B
+/// Bossã®åŸºåº•ã‚¯ãƒ©ã‚¹ :
+/// æ–°ã—ã„ã€BossBaseã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã€‚
+/// ä»Šã¯ã¾ã ä½¿ç”¨ã—ã¦ã„ãªã„ã€‚
 /// 
-/// •ÏX“_ : EnemyBase‚ğŒp³‚µ‚Ä‚¢‚é“_B
-///          ‚»‚Ì‘¼‚¢‚ë‚¢‚ëÅ“K‰»
+/// å¤‰æ›´ç‚¹ : EnemyBaseã‚’ç¶™æ‰¿ã—ã¦ã„ã‚‹ç‚¹ã€‚
+///          ãã®ä»–ã„ã‚ã„ã‚æœ€é©åŒ–
 /// </summary>
 public class NewBossBase : EnemyBase
 {
-    //<=========== ‚±‚ÌƒNƒ‰ƒX‚Åg—p‚·‚éŒ^ ===========>//
-    /// <summary> ƒ{ƒX‚ÌƒXƒe[ƒg‚ğ•\‚·Œ^ </summary>
+    //<=========== ã“ã®ã‚¯ãƒ©ã‚¹ã§ä½¿ç”¨ã™ã‚‹å‹ ===========>//
+    /// <summary> ãƒœã‚¹ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è¡¨ã™å‹ </summary>
     public enum BossState
     {
-        IDLE,//‘Ò‹@
-        APPROACH,//Ú‹ß
-        RECESSION,//Œã‘Ş
+        IDLE,//å¾…æ©Ÿ
+        APPROACH,//æ¥è¿‘
+        RECESSION,//å¾Œé€€
         NOMAL_END,
 
-        LIGHT_ATTACK,//ãUŒ‚
-        HEAVY_ATTACK,//‹­UŒ‚
-        LONG_RANGE_ATTACK,//‰“‹——£UŒ‚
+        LIGHT_ATTACK,//å¼±æ”»æ’ƒ
+        HEAVY_ATTACK,//å¼·æ”»æ’ƒ
+        LONG_RANGE_ATTACK,//é è·é›¢æ”»æ’ƒ
 
         ATTACK_END,
 
-        DIE,//€
+        DIE,//æ­»
     }
 
-    //<============= ƒƒ“ƒo[•Ï” =============>//
-    // í“¬’†‚©‚Ç‚¤‚©ŠÖ˜A
-    /// <summary> ‘O‚ÌƒtƒŒ[ƒ€‚Åí“¬ó‘Ô‚¾‚Á‚½‚©H : í“¬’†‚Å‚ ‚ê‚Î true </summary>
-    private bool _beforeFrameIsFight = false;
-    /// <summary> Œ»İ‚ÌƒtƒŒ[ƒ€‚Åí“¬ó‘Ô‚©H : í“¬’†‚Å‚ ‚ê‚Î true </summary>
+    //<============= ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =============>//
+    // æˆ¦é—˜ä¸­ã‹ã©ã†ã‹é–¢é€£
+    /// <summary> ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§æˆ¦é—˜çŠ¶æ…‹ã‹ï¼Ÿ : æˆ¦é—˜ä¸­ã§ã‚ã‚Œã° true </summary>
     private bool _isFight = false;
+    /// <summary> å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§æˆ¦é—˜çŠ¶æ…‹ã ã£ãŸã‹ï¼Ÿ : æˆ¦é—˜ä¸­ã§ã‚ã‚Œã° true </summary>
+    private bool _beforeFrameIsFight = false;
 
-    //ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A
-    /// <summary> Œ»İƒN[ƒ‹ƒ^ƒCƒ€’†‚©‚Ç‚¤‚© </summary>
+    //ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ é–¢é€£
+    /// <summary> ç¾åœ¨ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ä¸­ã‹ã©ã†ã‹ </summary>
     protected bool _isCoolTimerNow = false;
-    /// <summary> Œ»İƒN[ƒ‹ƒ^ƒCƒ€’†‚©‚Ç‚¤‚©‚Ì‘OƒtƒŒ[ƒ€‚Ì’l </summary>
+    /// <summary> ç¾åœ¨ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ä¸­ã‹ã©ã†ã‹ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å€¤ </summary>
     private bool _beforeIsCoolTimerNow = false;
-    /// <summary> ƒN[ƒ‹ƒ^ƒCƒ€ŠÔ </summary>
+    /// <summary> ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ æ™‚é–“ </summary>
     protected float _coolTimeValue = 0f;
-    /// <summary> Œ»İUŒ‚’†‚©‚Ç‚¤‚© </summary>
+    /// <summary> ç¾åœ¨æ”»æ’ƒä¸­ã‹ã©ã†ã‹ </summary>
     protected bool _isAttackNow = false;
 
-    /// <summary> ƒ{ƒXUŒ‚Œã‚ÌƒN[ƒ‹ƒ^ƒCƒ€ </summary>
-    Dictionary<BossState, float> _bossAttackCoolTime = new Dictionary<BossState, float>();
+    /// <summary> ãƒœã‚¹æ”»æ’ƒå¾Œã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ  : ã‚­ãƒ¼ã¯BossStateã§ã€Valueã¯RandomRangeValueå‹ã€‚ </summary>
+    [Header("ãƒœã‚¹æ”»æ’ƒå¾Œã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ "), SerializeField]
+    Dictionary<BossState, RandomRangeValue> _bossAttackCoolTime = new Dictionary<BossState, RandomRangeValue>();
 
-    [Tooltip("í“¬ŠJn‚Ü‚Å‚Ì‹——£"), SerializeField] private Vector2 _fightStartDistance;
-    [Tooltip("í“¬’â~‚Ü‚Å‚Ì‹——£"), SerializeField] private Vector2 _fightStopDistance;
+    [Tooltip("æˆ¦é—˜é–‹å§‹ã¾ã§ã®è·é›¢"), SerializeField] private Vector2 _fightStartDistance;
+    [Tooltip("æˆ¦é—˜åœæ­¢ã¾ã§ã®è·é›¢"), SerializeField] private Vector2 _fightStopDistance;
 
-    /// <summary> Œ»İ‚ÌƒXƒe[ƒg </summary>
+    /// <summary> ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆ </summary>
     public BossState _nowState { get; protected set; }
 
     protected Animator _animator;
 
 
-    //<============= protectedƒƒ“ƒo[ŠÖ” =============>//
-    /// <summary> BossBase‚Ì‰Šú‰»ŠÖ” </summary>
-    /// <returns> ¬Œ÷‚µ‚½‚ç true ‚ğ•Ô‚·B </returns>
+    //<============= protectedãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =============>//
+    /// <summary> BossBaseã®åˆæœŸåŒ–é–¢æ•° </summary>
+    /// <returns> æˆåŠŸã—ãŸã‚‰ true ã‚’è¿”ã™ã€‚ </returns>
     protected bool Initialize_BossBase()
     {
         if (!base.Initialize_Enemy())
         {
-            Debug.LogError($"‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½B{gameObject.name}");
+            Debug.LogError($"åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸã€‚{gameObject.name}");
             return false;
         }
         if (!(_animator=GetComponent<Animator>()))
         {
-            Debug.LogError($"AnimatorƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½B : {gameObject.name}");
-            Debug.LogError($"‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½B{gameObject.name}");
+            Debug.LogError($"Animatorã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ : {gameObject.name}");
+            Debug.LogError($"åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸã€‚{gameObject.name}");
             return false;
         }
         return true;
     }
-    /// <summary> ƒ{ƒX‹¤’Ê‚ÌXVˆ— : ƒI[ƒo[ƒ‰ƒCƒh‰Â </summary>
+    /// <summary> ãƒœã‚¹å…±é€šã®æ›´æ–°å‡¦ç† : ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰å¯ </summary>
     protected virtual void CommonUpdate_BossBase()
     {
-        // Œã‚ÌƒtƒŒ[ƒ€—p‚ÉAƒN[ƒ‹ƒ^ƒCƒ€‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é’l‚ğ•Û‘¶‚µ‚Ä‚¨‚­B
+        // å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ç”¨ã«ã€ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹å€¤ã‚’ä¿å­˜ã—ã¦ãŠãã€‚
         _beforeIsCoolTimerNow = _isCoolTimerNow;
 
-        // ˆÈ‰º‚Í”»’è‚ğ“à•”‚Ås‚Á‚Ä‚¢‚é‚Ì‚ÅAÀs‚·‚×‚«ƒ^ƒCƒ~ƒ“ƒO‚ÅŸè‚ÉÀs‚µ‚Ä‚­‚ê‚éB
+        // ä»¥ä¸‹ã¯åˆ¤å®šã‚’å†…éƒ¨ã§è¡Œã£ã¦ã„ã‚‹ã®ã§ã€å®Ÿè¡Œã™ã¹ãã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§å‹æ‰‹ã«å®Ÿè¡Œã—ã¦ãã‚Œã‚‹ã€‚
         Update_StartAttackProcess();
         Update_EndAttackProcess();
     }
 
-    /// <summary> UŒ‚ŠJn‚ÌƒtƒŒ[ƒ€‚ğŒŸ’m‚·‚é </summary>
-    /// <returns> UŒ‚ŠJn‚ÌƒtƒŒ[ƒ€‚Å true ‚ğ•Ô‚·B </returns>
+    /// <summary> æ”»æ’ƒé–‹å§‹ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’æ¤œçŸ¥ã™ã‚‹ </summary>
+    /// <returns> æ”»æ’ƒé–‹å§‹ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ true ã‚’è¿”ã™ã€‚ </returns>
     protected bool Get_IsAttackStart()
     {
         return _beforeIsCoolTimerNow == false && _isCoolTimerNow == true;
     }
-    /// <summary> UŒ‚I—¹‚ÌƒtƒŒ[ƒ€‚ğŒŸ’m‚·‚é </summary>
-    /// <returns> UŒ‚I—¹‚ÌƒtƒŒ[ƒ€‚Å true ‚ğ•Ô‚·B </returns>
+    /// <summary> æ”»æ’ƒçµ‚äº†ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’æ¤œçŸ¥ã™ã‚‹ </summary>
+    /// <returns> æ”»æ’ƒçµ‚äº†ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ true ã‚’è¿”ã™ã€‚ </returns>
     protected bool Get_IsAttackEnd()
     {
         return _beforeIsCoolTimerNow == true && _isCoolTimerNow == false;
     }
 
-    //<============= privateƒƒ“ƒo[ŠÖ” =============>//
-    /// <summary> UŒ‚ŠJn‚ğŒŸ’m‚µ‚Äˆ—‚ğÀs‚·‚éB </summary>
+    //<============= privateãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =============>//
+    /// <summary> æ”»æ’ƒé–‹å§‹ã‚’æ¤œçŸ¥ã—ã¦å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚ </summary>
     void Update_StartAttackProcess()
     {
         if (Get_IsAttackStart())
@@ -110,7 +111,7 @@ public class NewBossBase : EnemyBase
             StartAttackProcess();
         }
     }
-    /// <summary> UŒ‚I—¹‚ğŒŸ’m‚µ‚Äˆ—‚ğÀs‚·‚éB </summary>
+    /// <summary> æ”»æ’ƒçµ‚äº†ã‚’æ¤œçŸ¥ã—ã¦å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚ </summary>
     void Update_EndAttackProcess()
     {
         if (Get_IsAttackEnd())
@@ -119,9 +120,9 @@ public class NewBossBase : EnemyBase
         }
     }
 
-    //<============= ƒRƒ‹[ƒ`ƒ“ =============>//
-    /// <summary> ƒN[ƒ‹ƒ^ƒCƒ€‚ğŠJn‚·‚éB : w’è‚³‚ê‚½ŠÔƒN[ƒ‹ƒ^ƒCƒ€•Ï”‚ğ true ‚É‚·‚éB </summary>
-   @protected IEnumerator StartCoolTime()
+    //<============= ã‚³ãƒ«ãƒ¼ãƒãƒ³ =============>//
+    /// <summary> ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã‚’é–‹å§‹ã™ã‚‹ã€‚ : æŒ‡å®šã•ã‚ŒãŸæ™‚é–“ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ å¤‰æ•°ã‚’ true ã«ã™ã‚‹ã€‚ </summary>
+   ã€€protected IEnumerator StartCoolTime()
     {
         _isCoolTimerNow = true;
         yield return new WaitForSeconds(_coolTimeValue);
@@ -129,15 +130,24 @@ public class NewBossBase : EnemyBase
     }
 
 
-    //<============= ‰¼‘zŠÖ” =============>//
-    /// <summary> UŒ‚ŠJnˆ— : ƒI[ƒo[ƒ‰ƒCƒh„§ </summary>
+    //<============= ä»®æƒ³é–¢æ•° =============>//
+    /// <summary> æ”»æ’ƒé–‹å§‹å‡¦ç† : ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰æ¨å¥¨ </summary>
     protected virtual void StartAttackProcess()
     {
-        // ‚±‚±‚ÉAƒI[ƒo[ƒ‰ƒCƒhæ‚ÅƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘JˆÚˆ—“™‚ÌAUŒ‚ŠJn‚ÉŠÖ‚í‚éˆ—‚ğ‹Lq‚µ‚Ä‚­‚¾‚³‚¢B
+        // ã“ã“ã«ã€ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰å…ˆã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é·ç§»å‡¦ç†ç­‰ã®ã€æ”»æ’ƒé–‹å§‹ã«é–¢ã‚ã‚‹å‡¦ç†ã‚’è¨˜è¿°ã—ã¦ãã ã•ã„ã€‚
     }
-    /// <summary> UŒ‚I—¹ˆ— : ƒI[ƒo[ƒ‰ƒCƒh„§ </summary>
+    /// <summary> æ”»æ’ƒçµ‚äº†å‡¦ç† : ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰æ¨å¥¨ </summary>
     protected virtual void EndAttackProcess()
     {
-        // ‚±‚±‚ÉAƒI[ƒo[ƒ‰ƒCƒhæ‚ÅƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘JˆÚˆ—‚âAƒN[ƒ‹ƒ^ƒCƒ€ŠJnˆ—“™‚ÌAUŒ‚I—¹‚ÉŠÖ‚í‚éˆ—‚ğ‹Lq‚µ‚Ä‚­‚¾‚³‚¢B
+        // ã“ã“ã«ã€ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰å…ˆã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é·ç§»å‡¦ç†ã‚„ã€ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ é–‹å§‹å‡¦ç†ç­‰ã®ã€æ”»æ’ƒçµ‚äº†ã«é–¢ã‚ã‚‹å‡¦ç†ã‚’è¨˜è¿°ã—ã¦ãã ã•ã„ã€‚
     }
+}
+/// <summary> ãƒ©ãƒ³ãƒ€ãƒ ãªå€¤ã®æœ€å°å€¤ã¨æœ€å¤§å€¤ã®ã‚»ãƒƒãƒˆ </summary>
+[System.Serializable]
+struct RandomRangeValue
+{
+    /// <summary> ãƒ©ãƒ³ãƒ€ãƒ ãªå€¤ã®æœ€å°å€¤ </summary>
+    public float _minValue;
+    /// <summary> ãƒ©ãƒ³ãƒ€ãƒ ãªå€¤ã®æœ€å¤§å€¤ </summary>
+    public float _maxValue;
 }

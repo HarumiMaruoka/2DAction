@@ -124,7 +124,11 @@ public class EnemyBase : MonoBehaviour
 
         return true;
     }
-    /// <summary> このゲームオブジェクトにアタッチされているコンポーネントを取得する。 </summary>
+    /// <summary> 
+    /// このゲームオブジェクトにアタッチされている<br/>
+    /// SpriteRendererコンポーネントと、<br/>
+    /// Rigidbody2Dコンポーネントを取得する。<br/>
+    /// </summary>
     /// <returns> 成功したら true を返す。 </returns>
     bool EnemyInitialize_Get_ThisGameObjectComponents()
     {

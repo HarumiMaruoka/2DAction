@@ -9,8 +9,8 @@ public abstract class FireBehavior : MonoBehaviour
 {
     //<===== メンバー変数 =====>//
     /// <summary> 
-    /// <para>入力タイプ : </para>
-    /// <para>trueなら押下時のみ、falseなら押下中ずっと実行することを表す。 </para>
+    /// 入力タイプ : <br/>
+    /// trueなら押下時のみ、falseなら押下中ずっと実行することを表す。 <br/>
     /// </summary>
     protected bool _pressType;
 
@@ -48,8 +48,8 @@ public abstract class FireBehavior : MonoBehaviour
 
     //<===== 仮想関数 =====>//
     /// <summary> 初期化処理 </summary>
-    /// <param name="pressType"> 入力タイプ : 
-    /// <para>trueなら押下時のみ、falseなら押下中ずっと実行することを表す。 </para> </param>
+    /// <param name="pressType"> 入力タイプ : <br/>
+    /// trueなら押下時のみ、falseなら押下中ずっと実行することを表す。 <br/> </param>
     /// <returns> 初期化に成功したら true ,そうでない場合に false を返す。 </returns>
     protected virtual bool Initialized(bool pressType)
     {
@@ -57,8 +57,8 @@ public abstract class FireBehavior : MonoBehaviour
         return true;
     }
     /// <summary> 
-    /// <para>攻撃処理 : </para>
-    /// <para>PlayerAttackクラスのデリゲート変数に登録し、そこから呼び出す。</para>
+    /// 攻撃処理 : <br/>
+    /// PlayerAttackクラスのデリゲート変数に登録し、そこから呼び出す。<br/>
     /// </summary>
     protected virtual void OnFire_ThisWeapon() { }
 }

@@ -38,8 +38,8 @@ public class BasicAufschlitzen : ShortRangeWeaponBase
     }
 
     /// <summary>
-    /// <para>このオブジェクトを破棄する。</para>
-    /// <para>アニメーションイベントから呼び出す。</para>
+    /// このオブジェクトを破棄する。<br/>
+    /// アニメーションイベントから呼び出す。<br/>
     /// </summary>
     void DestroyThisObject()
     {
