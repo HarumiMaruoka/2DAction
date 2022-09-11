@@ -4,43 +4,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ゲーム全体で使用可能なクラス。未だに何も記述していないので必要ないかもしれない。
 /// </summary>
 public class GameManager : MonoBehaviour
-{
-    //<===== シングルトン関係 =====>//
-    private static GameManager _instance;
-    /// <summary> GameManagerクラスの唯一のインスタンス </summary>
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new GameManager();
-            }
-            return _instance;
-        }
-    }
-    //プライベートなコンストラクタ
-    private GameManager() { }
-
+{    
     /// <summary> 初期化に成功したかどうかを表す変数。 </summary>
     bool _isInitialized = false;
+
+    [Header("フェードイン/アウト用のパネル"), SerializeField] GameObject _fadePanel;
+
+    public void FadeIn(string nextSceneName)
+    {
+        //フェードイン用パネルをアクティブにする。
+        _fadePanel.SetActive(true);
+        //DOTweenを利用してフェードインする。
+        _fadePanel.
+            GetComponent<Image>().DOFade(1, 1.5f).
+            SetDelay(0.5f).
+            OnComplete(() => SceneManager.LoadScene(nextSceneName));
+    }
+    public void FadeOut()
+    {
+
+    }
 
     //<===== Unityメッセージ =====>//
     void Awake()
     {
-        if( _isInitialized = Initialized())
-        {
-            Debug.Log($"初期化に成功しました。 : オブジェクト名{gameObject.name}");
-        }
-        else
-        {
-            Debug.LogError($"初期化に失敗しました。 : オブジェクト名{gameObject.name}");
-        }
+
     }
     void Start()
     {
@@ -56,18 +51,6 @@ public class GameManager : MonoBehaviour
     /// <returns> 初期化に成功したら true を返す。 </returns>
     bool Initialized()
     {
-        //もしインスタンスが設定されていなかったら自身を代入する
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        //もう既に存在する場合は、このオブジェクトを破棄する。
-        else if (_instance != null)
-        {
-            Destroy(this);
-        }
-        //このスクリプトがアタッチされたオブジェクトは、シーンを跨いでもデストロイされないようにする。
-        DontDestroyOnLoad(gameObject);
 
         return true;
     }
