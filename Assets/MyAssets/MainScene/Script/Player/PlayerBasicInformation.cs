@@ -6,10 +6,6 @@ using UnityEngine;
 //プレイヤーの体力などの基礎情報を持つクラス
 public class PlayerBasicInformation : MonoBehaviour
 {
-    //基本パラメータ
-    [SerializeField] public int _maxHitPoint = 3;//最大HP
-    [SerializeField] public int _playerHitPoint = 3;//現在のHP
-
     AudioSource _hitEnemySound;
 
     [Header("Botton群"), SerializeField] GameObject _botton;
@@ -26,7 +22,6 @@ public class PlayerBasicInformation : MonoBehaviour
     [Tooltip("最大ガス量"), SerializeField] private float _maxHealthForHover;
     public float MaxHealthForHover { get => _maxHealthForHover; }
 
-    // Start is called before the first frame update
     void Start()
     {
         _hoverValue = MaxHealthForHover;
@@ -35,7 +30,6 @@ public class PlayerBasicInformation : MonoBehaviour
         _hitEnemySound = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         //player の体力がなくなったら消滅する

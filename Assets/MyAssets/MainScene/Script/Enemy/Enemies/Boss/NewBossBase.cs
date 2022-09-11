@@ -3,32 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Bossの基底クラス :
-/// 新しい、BossBaseコンポーネント。
-/// 今はまだ使用していない。
-/// 
-/// 変更点 : EnemyBaseを継承している点。
-///          その他いろいろ最適化
+/// <para>Bossの基底クラス :<br/>
+/// EnemyBase を継承している。</para>
+/// 追加要素 : <br/>
+/// ステートを表す型と、変数を用意。<br/>
+/// 攻撃のバリエーションを増やすために<br/>
+/// 様々なメンバーを追加<br/>
 /// </summary>
 public class NewBossBase : EnemyBase
 {
     //<=========== このクラスで使用する型 ===========>//
-    /// <summary> ボスのステートを表す型 </summary>
-    public enum BossState
-    {
-        IDLE,//待機
-        APPROACH,//接近
-        RECESSION,//後退
-        NOMAL_END,
-
-        LIGHT_ATTACK,//弱攻撃
-        HEAVY_ATTACK,//強攻撃
-        LONG_RANGE_ATTACK,//遠距離攻撃
-
-        ATTACK_END,
-
-        DIE,//死
-    }
 
     //<============= メンバー変数 =============>//
     // 戦闘中かどうか関連
@@ -41,7 +25,7 @@ public class NewBossBase : EnemyBase
     /// <summary> 現在クールタイム中かどうか </summary>
     protected bool _isCoolTimerNow = false;
     /// <summary> 現在クールタイム中かどうかの前フレームの値 </summary>
-    private bool _beforeIsCoolTimerNow = false;
+    protected bool _beforeIsCoolTimerNow = false;
     /// <summary> クールタイム時間 </summary>
     protected float _coolTimeValue = 0f;
     /// <summary> 現在攻撃中かどうか </summary>
@@ -74,7 +58,7 @@ public class NewBossBase : EnemyBase
             Debug.LogError($"初期化に失敗しました。{gameObject.name}");
             return false;
         }
-        if (!(_animator=GetComponent<Animator>()))
+        if (!(_animator = GetComponent<Animator>()))
         {
             Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 : {gameObject.name}");
             Debug.LogError($"初期化に失敗しました。{gameObject.name}");
@@ -145,6 +129,48 @@ public class NewBossBase : EnemyBase
     {
         // ここに、オーバーライド先でアニメーションの遷移処理や、クールタイム開始処理等の、攻撃終了に関わる処理を記述してください。
     }
+}
+/// <summary> ボスのステートを表す型 </summary>
+public enum BossState
+{
+    /// <summary> 待機 </summary>
+    IDLE,
+    /// <summary> 接近 </summary>
+    APPROACH,
+    /// <summary> 後退 </summary>
+    RECESSION,
+    /// <summary> 突進 </summary>
+    RUSH,
+    /// <summary> 逃走 </summary>
+    ESCAPE,
+
+    NOMAL_END,
+
+    /// <summary> 弱攻撃その1 </summary>
+    LIGHT_ATTACK_PATTERN_ONE,
+    /// <summary> 弱攻撃その2 </summary>
+    LIGHT_ATTACK_PATTERN_TOW,
+    /// <summary> 弱攻撃その3 </summary>
+    LIGHT_ATTACK_PATTERN_THREE,
+
+    /// <summary> 強攻撃その1 </summary>
+    HEAVY_ATTACK_PATTERN_ONE,
+    /// <summary> 強攻撃その2 </summary>
+    HEAVY_ATTACK_PATTERN_TOW,
+    /// <summary> 強攻撃その3 </summary>
+    HEAVY_ATTACK_PATTERN_THREE,
+
+    /// <summary> 遠距離攻撃その1 </summary>
+    LONG_RANGE_ATTACK_PATTERN_ONE,
+    /// <summary> 遠距離攻撃その2 </summary>
+    LONG_RANGE_ATTACK_PATTERN_TOW,
+    /// <summary> 遠距離攻撃その3 </summary>
+    LONG_RANGE_ATTACK_PATTERN_THREE,
+
+    ATTACK_END,
+
+    /// <summary> 死 </summary>
+    DIE,
 }
 /// <summary> ランダムな値の最小値と最大値のセット </summary>
 [System.Serializable]

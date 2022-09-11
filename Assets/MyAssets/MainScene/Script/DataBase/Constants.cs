@@ -39,4 +39,6 @@ public class Constants
     public const float DOWN = -1f;
     public const float RIGHT = 1f;
     public const float LEFT = -1;
+
+    public const string PLAYER_TAG_NAME = "Player";
 }

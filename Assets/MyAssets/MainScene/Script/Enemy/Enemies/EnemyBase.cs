@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary> Enemyの基底クラス </summary>
-public class EnemyBase : MonoBehaviour
+/// <summary> 
+/// Enemyの基底クラス :  <br/>
+/// ステータスを表す変数や、攻撃判定系メソッド、<br/>
+/// ノックバック系メソッド、を用意。<br/>
+/// </summary>
+public class EnemyBase : MonoBehaviour, AttackOnPlayer
 {
     //<============= メンバー変数 =============>//
     //エネミー共通のステータス
@@ -16,6 +20,8 @@ public class EnemyBase : MonoBehaviour
 
     //このエネミーが向いている方向
     protected bool _isRight;
+    public bool IsRight { get => _isRight; }
+
 
     //プレイヤーのコンポーネント
     protected GameObject _player;
@@ -195,15 +201,18 @@ public class EnemyBase : MonoBehaviour
         //プレイヤーをノックバックする
         if (_isRight)
         {
-            //_playersRigidBody2D.AddForce((Vector2.right + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
             _playersRigidBody2D.AddForce(Vector2.right * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
         else
         {
-            //_playersRigidBody2D.AddForce((Vector2.left + Vector2.up) * _status._blowingPower, ForceMode2D.Impulse);
             _playersRigidBody2D.AddForce(Vector2.left * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
     }
+    public virtual void HitPlayer(Rigidbody2D _)
+    {
+        Debug.Log("間違った方が呼ばれています！修正してください！");
+    }
+
 
     //<============= コルーチン =============>//
     /// <summary> ノックバック実行用コルーチン。 : ノックバック中かどうかを表す変数を一定時間 true にする。 </summary>
@@ -260,10 +269,8 @@ public struct EnemyStatus
 [System.Serializable]
 public struct DropItemAndProbability
 {
-    /// <summary> 落とすアイテム </summary>
-    Item.ItemID _itemID;
-    /// <summary> 落とす装備 </summary>
-    EquipmentDataBase.EquipmentID _equipmentID;
+    /// <summary> 落とすアイテム、あるいは装備のプレハブ </summary>
+    public GameObject DropGameObjectPrefab;
     /// <summary> ドロップ率(%) </summary>
-    float _probability;
+    public float _probability;
 }
