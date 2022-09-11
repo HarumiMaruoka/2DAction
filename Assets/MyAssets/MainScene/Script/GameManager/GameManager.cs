@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     bool _isInitialized = false;
 
     [Header("フェードイン/アウト用のパネル"), SerializeField] GameObject _fadePanel;
+    [Header("フェードインに掛ける時間"),SerializeField] float _timeToFadeIn;
 
     public void FadeIn(string nextSceneName)
     {
@@ -23,9 +24,13 @@ public class GameManager : MonoBehaviour
         _fadePanel.SetActive(true);
         //DOTweenを利用してフェードインする。
         _fadePanel.
-            GetComponent<Image>().DOFade(1, 1.5f).
-            SetDelay(0.5f).
-            OnComplete(() => SceneManager.LoadScene(nextSceneName));
+            GetComponent<Image>().
+            DOFade(1, _timeToFadeIn).//_timeToFadeIn秒掛けて、パネルのアルファ値を1にする。
+            SetDelay(0.5f).          //0.5秒待って実行する。
+            OnComplete               //フェードインが完了したら、シーンを読み込む。
+            (
+                () => SceneManager.LoadScene(nextSceneName)
+            );
     }
     public void FadeOut()
     {
