@@ -6,8 +6,11 @@ using UnityEngine;
 /// プレイヤーを攻撃するオブジェクトが継承すべきインターフェース。
 /// </summary>
 interface AttackOnPlayer
-{    
-    /// <summary> プレイヤーに対する攻撃処理 </summary>
-    void HitPlayer();
-    void HitPlayer(Rigidbody2D playerRb);
+{
+    /// <summary> 
+    /// プレイヤーに対する攻撃処理 :<br/>
+    /// プレイヤーの体力を減らし、ノックバックさせる。<br/>
+    /// </summary>
+    /// <param name="playerRb2D"> プレイヤーのRigidBody2D </param>
+    void HitPlayer(Rigidbody2D playerRb2D);
 }

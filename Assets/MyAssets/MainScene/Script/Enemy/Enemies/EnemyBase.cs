@@ -24,11 +24,7 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
 
 
     //プレイヤーのコンポーネント
-    protected GameObject _player;
     protected Transform _playerPos;
-    protected PlayerBasicInformation _playerBasicInformation;
-    protected Rigidbody2D _playersRigidBody2D;
-    protected PlayerMoveManager _playerMoveManager;
 
     //自身のコンポーネント
     protected SpriteRenderer _spriteRenderer;
@@ -47,103 +43,37 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
     float _knockBackModeTime = 0f;
     protected bool _isMove = true;
 
-
-    //<============== protectedメンバー関数 ==============>//
-    /// <summary> 全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。 </summary>
-    /// <returns> 成功したら true を返す。 </returns>
-    protected bool Initialize_Enemy()
+    //===== Unityメッセージ =====//
+    protected virtual void Start()
     {
-        if (!EnemyInitialize_Get_PlayerComponents())
-        {
-            Debug.LogError($"初期化に失敗しました。 : {gameObject.name}");
-            return false;
-        }
-        if (!EnemyInitialize_Get_ThisGameObjectComponents())
-        {
-            Debug.LogError($"初期化に失敗しました。 : {gameObject.name}");
-            return false;
-        }
-
-        return true;
+        Initialize_EnemyBase();
     }
     protected virtual void Update()
     {
         Update_Enemy();
     }
-    //全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す
-    protected void Update_Enemy()
-    {
-        //色を変える必要があれば変える
-        if (_isColorChange)
-        {
-            _spriteRenderer.color = Color.red;
-        }
-        //色を元に戻す
-        else
-        {
-            _spriteRenderer.color = new Color(255, 255, 255, 255);
-        }
-    }
-    protected void StartKnockBack(float knockBackPower)
-    {
-        _rigidBody2d.velocity = Vector2.zero;
-        float diff = PlayerStatusManager.Instance.IsRight ? Constants.LEFT : Constants.RIGHT;
-        _rigidBody2d.AddForce((Vector2.up + Vector2.right * diff) * knockBackPower, ForceMode2D.Impulse);
-    }
-    //<============= private関数 =============>//
-    //***** 初期化関連 *****//
-    /// <summary> プレイヤーにアタッチされているコンポーネントを取得する。 </summary>
+
+    //<============== protectedメンバー関数 ==============>//
+    /// <summary> 全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。 </summary>
     /// <returns> 成功したら true を返す。 </returns>
-    bool EnemyInitialize_Get_PlayerComponents()
+    protected bool Initialize_EnemyBase()
     {
-        //プレイヤーの情報を取得
-        _player = GameObject.Find("ChibiRobo");
-        if (_player == null)
-        {
-            Debug.LogError($"Playerを取得できませんでした。 : {gameObject.name}");
-            return false;
-        }
-        _playerBasicInformation = _player.GetComponent<PlayerBasicInformation>();
-        if (_playerBasicInformation == null)
-        {
-            Debug.LogError($"PlayerのPlayerBasicInformationコンポーネントを取得できませんでした。 : {gameObject.name}");
-            return false;
-        }
-        _playerPos = _player.GetComponent<Transform>();
+        // プレイヤーのTransformを取得
+        _playerPos = GameObject.FindGameObjectWithTag(Constants.PLAYER_TAG_NAME).transform;
         if (_playerPos == null)
         {
             Debug.LogError($"PlayerのTransformコンポーネントを取得できませんでした。 : {gameObject.name}");
             return false;
         }
-        _playersRigidBody2D = _player.GetComponent<Rigidbody2D>();
-        if (_playersRigidBody2D == null)
-        {
-            Debug.LogError($"Playerの_playersRigidBody2Dコンポーネントを取得できませんでした。 : {gameObject.name}");
-            return false;
-        }
-        _playerMoveManager = _player.GetComponent<PlayerMoveManager>();
-        if (_playerMoveManager == null)
-        {
-            Debug.LogError($"PlayerのPlayerMoveManagerコンポーネントを取得できませんでした。 : {gameObject.name}");
-            return false;
-        }
 
-        return true;
-    }
-    /// <summary> 
-    /// このゲームオブジェクトにアタッチされている<br/>
-    /// SpriteRendererコンポーネントと、<br/>
-    /// Rigidbody2Dコンポーネントを取得する。<br/>
-    /// </summary>
-    /// <returns> 成功したら true を返す。 </returns>
-    bool EnemyInitialize_Get_ThisGameObjectComponents()
-    {
+        // スプライトレンダラーコンポーネントを取得する。
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
         {
             Debug.LogError($"SpriteRendererの取得に失敗しました。 : {gameObject.name}");
             return false;
         }
+        // Rigidbody2Dを取得する。
         _rigidBody2d = GetComponent<Rigidbody2D>();
         if (_rigidBody2d == null)
         {
@@ -153,11 +83,23 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
 
         return true;
     }
-
-
+    /// <summary> 全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す。 </summary>
+    protected void Update_Enemy()
+    {
+        ChangeColor();
+        Move();
+    }
+    /// <summary> ノックバック処理 </summary>
+    /// <param name="knockBackPower"></param>
+    protected void StartKnockBack(float knockBackPower)
+    {
+        _rigidBody2d.velocity = Vector2.zero;
+        float diff = PlayerStatusManager.Instance.IsRight ? Constants.LEFT : Constants.RIGHT;
+        _rigidBody2d.AddForce((Vector2.up + Vector2.right * diff) * knockBackPower, ForceMode2D.Impulse);
+    }
     //<============= publicメンバー関数 =============>//
     //***** 攻撃ヒット関連 *****//
-    /// <summary> プレイヤーからの攻撃処理 : ノックバック無し版 </summary>
+    /// <summary> プレイヤーからこのエネミーに対する攻撃処理。 : ノックバック無し版 </summary>
     /// <param name="playerOffensivePower"> ダメージ量 </param>
     public void HitPlayerAttack(float playerOffensivePower)
     {
@@ -169,22 +111,21 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
             Destroy(this.gameObject);
         }
         StartCoroutine(ColorChange());
-        _colorChangeTimeValue = _colorChangeTime;
     }
-    /// <summary> プレイヤーからの攻撃処理 : ノックバック有り版 </summary>
+    /// <summary> プレイヤーからこのエネミーに対する攻撃処理。 : ノックバック有り版 </summary>
     /// <param name="playerOffensivePower"> ダメージ量 </param>
     /// <param name="knockBackTimer"> ノックバック時間 </param>
     public void HitPlayerAttack(float playerOffensivePower, float knockBackTimer, float knockBackPower)
     {
-        //自身の体力を減らし、0.1秒だけ色を赤に変える。
+        //自身の体力を減らす。
         _status._hitPoint -= playerOffensivePower;
         if (_status._hitPoint <= 0)
         {
             //体力がなくなったら消滅する
             Destroy(this.gameObject);
         }
+        //攻撃がヒットしたことを表現する為に一定時間色を変更する。
         StartCoroutine(ColorChange());
-        _colorChangeTimeValue = _colorChangeTime;
 
         //指定された時間だけ移動を停止する。
         _knockBackModeTime = (knockBackTimer - _status._weight) > 0f ? (knockBackTimer - _status._weight) : 0f;
@@ -192,30 +133,28 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
         //ノックバック処理。
         StartKnockBack((knockBackPower - _status._weight) > 0f ? knockBackPower - _status._weight : 0f);
     }
-    /// <summary> プレイヤーに対する攻撃処理 : オーバーライド可 </summary>
-    public virtual void HitPlayer()
+    public virtual void HitPlayer(Rigidbody2D playerRigidbody2D)
     {
         //プレイヤーのHitPointを減らす
         PlayerStatusManager.Instance.PlayerHealthPoint -= _status._offensivePower;
-        _playersRigidBody2D.velocity = Vector2.zero;
+        playerRigidbody2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
         if (_isRight)
         {
-            _playersRigidBody2D.AddForce(Vector2.right * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
+            playerRigidbody2D.AddForce(Vector2.right * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
         else
         {
-            _playersRigidBody2D.AddForce(Vector2.left * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
+            playerRigidbody2D.AddForce(Vector2.left * _status._blowingPower.x + Vector2.up * _status._blowingPower.y, ForceMode2D.Impulse);
         }
-    }
-    public virtual void HitPlayer(Rigidbody2D _)
-    {
-        Debug.Log("間違った方が呼ばれています！修正してください！");
     }
 
 
     //<============= コルーチン =============>//
-    /// <summary> ノックバック実行用コルーチン。 : ノックバック中かどうかを表す変数を一定時間 true にする。 </summary>
+    /// <summary> 
+    /// ノックバック実行用コルーチン。 : <br/>
+    /// 一定時間 _isMove変数を、falseにする。<br/>
+    /// </summary>
     IEnumerator MoveStop()
     {
         _isMove = false;
@@ -233,6 +172,23 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
     //<============= 仮想関数 =============>//
     /// <summary> Enemy移動用関数 : オーバーライド可 </summary>
     protected virtual void Move() { }
+    /// <summary>
+    /// このエネミーに対して攻撃がヒットしたことを演出するためのメソッド。<br/>
+    /// 色を一定時間変更する。<br/>
+    /// </summary>
+    protected virtual void ChangeColor()
+    {
+        //色を変える必要があれば変える
+        if (_isColorChange)
+        {
+            _spriteRenderer.color = Color.red;
+        }
+        //色を元に戻す
+        else
+        {
+            _spriteRenderer.color = new Color(255, 255, 255, 255);
+        }
+    }
 }
 /// <summary> Enemyのステータスを表す型 </summary>
 [System.Serializable]

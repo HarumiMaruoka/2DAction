@@ -43,25 +43,29 @@ public class NewBossBase : EnemyBase
 
     protected Animator _animator;
 
+    //===== Unityメッセージ =====//
+    protected override void Start()
+    {
+        base.Start();
+        Initialize_BossBase();
+    }
+    protected override void Update()
+    {
+        base.Update();
+        CommonUpdate_BossBase();
+    }
 
     //<============= protectedメンバー関数 =============>//
     /// <summary>
-    /// BossBaseの初期化関数<br/>
-    /// 基底クラスの初期化関数を実行し、<br/>
-    /// Animatorコンポーネントをメンバー変数に保存する。<br/>
+    /// BossBase の初期化関数<br/>
+    /// Animatorコンポーネント取得しメンバー変数に保存する。<br/>
     /// </summary>
     /// <returns> 成功したら true を返す。 </returns>
     protected bool Initialize_BossBase()
     {
-        if (!base.Initialize_Enemy())
-        {
-            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
-            return false;
-        }
         if (!(_animator = GetComponent<Animator>()))
         {
             Debug.LogError($"Animatorコンポーネントの取得に失敗しました。 : {gameObject.name}");
-            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
             return false;
         }
         return true;
@@ -69,44 +73,21 @@ public class NewBossBase : EnemyBase
     /// <summary> ボス共通の更新処理 : オーバーライド可 </summary>
     protected virtual void CommonUpdate_BossBase()
     {
+        // 必要であれば攻撃開始処理を行う
+        if(_beforeIsCoolTimerNow == false && _isCoolTimerNow == true)
+            StartAttackProcess();
+        // 必要であれば攻撃終了処理を行う
+        else if (_beforeIsCoolTimerNow == true && _isCoolTimerNow == false)
+            EndAttackProcess();
+
+        // 現在のステート別に処理を行う
+        ManageState();
+
         // 後のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
         _beforeIsCoolTimerNow = _isCoolTimerNow;
-
-        // 以下は判定を内部で行っているので、実行すべきタイミングで勝手に実行してくれる。
-        Update_StartAttackProcess();
-        Update_EndAttackProcess();
-    }
-
-    /// <summary> 攻撃開始のフレームを検知する </summary>
-    /// <returns> 攻撃開始のフレームで true を返す。 </returns>
-    protected bool Get_IsAttackStart()
-    {
-        return _beforeIsCoolTimerNow == false && _isCoolTimerNow == true;
-    }
-    /// <summary> 攻撃終了のフレームを検知する </summary>
-    /// <returns> 攻撃終了のフレームで true を返す。 </returns>
-    protected bool Get_IsAttackEnd()
-    {
-        return _beforeIsCoolTimerNow == true && _isCoolTimerNow == false;
     }
 
     //<============= privateメンバー関数 =============>//
-    /// <summary> 攻撃開始を検知して処理を実行する。 </summary>
-    void Update_StartAttackProcess()
-    {
-        if (Get_IsAttackStart())
-        {
-            StartAttackProcess();
-        }
-    }
-    /// <summary> 攻撃終了を検知して処理を実行する。 </summary>
-    void Update_EndAttackProcess()
-    {
-        if (Get_IsAttackEnd())
-        {
-            EndAttackProcess();
-        }
-    }
 
     //<============= コルーチン =============>//
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム変数を true にする。 </summary>
@@ -119,16 +100,23 @@ public class NewBossBase : EnemyBase
 
 
     //<============= 仮想関数 =============>//
-    /// <summary> 攻撃開始処理 : オーバーライド推奨 </summary>
-    protected virtual void StartAttackProcess()
-    {
-        // ここに、オーバーライド先でアニメーションの遷移処理等の、攻撃開始に関わる処理を記述してください。
-    }
-    /// <summary> 攻撃終了処理 : オーバーライド推奨 </summary>
-    protected virtual void EndAttackProcess()
-    {
-        // ここに、オーバーライド先でアニメーションの遷移処理や、クールタイム開始処理等の、攻撃終了に関わる処理を記述してください。
-    }
+    /// <summary> 
+    /// 攻撃開始処理 : オーバーライド推奨 : <br/>
+    /// オーバーライド先でアニメーションの遷移処理等の<br/>
+    /// 攻撃開始に関わる処理を記述してください。<br/>
+    /// </summary>
+    protected virtual void StartAttackProcess() { }
+    /// <summary> 
+    /// 攻撃終了処理 : オーバーライド推奨 : <br/>
+    /// オーバーライド先でアニメーションの遷移処理や<br/>
+    /// クールタイム開始処理等の、攻撃終了に関わる処理を記述してください。<br/>
+    /// </summary>
+    protected virtual void EndAttackProcess() { }
+    /// <summary> 
+    /// ステートを管理するメソッド : オーバーライド推奨 : <br/>
+    /// オーバーライド先でステート別の処理を行うように記述してください。<br/>
+    /// </summary>
+    protected virtual void ManageState() { }
 }
 /// <summary> ボスのステートを表す型 </summary>
 public enum BossState

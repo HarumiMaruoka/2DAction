@@ -9,7 +9,7 @@ using UnityEngine;
 public class BringerController : NewBossBase
 {
     //<===== メンバー変数 =====>//
-    [Header("各攻撃別に移行する確率 (最大100%)")]
+    [Header("各攻撃別に移行する確率 \n(全てを足して100%になるように作成してください。)")]
 
     [Tooltip("弱攻撃を撃つ確率"), SerializeField]
     float _lightAttackProbability;
@@ -18,7 +18,7 @@ public class BringerController : NewBossBase
     [Tooltip("遠距離攻撃を撃つ確率"), SerializeField]
     float _longRangeAttackProbability;
 
-    [Header("各通常行動に移行する確率 (最大100%)")]
+    [Header("各通常行動に移行する確率 \n(全てを足して100%になるように作成してください。)")]
 
     [Tooltip("アイドルに移行する確率"), SerializeField]
     float _idleProbability;
@@ -28,18 +28,17 @@ public class BringerController : NewBossBase
     float _recessionProbability;
 
     //<===== Unityメッセージ =====>//
-    void Start()
+    protected override void Start()
     {
-
+        base.Start();
     }
     protected override void Update()
     {
-        BringerUpdate();
+        base.Update();
     }
 
     //<===== メンバー関数 =====>//
-    /// <summary> Bringerの更新関数 </summary>
-    void BringerUpdate()
+    protected override void ManageState()
     {
         switch (_nowState)
         {
@@ -56,6 +55,16 @@ public class BringerController : NewBossBase
             //エラー値処理
             default: Debug.LogError("エラー値です。修正してください！"); break;
         }
+    }
+    /// <summary> 設定された確率を基に攻撃行動ステートを遷移する。 </summary>
+    protected override void StartAttackProcess()
+    {
+        _nowState = ChangeAttackState();
+    }
+    /// <summary> 設定された確率を基に通常行動ステートを遷移する。 </summary>
+    protected override void EndAttackProcess()
+    {
+        _nowState = ChangeNomalState();
     }
     /// <summary> アイドルの処理 </summary>
     void Idle()
@@ -136,5 +145,4 @@ public class BringerController : NewBossBase
         // 攻撃ステートに移る。
         _nowState = ChangeAttackState();
     }
-
 }

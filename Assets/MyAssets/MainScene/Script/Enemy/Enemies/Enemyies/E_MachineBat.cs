@@ -12,17 +12,13 @@ public class E_MachineBat : EnemyBase
     [Header("Y軸方向の移動を停止する距離"), SerializeField] float _distanceToStopY;
 
     //<=========== Unityメッセージ ===========>//
-    void Start()
+    protected override void Start()
     {
-        if (!base.Initialize_Enemy())
-        {
-            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
-        }
+        base.Start();
     }
     protected override void Update()
     {
         base.Update();
-        Move();
     }
 
     //<======== protectedメンバー関数 ========>//

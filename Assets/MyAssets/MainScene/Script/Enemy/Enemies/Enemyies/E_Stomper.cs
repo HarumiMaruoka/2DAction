@@ -23,18 +23,13 @@ public class E_Stomper : EnemyBase
 
 
     //<=========== Unityメッセージ ===========>//
-    void Start()
+    protected override void Start()
     {
-        if (!base.Initialize_Enemy())
-        {
-            Debug.LogError($"初期化に失敗しました。{gameObject.name}");
-        }
-        
+        base.Initialize_EnemyBase();
     }
     protected override void Update()
     {
-        Update_Enemy();
-        Move();
+        base.Update_Enemy();
     }
     // デバッグ用 : Gizmoを表示する。
     private void OnDrawGizmos()

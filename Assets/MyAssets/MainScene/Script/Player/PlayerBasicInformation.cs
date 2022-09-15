@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerBasicInformation : MonoBehaviour
 {
     AudioSource _hitEnemySound;
+    Rigidbody2D _rigidbody2D;
 
     [Header("Botton群"), SerializeField] GameObject _botton;
 
@@ -28,6 +29,7 @@ public class PlayerBasicInformation : MonoBehaviour
         //自身のコンポーネントを取得する。
         _newPlayerStateManagement = GetComponent<PlayerStateManagement>();
         _hitEnemySound = GetComponent<AudioSource>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class PlayerBasicInformation : MonoBehaviour
             //Enemyと接触したらEnemyのHitPlayer関数を実行する
             if (collision.gameObject.TryGetComponent(out EnemyBase enemy))
             {
-                enemy.HitPlayer();
+                enemy.HitPlayer(_rigidbody2D);
                 _newPlayerStateManagement._isHitEnemy = true;
                 _hitEnemySound.Play();
                 StartCoroutine(GodMode());
