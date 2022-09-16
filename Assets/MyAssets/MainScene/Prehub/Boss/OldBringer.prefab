@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 4271132077866417716}
   - component: {fileID: 4271132077866417717}
   m_Layer: 0
-  m_Name: Bringer
+  m_Name: OldBringer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -41,4 +41,11 @@ public class Constants
     public const float LEFT = -1;
 
     public const string PLAYER_TAG_NAME = "Player";
+
+    /// <summary> アニメーション通常再生時のスピード </summary>
+    public const float NOMAL_ANIM_SPEED = 1f;
+    /// <summary> アニメーション逆再生時のスピード </summary>
+    public const float REVERSE_PLAYBACK_ANIM_SPEED = -1f;
+    /// <summary> アニメーション一時停止時のスピード </summary>
+    public const float PAUSE_ANIM_SPEED = 0f;
 }

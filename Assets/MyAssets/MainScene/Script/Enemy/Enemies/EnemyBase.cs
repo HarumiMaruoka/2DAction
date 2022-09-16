@@ -202,6 +202,8 @@ public struct EnemyStatus
     public Vector2 _blowingPower;
     /// <summary> 吹っ飛びにくさ/重量 </summary>
     public float _weight;
+    /// <summary> 移動速度 </summary>
+    public float _moveSpeed;
 
     /// <summary> EnemyStatusのコンストラクタ </summary>
     /// <param name="hitPoint"> 体力 </param>
@@ -209,12 +211,13 @@ public struct EnemyStatus
     /// <param name="blowingPowerUp"> 吹っ飛ばし力 : 上方向の威力 </param>
     /// <param name="blowingPowerRight"> 吹っ飛ばし力 : 右方向の威力 </param>
     /// <param name="weight"> 重さ : 吹っ飛びにくさ </param>
-    public EnemyStatus(int hitPoint = 1, int offensivePower = 1, int blowingPowerUp = 1, int blowingPowerRight = 1, float weight = 1f)
+    public EnemyStatus(int hitPoint = 1, int offensivePower = 1, int blowingPowerUp = 1, int blowingPowerRight = 1, float weight = 1f, float moveSpeed = 1f)
     {
         _hitPoint = hitPoint;
         _offensivePower = offensivePower;
         _blowingPower = Vector2.up * blowingPowerUp + Vector2.right * blowingPowerRight;
         _weight = weight;
+        _moveSpeed = moveSpeed;
     }
 }
 

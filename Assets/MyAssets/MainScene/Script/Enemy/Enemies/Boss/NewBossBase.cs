@@ -31,10 +31,6 @@ public class NewBossBase : EnemyBase
     /// <summary> 現在攻撃中かどうか </summary>
     protected bool _isAttackNow = false;
 
-    /// <summary> ボス攻撃後のクールタイム : キーはBossStateで、ValueはRandomRangeValue型。 </summary>
-    [Header("ボス攻撃後のクールタイム"), SerializeField]
-    Dictionary<BossState, RandomRangeValue> _bossAttackCoolTime = new Dictionary<BossState, RandomRangeValue>();
-
     [Tooltip("戦闘開始までの距離"), SerializeField] private Vector2 _fightStartDistance;
     [Tooltip("戦闘停止までの距離"), SerializeField] private Vector2 _fightStopDistance;
 
@@ -91,13 +87,12 @@ public class NewBossBase : EnemyBase
 
     //<============= コルーチン =============>//
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム変数を true にする。 </summary>
-   　protected IEnumerator StartCoolTime()
+   　protected IEnumerator WaitCoolTime()
     {
         _isCoolTimerNow = true;
         yield return new WaitForSeconds(_coolTimeValue);
         _isCoolTimerNow = false;
     }
-
 
     //<============= 仮想関数 =============>//
     /// <summary> 

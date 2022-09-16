@@ -9,7 +9,17 @@ using UnityEngine;
 public class BringerController : NewBossBase
 {
     //<===== メンバー変数 =====>//
-    [Header("各攻撃別に移行する確率 \n(全てを足して100%になるように作成してください。)")]
+    [Header("各攻撃後のクールタイム")]
+
+    [Tooltip("弱攻撃後のクールタイム"), SerializeField]
+    RandomRangeValue _cooltimeAfterLightAttack;
+    [Tooltip("強攻撃後のクールタイム"), SerializeField]
+    RandomRangeValue _cooltimeAfterHeavyAttack;
+    [Tooltip("遠距離攻撃後のクールタイム"), SerializeField]
+    RandomRangeValue _cooltimeAfterLongRangeAttack;
+
+
+    [Header("各攻撃別に移行する確率 (全部足して100%になるように作成してください。)")]
 
     [Tooltip("弱攻撃を撃つ確率"), SerializeField]
     float _lightAttackProbability;
@@ -18,7 +28,7 @@ public class BringerController : NewBossBase
     [Tooltip("遠距離攻撃を撃つ確率"), SerializeField]
     float _longRangeAttackProbability;
 
-    [Header("各通常行動に移行する確率 \n(全てを足して100%になるように作成してください。)")]
+    [Header("各通常行動に移行する確率 (全部足して100%になるように作成してください。)")]
 
     [Tooltip("アイドルに移行する確率"), SerializeField]
     float _idleProbability;
@@ -26,6 +36,37 @@ public class BringerController : NewBossBase
     float _approachProbability;
     [Tooltip("後退行動に移行する確率"), SerializeField]
     float _recessionProbability;
+
+    [Header("アニメーション関連")]
+
+    [Tooltip("アニメーションスピードのパラメーター名"), SerializeField]
+    string _animSpeedParamName = "";
+    [Tooltip("アイドルを表現するアニメーションの名前"), SerializeField]
+    string _idleAnimStateName = "";
+    [Tooltip("接近/後退を表現するアニメーションの名前"), SerializeField]
+    string _runAnimStateName = "";
+    [Tooltip("弱攻撃を表現するアニメーションの名前"), SerializeField]
+    string _lightAttackAnimStateName = "";
+    [Tooltip("強攻撃を表現するアニメーションの名前"), SerializeField]
+    string _heavyAttackAnimStateName = "";
+    [Tooltip("遠距離攻撃を表現するアニメーションの名前"), SerializeField]
+    string _longRangeAttackAnimStateName = "";
+    /// <summary> アニメーションスピード </summary>
+    float _animSpeed = 1;
+
+    [Header("武器のプレハブ")]
+
+    [Tooltip("弱攻撃のプレハブ"), SerializeField]
+    GameObject _lightAttackPrefab;
+    [Tooltip("強攻撃のプレハブ"), SerializeField]
+    GameObject _heavyAttackPrefab;
+    [Tooltip("遠距離攻撃のプレハブ"), SerializeField]
+    GameObject _longRangeAttackPrefab;
+    GameObject _weapon;
+
+    /// <summary> 後退時の移動速度の倍率 </summary>
+    const float _moveSpeedMagnificationAtRecession = 0.8f;
+
 
     //<===== Unityメッセージ =====>//
     protected override void Start()
@@ -56,93 +97,161 @@ public class BringerController : NewBossBase
             default: Debug.LogError("エラー値です。修正してください！"); break;
         }
     }
-    /// <summary> 設定された確率を基に攻撃行動ステートを遷移する。 </summary>
+    /// <summary> 設定された確率を基に"攻撃"行動ステートに遷移する。 </summary>
     protected override void StartAttackProcess()
     {
-        _nowState = ChangeAttackState();
+        //速度をリセットする。(0にする)
+        _rigidBody2d.velocity = Vector2.zero;
+
+        // 入力された値を基にランダムに遷移先を決める。
+        float probability = Random.Range(0f, 100f);
+
+        // "弱攻撃"に遷移する処理 / 遷移時に実行する処理
+        if (probability < _lightAttackProbability)
+        {
+            // アニメーションを再生する。
+            _animator.Play(_lightAttackAnimStateName);
+            // ステートを変更する。
+            _nowState = BossState.LIGHT_ATTACK_PATTERN_ONE;
+        }
+        // "強攻撃"に遷移する処理 / 遷移時に実行する処理
+        else if (probability < _heavyAttackProbability + _lightAttackProbability)
+        {
+            // アニメーションを再生する。
+            _animator.Play(_heavyAttackAnimStateName);
+            // ステートを変更する。
+            _nowState = BossState.HEAVY_ATTACK_PATTERN_ONE;
+        }
+        // "遠距離攻撃"に遷移する処理 / 遷移時に実行する処理
+        else
+        {
+            // アニメーションを再生する。
+            _animator.Play(_longRangeAttackAnimStateName);
+            // ステートを変更する。
+            _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
+        }
     }
-    /// <summary> 設定された確率を基に通常行動ステートを遷移する。 </summary>
+    /// <summary> 設定された確率を基に"通常"行動ステートに遷移する。 </summary>
     protected override void EndAttackProcess()
     {
-        _nowState = ChangeNomalState();
+        //速度をリセットする。(0にする)
+        _rigidBody2d.velocity = Vector2.zero;
+
+        // 入力された値を基にランダムに遷移先を決める
+        float probability = Random.Range(0f, 100f);
+        // "アイドル"に遷移する処理 / "アイドルステート"に遷移時する際に一度だけ実行する処理
+        if (probability < _idleProbability)
+        {
+            // アイドル状態のアニメーションを再生する。
+            _animator.Play(_idleAnimStateName);
+            // ステートを変更する。
+            _nowState = BossState.IDLE;
+        }
+        // "接近ステート"に遷移する処理 / "接近ステート"に遷移時する際に一度だけ実行する処理
+        else if (probability < _approachProbability + _idleProbability)
+        {
+            // 歩行アニメーションを再生する。
+            _animator.Play(_runAnimStateName);
+            // 通常再生する。(逆再生している可能性があるので)
+            _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
+
+            // ステートを変更する。
+            _nowState = BossState.APPROACH;
+        }
+        // "後退ステート"に遷移する処理 / "後退ステート"に遷移時する際に一度だけ実行する処理
+        else
+        {
+            // 歩行アニメーションを再生する。
+            _animator.Play(_runAnimStateName);
+            // アニメーションを逆再生する。(これで後退を表す。)
+            _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
+
+            // ステートを変更する。
+            _nowState = BossState.RECESSION;
+        }
     }
     /// <summary> アイドルの処理 </summary>
     void Idle()
     {
-
+        // その場で停止する。(つまり何もしない)
     }
     /// <summary> 接近の処理 </summary>
     void Approach()
     {
-
+        // プレイヤーに向かって接近する。
+        if (_playerPos.position.x > transform.position.x)
+        {
+            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed;
+        }
+        else
+        {
+            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed;
+        }
     }
     /// <summary> 後退の処理 </summary>
     void Recession()
     {
+        // 指定された時間プレイヤーから遠ざかる。
 
-    }
-    /// <summary> 弱攻撃の処理 </summary>
-    void LightAttack()
-    {
-
-    }
-    /// <summary> 強攻撃の処理 </summary>
-    void HeavyAttack()
-    {
-
-    }
-    /// <summary> 遠距離攻撃の処理 </summary>
-    void LongRangeAttack()
-    {
-
-    }
-    /// <summary> 攻撃ステートに移る。 </summary>
-    BossState ChangeAttackState()
-    {
-        float probability = Random.Range(0f, 100f);
-        //弱攻撃に移行するかどうかを判定する。
-        if (probability < _lightAttackProbability)
+        // プレイヤーに向かって接近する。
+        if (_playerPos.position.x < transform.position.x)
         {
-            return _nowState = BossState.LIGHT_ATTACK_PATTERN_ONE;
+            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
         }
-        //強攻撃に移行するかどうかを判定する。
-        else if (probability < _heavyAttackProbability + _lightAttackProbability)
-        {
-            return _nowState = BossState.HEAVY_ATTACK_PATTERN_ONE;
-        }
-        //遠距離攻撃に移行するかどうかを判定する。
         else
         {
-            return _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
+            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
         }
     }
-    /// <summary> 通常ステートに移る。 </summary>
-    BossState ChangeNomalState()
-    {
-        float probability = Random.Range(0f, 100f);
-        //アイドルに移行するか判定する。
-        if (probability < _idleProbability)
-        {
-            return _nowState = BossState.IDLE;
-        }
-        //接近に移行するか判定する。
-        else if (probability < _approachProbability + _idleProbability)
-        {
-            return _nowState = BossState.APPROACH;
-        }
-        //後退に移行するか判定する。
-        else
-        {
-            return _nowState = BossState.RECESSION;
-        }
-    }
+    /// <summary> 
+    /// 弱攻撃の処理<br/>
+    /// 撃ってる間は止まる。(何もしない。)<br/>
+    /// 他に何かある時はここに書く<br/>
+    /// </summary>
+    void LightAttack() { }
+    /// <summary> 
+    /// 強攻撃の処理<br/>
+    /// 撃ってる間は止まる。(何もしない。)<br/>
+    /// 他に何かある時はここに書く<br/>
+    /// </summary>
+    void HeavyAttack() { }
+    /// <summary>
+    /// 遠距離攻撃の処理<br/>
+    /// 撃ってる間は止まる。(何もしない。)<br/>
+    /// 他に何かある時はここに書く<br/>
+    /// </summary>
+    void LongRangeAttack() { }
 
-    //<===== コルーチン =====>//
-    IEnumerator WaitAttackCoolTime(float waitTime)
+    /// <summary> 
+    /// 弱攻撃判定を生成する。<br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    void GenerateAttack_LightAttack()
     {
-        // 攻撃後のクールタイムを待つ。
-        yield return new WaitForSeconds(waitTime);
-        // 攻撃ステートに移る。
-        _nowState = ChangeAttackState();
+        _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
+    }
+    /// <summary> 
+    /// 弱攻撃判定を生成する。<br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    void GenerateAttack_HeavyAttack()
+    {
+        _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
+    }
+    /// <summary> 
+    /// 弱攻撃判定を生成する。<br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    void GenerateAttack_LongRangeAttack()
+    {
+        _weapon = Instantiate(_longRangeAttackPrefab, transform.position, Quaternion.identity);
+    }
+    /// <summary> 
+    /// 武器を破棄する。<br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    void DestroyAttack()
+    {
+        Destroy(_weapon);
     }
 }

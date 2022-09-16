@@ -4,7 +4,9 @@ using UnityEngine;
 
 /// <summary>
 /// Enemy / Bossが扱う武器の基底クラス : <br/>
-/// プレイヤーに対する攻撃処理を記載。
+/// このクラスにはプレイヤーに対する攻撃に関する処理を記載してある。<br/>
+/// 
+/// 敵が放つ
 /// </summary>
 public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
 {
@@ -28,11 +30,15 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     {
         if (collision.tag == Constants.PLAYER_TAG_NAME)
         {
+            // プレイヤーの体力を減らす。
             PlayerStatusManager.Instance.PlayerHealthPoint -= _offensivePower;
+            // 接触後消滅する。
+            Destroy(gameObject);
         }
         else
         {
-            Debug.LogError($"エラー！\nプレイヤーのタグは、\"{Constants.PLAYER_TAG_NAME}\"ですか？");
+            Debug.LogError($"プレイヤー以外のオブジェクトに接触しました。\n" +
+                $"プレイヤーに接触した場合、プレイヤーのタグは、\"{Constants.PLAYER_TAG_NAME}\"ですか？");
         }
     }
     /// <summary> 
@@ -51,6 +57,14 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     {
         _collider.enabled = false;
     }
+    /// <summary>
+    /// このゲームオブジェクトおよびアタッチされたコンポーネントを破棄する。<br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    void DestroyThisObject()
+    {
+        Destroy(gameObject);
+    }
 
     public virtual void HitPlayer(Rigidbody2D playerRb2D)
     {
@@ -60,7 +74,7 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
         //プレイヤーをノックバックする
         if (transform.parent.GetComponent<EnemyBase>().IsRight)
         {
-            playerRb2D.AddForce((Vector2.right + Vector2.up)* _blowingPower, ForceMode2D.Impulse);
+            playerRb2D.AddForce((Vector2.right + Vector2.up) * _blowingPower, ForceMode2D.Impulse);
         }
         else
         {
