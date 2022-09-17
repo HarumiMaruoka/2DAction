@@ -31,6 +31,7 @@ public class NewBossBase : EnemyBase
     /// <summary> 現在攻撃中かどうか </summary>
     protected bool _isAttackNow = false;
 
+    [Header("先頭開始 /終了 の距離")]
     [Tooltip("戦闘開始までの距離"), SerializeField] private Vector2 _fightStartDistance;
     [Tooltip("戦闘停止までの距離"), SerializeField] private Vector2 _fightStopDistance;
 
@@ -82,8 +83,6 @@ public class NewBossBase : EnemyBase
         // 後のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
         _beforeIsCoolTimerNow = _isCoolTimerNow;
     }
-
-    //<============= privateメンバー関数 =============>//
 
     //<============= コルーチン =============>//
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム変数を true にする。 </summary>

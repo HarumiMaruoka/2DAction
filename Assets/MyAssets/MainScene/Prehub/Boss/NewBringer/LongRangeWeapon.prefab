@@ -11,15 +11,15 @@ GameObject:
   - component: {fileID: 7670996434185723398}
   - component: {fileID: 7670996434185723640}
   - component: {fileID: 7670996434185723399}
-  - component: {fileID: 7670996434185723641}
   - component: {fileID: 7670996434185723642}
+  - component: {fileID: -585717082986895424}
   m_Layer: 0
   m_Name: LongRangeWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7670996434185723398
 Transform:
   m_ObjectHideFlags: 0
@@ -104,22 +104,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7670996434185723641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7670996434185723397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b894939226da44da48184219a9b725, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _offensivePower: 5
-  _playerKnockBackPower: {x: 50, y: 20}
-  _height: 3.2
-  _fallPos: {x: 0, y: 0}
 --- !u!61 &7670996434185723642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -146,3 +130,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 4.86}
   m_EdgeRadius: 0
+--- !u!114 &-585717082986895424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7670996434185723397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c9e6cd5cf1f734bb19a7f3a8449107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _offensivePower: 0
+  _blowingPower: 0

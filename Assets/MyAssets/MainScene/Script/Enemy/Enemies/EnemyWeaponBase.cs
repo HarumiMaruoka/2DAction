@@ -14,7 +14,7 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     Collider2D _collider;
 
     [Header("攻撃力"), SerializeField] float _offensivePower;
-    [Header("攻撃力"), SerializeField] float _blowingPower;
+    [Header("ノックバック力"), SerializeField] float _blowingPower;
 
     //===== Unityメッセージ =====//
     /// <summary>

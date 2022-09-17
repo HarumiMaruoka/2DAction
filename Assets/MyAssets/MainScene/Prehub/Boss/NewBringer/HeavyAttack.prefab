@@ -10,14 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4783418991972308155}
   - component: {fileID: 4783418991972308152}
-  - component: {fileID: 4783418991972308153}
+  - component: {fileID: -4615145643703179875}
   m_Layer: 0
   m_Name: HeavyAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4783418991972308155
 Transform:
   m_ObjectHideFlags: 0
@@ -48,7 +48,7 @@ CapsuleCollider2D:
   m_Offset: {x: 4, y: -1.5}
   m_Size: {x: 10, y: 4.5}
   m_Direction: 1
---- !u!114 &4783418991972308153
+--- !u!114 &-4615145643703179875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,10 +57,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4783418991972308154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d685262b647cce4b8dee4b1100f7987, type: 3}
+  m_Script: {fileID: 11500000, guid: 10c9e6cd5cf1f734bb19a7f3a8449107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _offensive_Power: 10
-  _playerKnockBackPower: {x: 50, y: 20}
-  _offset: {x: 4, y: -1.5}
-  _playerTagName: Player
+  _offensivePower: 0
+  _blowingPower: 0
