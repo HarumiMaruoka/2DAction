@@ -37,6 +37,7 @@ public class NewBossBase : EnemyBase
 
     /// <summary> 現在のステート </summary>
     public BossState _nowState { get; protected set; }
+    public BossState _beforeState { get; private set; }
 
     protected Animator _animator;
 
@@ -71,7 +72,7 @@ public class NewBossBase : EnemyBase
     protected virtual void CommonUpdate_BossBase()
     {
         // 必要であれば攻撃開始処理を行う
-        if(_beforeIsCoolTimerNow == false && _isCoolTimerNow == true)
+        if (_beforeIsCoolTimerNow == false && _isCoolTimerNow == true)
             StartAttackProcess();
         // 必要であれば攻撃終了処理を行う
         else if (_beforeIsCoolTimerNow == true && _isCoolTimerNow == false)
@@ -80,12 +81,44 @@ public class NewBossBase : EnemyBase
         // 現在のステート別に処理を行う
         ManageState();
 
-        // 後のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
+        // 次のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
         _beforeIsCoolTimerNow = _isCoolTimerNow;
+        // 次のフレーム用に、現在のステートを保存しておく。
+        _beforeState = _nowState;
+    }
+    /// <summary>
+    /// このボスが死んだことを検知する。
+    /// </summary>
+    /// <returns> このボスのステートが"BossState.DIE"になった時にtureを返す。 </returns>
+    protected bool GetIsDie() { return (_beforeState != BossState.DIE) && (_nowState == BossState.DIE); }
+    //<===== アニメーションイベントから呼び出す想定のメソッド =====>//
+    /// <summary> 
+    /// このゲームオブジェクトを破棄する。 : <br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    protected void DestroyThisObject() { Destroy(gameObject); }
+    /// <summary>
+    /// 死んだ時の処理。(ステートがDieの時の処理。)<br/>
+    /// ManageState()で使用することを想定したメソッド。<br/>
+    /// 使用例はBringerのManageState()にあります。<br/>
+    /// MomentOfDeath()とTreatmentAfterDeath()をオーバーライドして処理を記述してください。<br/>
+    /// </summary>
+    protected void TreatmentOfDeath()
+    {
+        // ステートがDieになったフレームのみ実行する。
+        if (GetIsDie())
+        {
+            MomentOfDeath();
+        }
+        // それ以降の処理
+        else
+        {
+            TreatmentAfterDeath();
+        }
     }
 
     //<============= コルーチン =============>//
-    /// <summary> クールタイムを開始する。 : 指定された時間クールタイム変数を true にする。 </summary>
+    /// <summary> クールタイムを開始する。 : 指定された時間クールタイム中だと表す変数を true にする。 </summary>
    　protected IEnumerator WaitCoolTime()
     {
         _isCoolTimerNow = true;
@@ -111,6 +144,25 @@ public class NewBossBase : EnemyBase
     /// オーバーライド先でステート別の処理を行うように記述してください。<br/>
     /// </summary>
     protected virtual void ManageState() { }
+    /// <summary>
+    /// ステートがDieになった瞬間一度だけ実行するメソッド : オーバーライド推奨<br/>
+    /// </summary>
+    protected virtual void MomentOfDeath() { }
+    /// <summary>
+    /// ステートがDieになった後ずっと行われる処理 : オーバーライド推奨<br/>
+    /// </summary>
+    protected virtual void TreatmentAfterDeath() { }
+
+    //===== overrides =====//
+    /// <summary>
+    /// 体力がなくなった時の処理 : <br/>
+    /// ステートをDieに変更する。<br/>
+    /// </summary>
+    protected override void Deth()
+    {
+        _nowState = BossState.DIE;
+    }
+
 }
 /// <summary> ボスのステートを表す型 </summary>
 public enum BossState

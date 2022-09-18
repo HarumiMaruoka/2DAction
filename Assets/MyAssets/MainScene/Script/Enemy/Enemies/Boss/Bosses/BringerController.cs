@@ -10,7 +10,6 @@ public class BringerController : NewBossBase
 {
     //<===== メンバー変数 =====>//
     [Header("各攻撃後のクールタイム")]
-
     [Tooltip("弱攻撃後のクールタイム"), SerializeField]
     RandomRangeValue _cooltimeAfterLightAttack;
     [Tooltip("強攻撃後のクールタイム"), SerializeField]
@@ -18,9 +17,7 @@ public class BringerController : NewBossBase
     [Tooltip("遠距離攻撃後のクールタイム"), SerializeField]
     RandomRangeValue _cooltimeAfterLongRangeAttack;
 
-
     [Header("各攻撃別に移行する確率 (全部足して100%になるように作成してください。)")]
-
     [Tooltip("弱攻撃を撃つ確率"), SerializeField]
     float _lightAttackProbability;
     [Tooltip("強攻撃を撃つ確率"), SerializeField]
@@ -29,7 +26,6 @@ public class BringerController : NewBossBase
     float _longRangeAttackProbability;
 
     [Header("各通常行動に移行する確率 (全部足して100%になるように作成してください。)")]
-
     [Tooltip("アイドルに移行する確率"), SerializeField]
     float _idleProbability;
     [Tooltip("接近行動に移行する確率"), SerializeField]
@@ -38,24 +34,24 @@ public class BringerController : NewBossBase
     float _recessionProbability;
 
     [Header("アニメーション関連")]
-
     [Tooltip("アニメーションスピードのパラメーター名"), SerializeField]
-    string _animSpeedParamName = "";
+    string _animSpeedParamName = "WalkSpeed";
     [Tooltip("アイドルを表現するアニメーションの名前"), SerializeField]
-    string _idleAnimStateName = "";
+    string _idleAnimStateName = "Idle";
     [Tooltip("接近/後退を表現するアニメーションの名前"), SerializeField]
-    string _runAnimStateName = "";
+    string _runAnimStateName = "Run";
     [Tooltip("弱攻撃を表現するアニメーションの名前"), SerializeField]
-    string _lightAttackAnimStateName = "";
+    string _lightAttackAnimStateName = "LightAttack";
     [Tooltip("強攻撃を表現するアニメーションの名前"), SerializeField]
-    string _heavyAttackAnimStateName = "";
+    string _heavyAttackAnimStateName = "HeavyAttack";
     [Tooltip("遠距離攻撃を表現するアニメーションの名前"), SerializeField]
-    string _longRangeAttackAnimStateName = "";
+    string _longRangeAttackAnimStateName = "LongRangeAttackMotion";
+    [Tooltip("死を表現するアニメーションの名前"), SerializeField]
+    string _dieAnimStateName = "Death";
     /// <summary> アニメーションスピード </summary>
     float _animSpeed = 1;
 
     [Header("武器のプレハブ")]
-
     [Tooltip("弱攻撃のプレハブ"), SerializeField]
     GameObject _lightAttackPrefab;
     [Tooltip("強攻撃のプレハブ"), SerializeField]
@@ -66,7 +62,6 @@ public class BringerController : NewBossBase
 
     /// <summary> 後退時の移動速度の倍率 </summary>
     const float _moveSpeedMagnificationAtRecession = 0.8f;
-
 
     //<===== Unityメッセージ =====>//
     protected override void Start()
@@ -79,6 +74,7 @@ public class BringerController : NewBossBase
     }
 
     //<===== メンバー関数 =====>//
+    //===== このボスのステートを管理する軸となるメソッド =====//
     protected override void ManageState()
     {
         switch (_nowState)
@@ -93,6 +89,9 @@ public class BringerController : NewBossBase
             case BossState.HEAVY_ATTACK_PATTERN_ONE: HeavyAttack(); break;
             case BossState.LONG_RANGE_ATTACK_PATTERN_ONE: LongRangeAttack(); break;
 
+            //その他の処理
+            case BossState.DIE: TreatmentOfDeath(); break;
+
             //エラー値処理
             default: Debug.LogError("エラー値です。修正してください！"); break;
         }
@@ -105,31 +104,12 @@ public class BringerController : NewBossBase
 
         // 入力された値を基にランダムに遷移先を決める。
         float probability = Random.Range(0f, 100f);
-
         // "弱攻撃"に遷移する処理 / 遷移時に実行する処理
-        if (probability < _lightAttackProbability)
-        {
-            // アニメーションを再生する。
-            _animator.Play(_lightAttackAnimStateName);
-            // ステートを変更する。
-            _nowState = BossState.LIGHT_ATTACK_PATTERN_ONE;
-        }
+        if (probability < _lightAttackProbability) MomentOfLightAttack();
         // "強攻撃"に遷移する処理 / 遷移時に実行する処理
-        else if (probability < _heavyAttackProbability + _lightAttackProbability)
-        {
-            // アニメーションを再生する。
-            _animator.Play(_heavyAttackAnimStateName);
-            // ステートを変更する。
-            _nowState = BossState.HEAVY_ATTACK_PATTERN_ONE;
-        }
+        else if (probability < _heavyAttackProbability + _lightAttackProbability) MomentOfHeavyAttack();
         // "遠距離攻撃"に遷移する処理 / 遷移時に実行する処理
-        else
-        {
-            // アニメーションを再生する。
-            _animator.Play(_longRangeAttackAnimStateName);
-            // ステートを変更する。
-            _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
-        }
+        else MomentOfLongRangeAttack();
     }
     /// <summary> 設定された確率を基に"通常"行動ステートに遷移する。 </summary>
     protected override void EndAttackProcess()
@@ -139,37 +119,16 @@ public class BringerController : NewBossBase
 
         // 入力された値を基にランダムに遷移先を決める
         float probability = Random.Range(0f, 100f);
-        // "アイドル"に遷移する処理 / "アイドルステート"に遷移時する際に一度だけ実行する処理
-        if (probability < _idleProbability)
-        {
-            // アイドル状態のアニメーションを再生する。
-            _animator.Play(_idleAnimStateName);
-            // ステートを変更する。
-            _nowState = BossState.IDLE;
-        }
-        // "接近ステート"に遷移する処理 / "接近ステート"に遷移時する際に一度だけ実行する処理
-        else if (probability < _approachProbability + _idleProbability)
-        {
-            // 歩行アニメーションを再生する。
-            _animator.Play(_runAnimStateName);
-            // 通常再生する。(逆再生している可能性があるので)
-            _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
-
-            // ステートを変更する。
-            _nowState = BossState.APPROACH;
-        }
-        // "後退ステート"に遷移する処理 / "後退ステート"に遷移時する際に一度だけ実行する処理
-        else
-        {
-            // 歩行アニメーションを再生する。
-            _animator.Play(_runAnimStateName);
-            // アニメーションを逆再生する。(これで後退を表す。)
-            _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
-
-            // ステートを変更する。
-            _nowState = BossState.RECESSION;
-        }
+        // "アイドル"に遷移する。
+        if (probability < _idleProbability) MomentOfIdle();
+        // "接近ステート"に遷移する。
+        else if (probability < _approachProbability + _idleProbability) MomentOfApproach();
+        // "後退ステート"に遷移する。
+        else MomentOfRecession();
     }
+
+    //===== 各ステート別の処理 =====//
+    //===== 通常行動群 =====//
     /// <summary> アイドルの処理 </summary>
     void Idle()
     {
@@ -203,6 +162,7 @@ public class BringerController : NewBossBase
             _rigidBody2d.velocity = Vector2.right * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
         }
     }
+    //===== 攻撃行動群 =====//
     /// <summary> 
     /// 弱攻撃の処理<br/>
     /// 撃ってる間は止まる。(何もしない。)<br/>
@@ -221,37 +181,108 @@ public class BringerController : NewBossBase
     /// 他に何かある時はここに書く<br/>
     /// </summary>
     void LongRangeAttack() { }
+    //===== 通常行動に遷移する処理群 =====//
+    /// <summary>
+    /// "アイドルステート"に遷移する瞬間一度だけ実行する処理。
+    /// </summary>
+    void MomentOfIdle()
+    {
+        // アイドル状態のアニメーションを再生する。
+        _animator.Play(_idleAnimStateName);
+        // ステートを変更する。
+        _nowState = BossState.IDLE;
+    }
+    /// <summary>
+    /// "接近ステート"に遷移する瞬間一度だけ実行する処理。
+    /// </summary>
+    void MomentOfApproach()
+    {
+        // 歩行アニメーションを再生する。
+        _animator.Play(_runAnimStateName);
+        // 通常再生する。(逆再生している可能性があるので)
+        _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
 
+        // ステートを変更する。
+        _nowState = BossState.APPROACH;
+    }
+    /// <summary>
+    /// "後退ステート"に遷移する瞬間一度だけ実行する処理。
+    /// </summary>
+    void MomentOfRecession()
+    {
+        // 歩行アニメーションを再生する。
+        _animator.Play(_runAnimStateName);
+        // アニメーションを逆再生する。(これで後退を表す。)
+        _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
+
+        // ステートを変更する。
+        _nowState = BossState.RECESSION;
+    }
+    //===== 攻撃行動に遷移する処理群 =====//
+    /// <summary>
+    /// "弱攻撃ステート"に遷移する瞬間に一度だけ実行する処理。<br/>
+    /// </summary>
+    void MomentOfLightAttack()
+    {
+        // アニメーションを再生する。
+        _animator.Play(_lightAttackAnimStateName);
+        // ステートを変更する。
+        _nowState = BossState.LIGHT_ATTACK_PATTERN_ONE;
+    }
+    /// <summary>
+    /// "強攻撃ステート"に遷移する瞬間に一度だけ実行する処理。<br/>
+    /// </summary>
+    void MomentOfHeavyAttack()
+    {
+        // アニメーションを再生する。
+        _animator.Play(_heavyAttackAnimStateName);
+        // ステートを変更する。
+        _nowState = BossState.HEAVY_ATTACK_PATTERN_ONE;
+    }
+    /// <summary>
+    /// "遠距離攻撃ステート"に遷移する瞬間に一度だけ実行する処理。<br/>
+    /// </summary>
+    void MomentOfLongRangeAttack()
+    {
+        // アニメーションを再生する。
+        _animator.Play(_longRangeAttackAnimStateName);
+        // ステートを変更する。
+        _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
+    }
+
+    //===== overrides =====//
+    protected override void MomentOfDeath()
+    {
+        // その場で止まる。
+        _rigidBody2d.velocity = Vector2.zero;
+        // 死亡時のアニメーションを再生する。
+        _animator.Play(_dieAnimStateName);
+    }
+    protected override void TreatmentAfterDeath()
+    {
+        // 特に何も思いつかないので何もしない。
+        // 死亡中に何かさせる場合は、ここに記述すること。
+    }
+
+    //===== アニメーションイベントから呼び出す想定のメソッド =====//
     /// <summary> 
     /// 弱攻撃判定を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_LightAttack()
-    {
-        _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
-    }
+    void GenerateAttack_LightAttack() { _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform); }
     /// <summary> 
-    /// 弱攻撃判定を生成する。<br/>
+    /// 強攻撃判定を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_HeavyAttack()
-    {
-        _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
-    }
+    void GenerateAttack_HeavyAttack() { _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform); }
     /// <summary> 
-    /// 弱攻撃判定を生成する。<br/>
+    /// 遠距離攻撃を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_LongRangeAttack()
-    {
-        _weapon = Instantiate(_longRangeAttackPrefab, transform.position, Quaternion.identity);
-    }
+    void GenerateAttack_LongRangeAttack() { _weapon = Instantiate(_longRangeAttackPrefab, transform.position, Quaternion.identity); }
     /// <summary> 
     /// 武器を破棄する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void DestroyAttack()
-    {
-        Destroy(_weapon);
-    }
+    void DestroyAttack() { Destroy(_weapon); }
 }

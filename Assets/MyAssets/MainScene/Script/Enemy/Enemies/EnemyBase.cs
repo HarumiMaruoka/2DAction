@@ -121,8 +121,7 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
         _status._hitPoint -= playerOffensivePower;
         if (_status._hitPoint <= 0)
         {
-            //体力がなくなったら消滅する
-            Destroy(this.gameObject);
+            Deth();
         }
         //攻撃がヒットしたことを表現する為に一定時間色を変更する。
         StartCoroutine(ColorChange());
@@ -188,6 +187,15 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
         {
             _spriteRenderer.color = new Color(255, 255, 255, 255);
         }
+    }
+    /// <summary>
+    /// 体力がなくなった時の処理 : <br/>
+    /// オーバーライド可。<br/>
+    /// そのまま使用する場合は自分自身を破棄する。<br/>
+    /// </summary>
+    protected virtual void Deth()
+    {
+        Destroy(gameObject);
     }
 }
 /// <summary> Enemyのステータスを表す型 </summary>
