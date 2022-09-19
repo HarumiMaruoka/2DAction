@@ -19,19 +19,19 @@ public class BringerController : NewBossBase
 
     [Header("各攻撃別に移行する確率 (全部足して100%になるように作成してください。)")]
     [Tooltip("弱攻撃を撃つ確率"), SerializeField]
-    float _lightAttackProbability;
+    float _lightAttackProbability = 40f;
     [Tooltip("強攻撃を撃つ確率"), SerializeField]
-    float _heavyAttackProbability;
+    float _heavyAttackProbability = 30f;
     [Tooltip("遠距離攻撃を撃つ確率"), SerializeField]
-    float _longRangeAttackProbability;
+    float _longRangeAttackProbability = 30f;
 
     [Header("各通常行動に移行する確率 (全部足して100%になるように作成してください。)")]
     [Tooltip("アイドルに移行する確率"), SerializeField]
-    float _idleProbability;
+    float _idleProbability = 15f;
     [Tooltip("接近行動に移行する確率"), SerializeField]
-    float _approachProbability;
+    float _approachProbability = 55f;
     [Tooltip("後退行動に移行する確率"), SerializeField]
-    float _recessionProbability;
+    float _recessionProbability = 30f;
 
     [Header("アニメーション関連")]
     [Tooltip("アニメーションスピードのパラメーター名"), SerializeField]
@@ -48,8 +48,6 @@ public class BringerController : NewBossBase
     string _longRangeAttackAnimStateName = "LongRangeAttackMotion";
     [Tooltip("死を表現するアニメーションの名前"), SerializeField]
     string _dieAnimStateName = "Death";
-    /// <summary> アニメーションスピード </summary>
-    float _animSpeed = 1;
 
     [Header("武器のプレハブ")]
     [Tooltip("弱攻撃のプレハブ"), SerializeField]
@@ -189,6 +187,8 @@ public class BringerController : NewBossBase
     {
         // アイドル状態のアニメーションを再生する。
         _animator.Play(_idleAnimStateName);
+        // クールタイムを開始する。
+        StartCoroutine(WaitCoolTime());
         // ステートを変更する。
         _nowState = BossState.IDLE;
     }
@@ -201,6 +201,8 @@ public class BringerController : NewBossBase
         _animator.Play(_runAnimStateName);
         // 通常再生する。(逆再生している可能性があるので)
         _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
+        // クールタイムを開始する。
+        StartCoroutine(WaitCoolTime());
 
         // ステートを変更する。
         _nowState = BossState.APPROACH;
@@ -214,6 +216,8 @@ public class BringerController : NewBossBase
         _animator.Play(_runAnimStateName);
         // アニメーションを逆再生する。(これで後退を表す。)
         _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
+        // クールタイムを開始する。
+        StartCoroutine(WaitCoolTime());
 
         // ステートを変更する。
         _nowState = BossState.RECESSION;
@@ -226,6 +230,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_lightAttackAnimStateName);
+        // クールタイム時間を設定する。
+        _coolTimeValue = Random.Range(_cooltimeAfterLightAttack._minValue, _cooltimeAfterLightAttack._maxValue);
         // ステートを変更する。
         _nowState = BossState.LIGHT_ATTACK_PATTERN_ONE;
     }
@@ -236,6 +242,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_heavyAttackAnimStateName);
+        // クールタイム時間を設定する。
+        _coolTimeValue = Random.Range(_cooltimeAfterHeavyAttack._minValue, _cooltimeAfterHeavyAttack._maxValue);
         // ステートを変更する。
         _nowState = BossState.HEAVY_ATTACK_PATTERN_ONE;
     }
@@ -246,6 +254,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_longRangeAttackAnimStateName);
+        // クールタイム時間を設定する。
+        _coolTimeValue = Random.Range(_cooltimeAfterLongRangeAttack._minValue, _cooltimeAfterLongRangeAttack._maxValue);
         // ステートを変更する。
         _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
     }
@@ -269,20 +279,20 @@ public class BringerController : NewBossBase
     /// 弱攻撃判定を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_LightAttack() { _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform); }
+    void GenerateAttack_LightAttack() => _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
     /// <summary> 
     /// 強攻撃判定を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_HeavyAttack() { _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform); }
+    void GenerateAttack_HeavyAttack() => _weapon = Instantiate(_lightAttackPrefab, transform.position, Quaternion.identity, transform);
     /// <summary> 
     /// 遠距離攻撃を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void GenerateAttack_LongRangeAttack() { _weapon = Instantiate(_longRangeAttackPrefab, transform.position, Quaternion.identity); }
+    void GenerateAttack_LongRangeAttack() => _weapon = Instantiate(_longRangeAttackPrefab, transform.position, Quaternion.identity);
     /// <summary> 
     /// 武器を破棄する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    void DestroyAttack() { Destroy(_weapon); }
+    void DestroyAttack() => Destroy(_weapon);
 }

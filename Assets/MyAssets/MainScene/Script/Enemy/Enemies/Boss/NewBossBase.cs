@@ -12,24 +12,25 @@ using UnityEngine;
 /// </summary>
 public class NewBossBase : EnemyBase
 {
-    //<=========== このクラスで使用する型 ===========>//
-
     //<============= メンバー変数 =============>//
-    // 戦闘中かどうか関連
-    /// <summary> 現在のフレームで戦闘状態か？ : 戦闘中であれば true </summary>
-    private bool _isFight = false;
-    /// <summary> 前のフレームで戦闘状態だったか？ : 戦闘中であれば true </summary>
-    private bool _beforeFrameIsFight = false;
+    /// <summary> 戦闘状態かどうかを表す変数。 </summary>
+    [Header("確認用 : 戦闘中かどうか"), SerializeField]
+    bool _isFight = false;
 
     //クールタイム関連
-    /// <summary> 現在クールタイム中かどうか </summary>
+    [Header("戦闘を開始して最初の攻撃までのクールタイム"), SerializeField]
+    protected RandomRangeValue _cooltimeFirstAttack;
+    /// <summary> 今フレームでクールタイム中かどうかを表す変数。 </summary>
     protected bool _isCoolTimerNow = false;
-    /// <summary> 現在クールタイム中かどうかの前フレームの値 </summary>
+    /// <summary> 前フレームでクールタイム中だったかどうかを表す変数。 </summary>
     protected bool _beforeIsCoolTimerNow = false;
     /// <summary> クールタイム時間 </summary>
+    [Header("確認用 : 現在のクールタイム"), SerializeField]
     protected float _coolTimeValue = 0f;
-    /// <summary> 現在攻撃中かどうか </summary>
+    /// <summary> 現在攻撃中かどうかを表す変数。 </summary>
     protected bool _isAttackNow = false;
+    /// <summary> 前フレームで攻撃中だったかどうかを表す変数。 </summary>
+    protected bool _isBeforeAttack = false;
 
     [Header("先頭開始 /終了 の距離")]
     [Tooltip("戦闘開始までの距離"), SerializeField] private Vector2 _fightStartDistance;
@@ -53,7 +54,8 @@ public class NewBossBase : EnemyBase
         CommonUpdate_BossBase();
     }
 
-    //<============= protectedメンバー関数 =============>//
+
+    //<============= メンバー関数 =============>//
     /// <summary>
     /// BossBase の初期化関数<br/>
     /// Animatorコンポーネント取得しメンバー変数に保存する。<br/>
@@ -69,34 +71,78 @@ public class NewBossBase : EnemyBase
         return true;
     }
     /// <summary> ボス共通の更新処理 : オーバーライド可 </summary>
-    protected virtual void CommonUpdate_BossBase()
+    protected void CommonUpdate_BossBase()
     {
-        // 必要であれば攻撃開始処理を行う
-        if (_beforeIsCoolTimerNow == false && _isCoolTimerNow == true)
-            StartAttackProcess();
-        // 必要であれば攻撃終了処理を行う
-        else if (_beforeIsCoolTimerNow == true && _isCoolTimerNow == false)
-            EndAttackProcess();
+        // プレイヤーがいる方向に向かって向きを変える
+        if (_playerPos.position.x > transform.position.x && transform.localScale.x > 0)
+        {
+            var localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
+        else if (_playerPos.position.x < transform.position.x && transform.localScale.x < 0)
+        {
+            var localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
 
-        // 現在のステート別に処理を行う
-        ManageState();
+        // 戦闘するかどうかを判断する。
+        StartOrExitBattle();
 
-        // 次のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
-        _beforeIsCoolTimerNow = _isCoolTimerNow;
-        // 次のフレーム用に、現在のステートを保存しておく。
+        // 戦闘中の処理
+        if (_isFight)
+        {
+            // 必要であれば攻撃開始処理を行う
+            if (_beforeIsCoolTimerNow && !_isCoolTimerNow)
+            {
+                StartAttackProcess();
+            }
+            // 必要であれば攻撃終了処理を行う
+            else if (!_isAttackNow && _isBeforeAttack)
+            {
+                EndAttackProcess();
+            }
+
+            // 現在のステート別に処理を行う
+            ManageState();
+
+            // 次のフレーム用に、クールタイムかどうかを判定する値を保存しておく。
+            _beforeIsCoolTimerNow = _isCoolTimerNow;
+        }
+
+        //戦闘中でなければ何もしない。
+
+        // 次フレーム用に現在のステートを保存しておく。
         _beforeState = _nowState;
+        // 次フレーム用に現在攻撃中だったかどうか保存しておく。
+        _isBeforeAttack = _isAttackNow;
     }
     /// <summary>
-    /// このボスが死んだことを検知する。
+    /// プレイヤーとの距離が一定以上小さくなれば戦闘を開始し<br/>
+    /// プレイヤーとの距離が一定以上離れたら戦闘を終了する。<br/>
     /// </summary>
-    /// <returns> このボスのステートが"BossState.DIE"になった時にtureを返す。 </returns>
-    protected bool GetIsDie() { return (_beforeState != BossState.DIE) && (_nowState == BossState.DIE); }
-    //<===== アニメーションイベントから呼び出す想定のメソッド =====>//
-    /// <summary> 
-    /// このゲームオブジェクトを破棄する。 : <br/>
-    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
-    /// </summary>
-    protected void DestroyThisObject() { Destroy(gameObject); }
+    void StartOrExitBattle()
+    {
+        //プレイヤーとの距離を測る処理をここに書く
+        Vector2 difference = _playerPos.position - transform.position;
+        float diffX = Mathf.Abs(difference.x);
+        float diffY = Mathf.Abs(difference.y);
+        // 現在戦闘状態でなく、かつ
+        // 距離が一定以上近づいたら、戦うかどうかを表すフィールドをtrueにする。(戦闘状態にする。)
+        if (!_isFight && (diffX < _fightStartDistance.x && diffY < _fightStartDistance.y))
+        {
+            Debug.Log($"{gameObject.name}戦闘開始しました。");
+            BattleStart();
+        }
+        // 現在非戦闘状態であり、かつ
+        // 距離が一定以上離れたら、戦うかどうかを表すフィールドをfalseにする。(非戦闘状態にする。)
+        else if (_isFight && (diffX > _fightStopDistance.x || diffY > _fightStopDistance.y))
+        {
+            Debug.Log($"{gameObject.name}戦闘終了しました。");
+            BattleExit();
+        }
+    }
     /// <summary>
     /// 死んだ時の処理。(ステートがDieの時の処理。)<br/>
     /// ManageState()で使用することを想定したメソッド。<br/>
@@ -106,7 +152,7 @@ public class NewBossBase : EnemyBase
     protected void TreatmentOfDeath()
     {
         // ステートがDieになったフレームのみ実行する。
-        if (GetIsDie())
+        if (_beforeState != BossState.DIE && _nowState == BossState.DIE)
         {
             MomentOfDeath();
         }
@@ -117,14 +163,34 @@ public class NewBossBase : EnemyBase
         }
     }
 
+
+    //<===== アニメーションイベントから呼び出す想定のメソッド =====>//
+    /// <summary> 
+    /// このゲームオブジェクトを破棄する。 : <br/>
+    /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
+    /// </summary>
+    protected void DestroyThisObject() { Destroy(gameObject); }
+    /// <summary> 
+    /// 攻撃開始処理。<br/>
+    /// このメソッドはアニメーションイベントから呼び出す想定で作成したもの。 
+    /// </summary>
+    protected void AttackStart() { _isAttackNow = true; }
+    /// <summary> 
+    /// 攻撃終了処理。<br/>
+    /// このメソッドはアニメーションイベントから呼び出す想定で作成したもの。 
+    /// </summary>
+    protected void AttackEnd() { _isAttackNow = false; }
+
+
     //<============= コルーチン =============>//
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム中だと表す変数を true にする。 </summary>
-   　protected IEnumerator WaitCoolTime()
+    protected IEnumerator WaitCoolTime()
     {
         _isCoolTimerNow = true;
         yield return new WaitForSeconds(_coolTimeValue);
         _isCoolTimerNow = false;
     }
+
 
     //<============= 仮想関数 =============>//
     /// <summary> 
@@ -152,11 +218,39 @@ public class NewBossBase : EnemyBase
     /// ステートがDieになった後ずっと行われる処理 : オーバーライド推奨<br/>
     /// </summary>
     protected virtual void TreatmentAfterDeath() { }
+    /// <summary>
+    /// 戦闘開始を検知して戦闘中かどうかを表すフィールドを trueにする。<br/>
+    /// 戦闘開始時に行う処理があればここに記述すること。:<br/>
+    /// 基本的には、そのまま使用することを想定しているが<br/>
+    /// もし独自の処理を行いたい場合には、オーバーライドしても良い。
+    /// </summary>
+    protected virtual void BattleStart()
+    {
+        //最初のクールタイムを待つ
+        _coolTimeValue = Random.Range(_cooltimeFirstAttack._minValue, _cooltimeFirstAttack._maxValue);
+        StartCoroutine(WaitCoolTime());
+        _isFight = true;
+    }
+    /// <summary>
+    /// 戦闘終了を検知して戦闘中かどうかを表すフィールドを falseにする。    
+    /// 戦闘終了時に行う処理があればここに記述すること。<br/>
+    /// 基本的には、そのまま使用することを想定しているが<br/>
+    /// もし独自の処理を行いたい場合には、オーバーライドしても良い。
+    /// </summary>
+    protected virtual void BattleExit()
+    {
+        // このコンポーネントから開始された全てのコルーチンを停止する。
+        StopAllCoroutines();
+        // 戦闘状態を表す変数をfalseにする。
+        _isFight = false;
+    }
+
 
     //===== overrides =====//
     /// <summary>
     /// 体力がなくなった時の処理 : <br/>
-    /// ステートをDieに変更する。<br/>
+    /// ステートをDieに変更する<br/>
+    /// オーバーライド可<br/>
     /// </summary>
     protected override void Deth()
     {
@@ -165,6 +259,7 @@ public class NewBossBase : EnemyBase
 
 }
 /// <summary> ボスのステートを表す型 </summary>
+[System.Serializable]
 public enum BossState
 {
     /// <summary> 待機 </summary>
@@ -208,7 +303,7 @@ public enum BossState
 }
 /// <summary> ランダムな値の最小値と最大値のセット </summary>
 [System.Serializable]
-struct RandomRangeValue
+public struct RandomRangeValue
 {
     /// <summary> ランダムな値の最小値 </summary>
     public float _minValue;

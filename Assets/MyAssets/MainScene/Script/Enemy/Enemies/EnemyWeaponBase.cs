@@ -8,10 +8,10 @@ using UnityEngine;
 /// 
 /// 敵が放つ
 /// </summary>
-public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
+public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
 {
     //===== メンバー変数 =====//
-    Collider2D _collider;
+    Collider2D _collider2D;
 
     [Header("攻撃力"), SerializeField] float _offensivePower;
     [Header("ノックバック力"), SerializeField] float _blowingPower;
@@ -20,9 +20,9 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     /// <summary>
     /// 初期化処理。コライダーを取得する。
     /// </summary>
-    void Start()
+    protected virtual void Start()
     {
-        _collider = GetComponent<Collider2D>();
+        _collider2D = GetComponent<Collider2D>();
     }
     /// <summary> プレイヤーに接触したらプレイヤーの体力を減らす。 </summary>
     /// <param name="collision"> 接触相手 </param>
@@ -31,14 +31,8 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
         if (collision.tag == Constants.PLAYER_TAG_NAME)
         {
             // プレイヤーの体力を減らす。
-            PlayerStatusManager.Instance.PlayerHealthPoint -= _offensivePower;
-            // 接触後消滅する。
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.LogError($"プレイヤー以外のオブジェクトに接触しました。\n" +
-                $"プレイヤーに接触した場合、プレイヤーのタグは、\"{Constants.PLAYER_TAG_NAME}\"ですか？");
+            if (collision.TryGetComponent(out Rigidbody2D playerRb2D))
+                HitPlayer(playerRb2D);
         }
     }
     /// <summary> 
@@ -47,7 +41,7 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     /// </summary>
     void ClliderOn()
     {
-        _collider.enabled = true;
+        _collider2D.enabled = true;
     }
     /// <summary>
     /// このオブジェクトにアタッチされているコライダーを非アクティブにする。<br/>
@@ -55,7 +49,7 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
     /// </summary>
     void ClliderOff()
     {
-        _collider.enabled = false;
+        _collider2D.enabled = false;
     }
     /// <summary>
     /// このゲームオブジェクトおよびアタッチされたコンポーネントを破棄する。<br/>
@@ -72,7 +66,8 @@ public class EnemyWeaponBase : MonoBehaviour, AttackOnPlayer
         PlayerStatusManager.Instance.PlayerHealthPoint -= _offensivePower;
         playerRb2D.velocity = Vector2.zero;
         //プレイヤーをノックバックする
-        if (transform.parent.GetComponent<EnemyBase>().IsRight)
+        if (GameObject.FindGameObjectWithTag(Constants.PLAYER_TAG_NAME).transform.position.x >
+            transform.position.x)
         {
             playerRb2D.AddForce((Vector2.right + Vector2.up) * _blowingPower, ForceMode2D.Impulse);
         }

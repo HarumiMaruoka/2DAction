@@ -31,9 +31,15 @@ public class BasicBullet : LongRangeWeaponBase
             l.x *= -1;
             transform.localScale = l;
         }
-        //発射音を鳴らす
-        GetComponent<AudioSource>().Play();
+        // 発射音を鳴らす
+        AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+        // デストロイするまで待つ
         StartCoroutine(WaitDestroy());
+
+        // 現在コルーチンを使用して弾を消失させているが、
+        // 弾を少しづつ小さくして消失させるという表現の方がよいと思うので、
+        // それをDOTweenを使用して実装しよう。
+
         return true;
     }
 
@@ -41,6 +47,7 @@ public class BasicBullet : LongRangeWeaponBase
     {
         base.OnTriggerEnter2D(collision);
     }
+
     //<===== コルーチン =====>//
     IEnumerator WaitDestroy()
     {

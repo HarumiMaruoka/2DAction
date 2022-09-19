@@ -73,23 +73,32 @@ public class PlayerBasicInformation : MonoBehaviour
         _isGodMode = false;
     }
 
-    //ボスと接触したときの処理
+    // 何かと接触したときの処理
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Godモードでも"Deadステート"でもなければ実行する。
         if (!_isGodMode && !_newPlayerStateManagement._isDead)
         {
-            if (collision.gameObject.TryGetComponent(out SpellController spell))
+            //if (collision.gameObject.TryGetComponent(out SpellController spell))
+            //{
+            //    spell.HitPlayer();
+            //    _newPlayerStateManagement._isHitEnemy = true;
+            //    _hitEnemySound.Play();
+            //    StartCoroutine(GodMode());
+            //}
+            //if (collision.gameObject.TryGetComponent(out BossWeapon bossAttack))
+            //{
+            //    bossAttack.HitPlayer();
+            //    _newPlayerStateManagement._isHitEnemy = true;
+            //    _hitEnemySound.Play();
+            //    StartCoroutine(GodMode());
+            //}
+            if(collision.gameObject.TryGetComponent(out IAttackOnPlayer _enemy))
             {
-                spell.HitPlayer();
+                _enemy.HitPlayer(_rigidbody2D);
                 _newPlayerStateManagement._isHitEnemy = true;
                 _hitEnemySound.Play();
-                StartCoroutine(GodMode());
-            }
-            if (collision.gameObject.TryGetComponent(out BossWeapon bossAttack))
-            {
-                bossAttack.HitPlayer();
-                _newPlayerStateManagement._isHitEnemy = true;
-                _hitEnemySound.Play();
+                //一定時間無敵にする。
                 StartCoroutine(GodMode());
             }
             //バッテリーと接触したときの処理

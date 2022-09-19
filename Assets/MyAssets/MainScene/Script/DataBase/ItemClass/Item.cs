@@ -78,6 +78,6 @@ abstract public class Item
     virtual public void UseItem()
     {
         Debug.Log($"アイテム共通の処理 : アイテムID.{_myID}を使用。");
-        ItemDataBase.Instance.Set_ItemNumberOfPossessions((int)_myID, -1);
+        ItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_myID, -1);
     }
 }

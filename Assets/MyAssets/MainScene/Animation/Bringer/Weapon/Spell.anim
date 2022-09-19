@@ -112,21 +112,21 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.7
-    functionName: LightningFalls
+    functionName: ClliderOn
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.9
-    functionName: LightningDisappears
+    functionName: ClliderOff
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.6
-    functionName: EndSpell
+    functionName: DestroyThisObject
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

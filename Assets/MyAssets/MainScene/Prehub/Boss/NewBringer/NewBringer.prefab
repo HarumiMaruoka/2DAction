@@ -188,8 +188,13 @@ MonoBehaviour:
     _weight: 100
     _moveSpeed: 10
   _dropItemAndProbabilities: []
-  _fightStartDistance: {x: 0, y: 0}
-  _fightStopDistance: {x: 0, y: 0}
+  _isFight: 0
+  _cooltimeFirstAttack:
+    _minValue: 0
+    _maxValue: 0
+  _coolTimeValue: 0
+  _fightStartDistance: {x: 12, y: 6}
+  _fightStopDistance: {x: 30, y: 14}
   _cooltimeAfterLightAttack:
     _minValue: 1
     _maxValue: 3
@@ -205,12 +210,13 @@ MonoBehaviour:
   _idleProbability: 15
   _approachProbability: 55
   _recessionProbability: 30
-  _animSpeedParamName: 
-  _idleAnimStateName: 
-  _runAnimStateName: 
-  _lightAttackAnimStateName: 
-  _heavyAttackAnimStateName: 
-  _longRangeAttackAnimStateName: 
+  _animSpeedParamName: WalkSpeed
+  _idleAnimStateName: Idle
+  _runAnimStateName: Run
+  _lightAttackAnimStateName: LightAttack
+  _heavyAttackAnimStateName: HeavyAttack
+  _longRangeAttackAnimStateName: LongRangeAttackMotion
+  _dieAnimStateName: Death
   _lightAttackPrefab: {fileID: 5113004720127136927, guid: c58748195eeba33419506f275e765e42, type: 3}
   _heavyAttackPrefab: {fileID: 4783418991972308154, guid: d58d2d7bf95283e458c2e593ee666331, type: 3}
   _longRangeAttackPrefab: {fileID: 7670996434185723397, guid: af6595d2f1ccdc44bacae62f962af19b, type: 3}

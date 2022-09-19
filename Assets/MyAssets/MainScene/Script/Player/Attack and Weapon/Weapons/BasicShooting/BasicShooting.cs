@@ -19,6 +19,8 @@ public class BasicShooting : FireBehavior
     {
         Initialized(Constants.ON_FIRE_PRESS_TYPE_CONSECUTIVELY);
 
+        
+
         //***テスト用処理***//
         //*左腕に装備する。*//
         SetEquip_LeftArm();

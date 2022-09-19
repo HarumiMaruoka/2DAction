@@ -7,7 +7,7 @@ using UnityEngine;
 /// ステータスを表す変数や、攻撃判定系メソッド、<br/>
 /// ノックバック系メソッド、を用意。<br/>
 /// </summary>
-public class EnemyBase : MonoBehaviour, AttackOnPlayer
+public class EnemyBase : MonoBehaviour, IAttackOnPlayer
 {
     //<============= メンバー変数 =============>//
     //エネミー共通のステータス
@@ -15,7 +15,7 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
     public EnemyStatus Status { get => _status; }
 
     /// <summary> ドロップ品と確率の情報を格納する変数。 </summary>
-    [Header("ドロップ品と確率"), SerializeField]
+    [Header("ドロップ品と確率"), Tooltip("IDは範囲外にならないように注意して設定してください。"), SerializeField]
     protected DropItemAndProbability[] _dropItemAndProbabilities;
 
     //このエネミーが向いている方向
@@ -96,6 +96,28 @@ public class EnemyBase : MonoBehaviour, AttackOnPlayer
         _rigidBody2d.velocity = Vector2.zero;
         float diff = PlayerStatusManager.Instance.IsRight ? Constants.LEFT : Constants.RIGHT;
         _rigidBody2d.AddForce((Vector2.up + Vector2.right * diff) * knockBackPower, ForceMode2D.Impulse);
+    }
+    protected void DropItems()
+    {
+        // ドロップ率を基に落とすかどうか判定する。
+        foreach (var i in _dropItemAndProbabilities)
+        {
+            if (i._dropGameObjectPrefab != null)
+            {
+                if (i._probability > Random.Range(0f, 99.99f))
+                {
+                    var drop = Instantiate(i._dropGameObjectPrefab, transform.position, Quaternion.identity);
+                    if (drop.TryGetComponent(out IDrops drops))
+                    {
+                        drops.SetID(i._iD);
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("アイテムを設定してください！");
+            }
+        }
     }
     //<============= publicメンバー関数 =============>//
     //***** 攻撃ヒット関連 *****//
@@ -236,8 +258,10 @@ public struct EnemyStatus
 [System.Serializable]
 public struct DropItemAndProbability
 {
+    /// <summary> 落とすモノのID </summary>
+    public int _iD;
     /// <summary> 落とすアイテム、あるいは装備のプレハブ </summary>
-    public GameObject DropGameObjectPrefab;
+    public GameObject _dropGameObjectPrefab;
     /// <summary> ドロップ率(%) </summary>
     public float _probability;
 }

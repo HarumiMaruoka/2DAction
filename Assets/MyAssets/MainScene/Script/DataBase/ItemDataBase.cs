@@ -78,8 +78,11 @@ public class ItemDataBase : MonoBehaviour
     //<===== publicメンバー関数 =====>//
     /// <summary>　特定のアイテムの所持数を変更する。 </summary>
     /// <param name="itemID"> 変更するアイテムのID </param>
-    /// <param name="value"> 変更する数 </param>
-    public void Set_ItemNumberOfPossessions(int itemID, int volume)
+    /// <param name="volume"> 変更する数 : <br/>
+    /// 1ならそのIDのアイテムを一つ増やす <br/>
+    /// -1ならそのIDのアイテムを一つ減らす。<br/>
+    /// </param>
+    public void MakeChanges_ItemNumberOfPossessions(int itemID, int volume)
     {
         //インデックスが正しいか判定
         if (itemID < (int)Item.ItemID.ITEM_ID_00 || itemID >= (int)Item.ItemID.ITEM_ID_END)

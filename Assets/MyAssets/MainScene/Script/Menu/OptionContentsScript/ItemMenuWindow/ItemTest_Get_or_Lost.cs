@@ -19,11 +19,11 @@ public class ItemTest_Get_or_Lost : MonoBehaviour
 
     public void OnClick_GetItem()
     {
-        ItemDataBase.Instance.Set_ItemNumberOfPossessions((int)_itemIndex, 1);
+        ItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_itemIndex, 1);
     }
 
     public void OnClick_LostItem()
     {
-        ItemDataBase.Instance.Set_ItemNumberOfPossessions((int)_itemIndex, -1);
+        ItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_itemIndex, -1);
     }
 }

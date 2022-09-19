@@ -5,7 +5,8 @@ using UnityEngine;
 /// <summary> 
 /// プレイヤーを攻撃するオブジェクトが継承すべきインターフェース。
 /// </summary>
-interface AttackOnPlayer
+interface IAttackOnPlayer
+
 {
     /// <summary> 
     /// プレイヤーに対する攻撃処理 :<br/>

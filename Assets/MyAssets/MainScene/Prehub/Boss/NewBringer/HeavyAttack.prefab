@@ -61,4 +61,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _offensivePower: 0
-  _blowingPower: 0
+  _blowingPower: 65
+  _isLongRangeWeapon: 0
+  _appearancePositionOffsetY: 0
