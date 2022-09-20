@@ -43,11 +43,6 @@ public class BasicBullet : LongRangeWeaponBase
         return true;
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        base.OnTriggerEnter2D(collision);
-    }
-
     //<===== コルーチン =====>//
     IEnumerator WaitDestroy()
     {

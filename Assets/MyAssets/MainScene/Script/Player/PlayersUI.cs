@@ -25,8 +25,16 @@ public class PlayersUI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _hitPointSlider.value = PlayerStatusManager.Instance.PlayerHealthPoint;
+        // 最大体力が変更されたらスライダーの最大値の設定する。
+        if (Mathf.Abs(_hitPointSlider.maxValue - PlayerStatusManager.Instance.ConsequentialPlayerStatus._maxHp) > 0.01f)
+        {
+            _hitPointSlider.maxValue = PlayerStatusManager.Instance.ConsequentialPlayerStatus._maxHp;
+        }
+        // 体力が変更されたらスライダーの値を変更する。
+        if (Mathf.Abs(_hitPointSlider.value - PlayerStatusManager.Instance.PlayerHealthPoint) > 0.01f)
+        {
+            _hitPointSlider.value = PlayerStatusManager.Instance.PlayerHealthPoint;
+        }
         _hoverSlider.value = _playerBasicInformation._hoverValue;
     }
-
 }

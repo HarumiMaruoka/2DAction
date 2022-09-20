@@ -1,20 +1,20 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary> 
-/// ‘S‚Ä‚Ì‘•”õ‚Ìî•ñ‚ÆA
-/// ƒvƒŒƒCƒ„[‚ªŠ‚µ‚Ä‚¢‚é‘•”õE’…—p‚µ‚Ä‚¢‚é‘•”õ‚ğAŠÇ—‚·‚éƒNƒ‰ƒXB
+/// å…¨ã¦ã®è£…å‚™ã®æƒ…å ±ã¨ã€
+/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ãƒ»ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã‚’ã€ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
 /// </summary>
 public class EquipmentDataBase : MonoBehaviour
 {
-    //<======= ‚±‚ÌƒNƒ‰ƒX‚Åg—p‚·‚éŒ^ =======>//
-    /// <summary> ‘•”õ‚ÌID </summary>
+    //<======= ã“ã®ã‚¯ãƒ©ã‚¹ã§ä½¿ç”¨ã™ã‚‹å‹ =======>//
+    /// <summary> è£…å‚™ã®ID </summary>
     public enum EquipmentID
     {
-        Nan = -1,
+        None = -1,
         ID_0,
         ID_1,
         ID_2,
@@ -31,92 +31,93 @@ public class EquipmentDataBase : MonoBehaviour
 
         ID_END,
     }
-    /// <summary> Œ»İ‘•’…‚µ‚Ä‚¢‚é‘•”õ‚ğ•\‚·\‘¢‘Ì </summary>
+    /// <summary> ç¾åœ¨è£…ç€ã—ã¦ã„ã‚‹è£…å‚™ã‚’è¡¨ã™æ§‹é€ ä½“ </summary>
     public struct MyEquipped
     {
-        /// <summary> “ª‚É‘•’…‚µ‚Ä‚¢‚éƒp[ƒc </summary>
+        /// <summary> é ­ã«è£…ç€ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ </summary>
         public int _headPartsID;
-        /// <summary> “·‚É‘•”õ‚µ‚Ä‚¢‚éƒp[ƒc </summary>
+        /// <summary> èƒ´ã«è£…å‚™ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ </summary>
         public int _torsoPartsID;
-        /// <summary> ‰E˜r‚É‘•’…‚µ‚Ä‚¢‚éƒp[ƒc </summary>
+        /// <summary> å³è…•ã«è£…ç€ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ </summary>
         public int _armRightPartsID;
-        /// <summary> ¶˜r‚É‘•’…‚µ‚Ä‚¢‚éƒp[ƒc </summary>
+        /// <summary> å·¦è…•ã«è£…ç€ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ </summary>
         public int _armLeftPartsID;
-        /// <summary> ‘«‚É‘•’…‚µ‚Ä‚¢‚éƒp[ƒc </summary>
+        /// <summary> è¶³ã«è£…ç€ã—ã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ </summary>
         public int _footPartsID;
     }
-    /// <summary> Š‚µ‚Ä‚¢‚é‘•”õ‚ğŠi”[‚·‚é\‘¢‘Ì </summary>
+    /// <summary> æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“ </summary>
     public struct HaveEquipped
     {
-        /// <summary> —v‘f‚Í‘•”õ‚ÌIDBŠ‚µ‚Ä‚¢‚È‚¯‚ê‚Î-1B </summary>
+        /// <summary> è¦ç´ ã¯è£…å‚™ã®IDã€‚æ‰€æŒã—ã¦ã„ãªã‘ã‚Œã°-1ã€‚ </summary>
         public int[] _equipmentsID;
     }
 
-    //<=========== ƒƒ“ƒo[•Ï” ===========>//
-    /// <summary> ‘•”õXV‚ÉŒÄ‚Ño‚³‚ê‚éƒfƒŠƒQ[ƒg•Ï”B </summary>
+    //<=========== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° ===========>//
+    /// <summary> è£…å‚™æ›´æ–°æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ‡ãƒªã‚²ãƒ¼ãƒˆå¤‰æ•°ã€‚ </summary>
     public System.Action ReplacedEquipment;
-    /// <summary> ‘S‚Ä‚Ì‘•”õ‚Ìî•ñ‚ğˆê•Û‘¶‚µ‚Ä‚¨‚­•Ï” </summary>
+    /// <summary> å…¨ã¦ã®è£…å‚™ã®æƒ…å ±ã‚’ä¸€æ™‚ä¿å­˜ã—ã¦ãŠãå¤‰æ•° </summary>
     Equipment[] _equipmentData;
+    /// <summary> å…¨ã¦ã®è£…å‚™ã®æƒ…å ± </summary>
     public Equipment[] EquipmentData { get => _equipmentData; }
-    /// <summary> Š‚µ‚Ä‚¢‚é‘•”õ‚Ì”z—ñ </summary>
+    /// <summary> æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã®é…åˆ— </summary>
     HaveEquipped _haveEquipmentID;
     public HaveEquipped HaveEquipmentID { get => _haveEquipmentID; }
-    /// <summary> Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õ </summary>
+    /// <summary> ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ </summary>
     MyEquipped _equipped;
     public MyEquipped Equipped { get => _equipped; }
-    [Header("Œ»İ’…—p‚µ‚Ä‚¢‚é‘•”õ‚Ì•\¦‚ğŠÇ—‚µ‚Ä‚¢‚éƒNƒ‰ƒX"), SerializeField] Draw_NowEquipped _draw_NowEquipped;
-    [Header("‘•”õ‚Ìã¸’l‚Ì•\¦‚ğŠÇ—‚µ‚Ä‚¢‚éƒNƒ‰ƒX"), SerializeField] ManagerOfPossessedEquipment _managerOfPossessedEquipment;
+    [Header("ç¾åœ¨ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®è¡¨ç¤ºã‚’ç®¡ç†ã—ã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹"), SerializeField] Draw_NowEquipped _draw_NowEquipped;
+    [Header("è£…å‚™ã®ä¸Šæ˜‡å€¤ã®è¡¨ç¤ºã‚’ç®¡ç†ã—ã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹"), SerializeField] ManagerOfPossessedEquipment _managerOfPossessedEquipment;
 
-    //<===== ƒCƒ“ƒXƒyƒNƒ^‚©‚çİ’è‚·‚×‚«’l =====>//
-    [Header("‘•”õ‚ÌŠî–{î•ñ‚ªŠi”[‚³‚ê‚½csvƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX"), SerializeField] string _equipmentCsvFilePath;
-    [Header("Šm”F—p : Š‚µ‚Ä‚¢‚é‘•”õ‚Ìî•ñ‚ªŠi”[‚³‚ê‚½jsonƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX"), SerializeField] string _equipmentHaveJsonFilePath;
-    [Header("Šm”F—p : Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õ‚Ìî•ñ‚ªŠi”[‚³‚ê‚½jsonƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX"), SerializeField] string _equippedJsonFilePath;
-    [Header("ƒvƒŒƒCƒ„[‚ªŠ‚Å‚«‚é‘•”õ‚ÌÅ‘å”"), SerializeField] int _maxHaveVolume;
+    //<===== ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ã‹ã‚‰è¨­å®šã™ã¹ãå€¤ =====>//
+    [Header("è£…å‚™ã®åŸºæœ¬æƒ…å ±ãŒæ ¼ç´ã•ã‚ŒãŸcsvãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹"), SerializeField] string _equipmentCsvFilePath;
+    [Header("ç¢ºèªç”¨ : æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã®æƒ…å ±ãŒæ ¼ç´ã•ã‚ŒãŸjsonãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹"), SerializeField] string _equipmentHaveJsonFilePath;
+    [Header("ç¢ºèªç”¨ : ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ã®æƒ…å ±ãŒæ ¼ç´ã•ã‚ŒãŸjsonãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹"), SerializeField] string _equippedJsonFilePath;
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ‰€æŒã§ãã‚‹è£…å‚™ã®æœ€å¤§æ•°"), SerializeField] int _maxHaveVolume;
 
-    /// <summary> ƒCƒxƒ“ƒgƒVƒXƒeƒ€ </summary>
-    [Header("ƒCƒxƒ“ƒgƒVƒXƒeƒ€"), SerializeField] EventSystem _eventSystem;
+    /// <summary> ã‚¤ãƒ™ãƒ³ãƒˆã‚·ã‚¹ãƒ†ãƒ  </summary>
+    [Header("ã‚¤ãƒ™ãƒ³ãƒˆã‚·ã‚¹ãƒ†ãƒ "), SerializeField] EventSystem _eventSystem;
     GameObject _beforeSelectedGameObject;
 
-    /// <summary> ƒvƒŒƒCƒ„[‚ªŠ‚Å‚«‚é‘•”õ‚ÌÅ‘å” </summary>
+    /// <summary> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ‰€æŒã§ãã‚‹è£…å‚™ã®æœ€å¤§æ•° </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
 
-    //<======ƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“ŠÖ˜A======>//
-    //ƒCƒ“ƒXƒ^ƒ“ƒX
+    //<======ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³é–¢é€£======>//
+    //ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
     private static EquipmentDataBase _instance;
-    //ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌƒvƒƒpƒeƒB
+    //ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
     public static EquipmentDataBase Instance
     {
         get
         {
             if (_instance == null)
             {
-                Debug.LogError("EquipmentDataBase._instance‚Ínull‚Å‚·B");
+                Debug.LogError("EquipmentDataBase._instanceã¯nullã§ã™ã€‚");
             }
             return _instance;
         }
     }
-    //ƒvƒ‰ƒCƒx[ƒg‚ÈƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãªã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     private EquipmentDataBase() { }
 
-    //<======= UnityƒƒbƒZ[ƒW =======>//
+    //<======= Unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =======>//
     void Awake()
     {
-        //ƒNƒ‰ƒX‚ğ‰Šú‰»
+        //ã‚¯ãƒ©ã‚¹ã‚’åˆæœŸåŒ–
         Initialize_EquipmentBase();
     }
     void Update()
     {
-        //KƒL[‰Ÿ‰º‚ÅƒZ[ƒu‚·‚é
+        //Kã‚­ãƒ¼æŠ¼ä¸‹ã§ã‚»ãƒ¼ãƒ–ã™ã‚‹
         if (Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("‘•”õŠÖŒW‚ğƒZ[ƒu‚·‚éB");
+            Debug.Log("è£…å‚™é–¢ä¿‚ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹ã€‚");
             OnSave_EquipmentHaveData_Json();
             OnSave_EquippedData_Json();
         }
-        //LƒL[‰Ÿ‰º‚Åƒ[ƒh‚·‚é
+        //Lã‚­ãƒ¼æŠ¼ä¸‹ã§ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
         if (Input.GetKeyDown(KeyCode.L))
         {
-            Debug.Log("‘•”õŠÖŒW‚ğƒ[ƒh‚·‚éB");
+            Debug.Log("è£…å‚™é–¢ä¿‚ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã€‚");
             OnLoad_EquipmentHaveData_Json();
             OnLoad_EquippedData_Json();
         }
@@ -129,78 +130,86 @@ public class EquipmentDataBase : MonoBehaviour
     }
 
 
-    //<======== privateƒƒ“ƒo[ŠÖ” ========>//
-    /// <summary> ‘•”õŠî’êƒNƒ‰ƒX‚Ì‰Šú‰»ŠÖ”B(”h¶æ‚ÅŒÄ‚Ño‚·B) </summary>
-    /// <returns> ‰Šú‰»‚É¬Œ÷‚µ‚½ê‡trueA¸”s‚µ‚½‚çfalse‚ğ•Ô‚·B </returns>
+    //<======== privateãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° ========>//
+    /// <summary> è£…å‚™åŸºåº•ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–é–¢æ•°ã€‚(æ´¾ç”Ÿå…ˆã§å‘¼ã³å‡ºã™ã€‚) </summary>
+    /// <returns> åˆæœŸåŒ–ã«æˆåŠŸã—ãŸå ´åˆtrueã€å¤±æ•—ã—ãŸã‚‰falseã‚’è¿”ã™ã€‚ </returns>
     bool Initialize_EquipmentBase()
     {
-        /*** ƒVƒ“ƒOƒ‹ƒgƒ“ŠÖŒW‚Ìˆ— ***/
-        //‚à‚µƒCƒ“ƒXƒ^ƒ“ƒX‚ªİ’è‚³‚ê‚Ä‚¢‚È‚©‚Á‚½‚ç©g‚ğ‘ã“ü‚·‚é
+        //===== ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³é–¢ä¿‚ã®å‡¦ç† =====//
+        //ã‚‚ã—ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¨­å®šã•ã‚Œã¦ã„ãªã‹ã£ãŸã‚‰è‡ªèº«ã‚’ä»£å…¥ã™ã‚‹
         if (_instance == null)
         {
             _instance = this;
         }
-        //‚à‚¤Šù‚É‘¶İ‚·‚éê‡‚ÍA‚±‚ÌƒIƒuƒWƒFƒNƒg‚ğ”jŠü‚·‚éB
+        //ã‚‚ã†æ—¢ã«å­˜åœ¨ã™ã‚‹å ´åˆã¯ã€ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç ´æ£„ã™ã‚‹ã€‚
         else if (_instance != null)
         {
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(gameObject);
 
-        /***** Š‚µ‚Ä‚¢‚é‘•”õ‚ğ•Û‘¶‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğæ“¾‚µAƒtƒ@ƒCƒ‹‚ğŠJ‚­B *****/
+        // æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’ä¿å­˜ã—ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å–å¾—ã—ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€‚
         _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquipmentFile.json");
         _equippedJsonFilePath = Path.Combine(Application.persistentDataPath, "EquippedFile.json");
 
-        /***** ”z—ñ—p‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚éB *****/
+        // csvãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã™ã¹ã¦ã®è£…å‚™æƒ…å ±ã‚’å–å¾—ã™ã‚‹ã€‚
+        OnLoad_EquipmentData_csv();
+
+        // ç¾åœ¨ã®ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã‚’åˆæœŸåŒ–ã™ã‚‹ã€‚
+        _equipped._headPartsID = (int)EquipmentID.None;
+        _equipped._torsoPartsID = (int)EquipmentID.None;
+        _equipped._armRightPartsID = (int)EquipmentID.None;
+        _equipped._armLeftPartsID = (int)EquipmentID.None;
+        _equipped._footPartsID = (int)EquipmentID.None;
+
+        // é…åˆ—ç”¨ã®ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹ã€‚
         _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
         if (_equipmentData == null) _equipmentData = new Equipment[(int)EquipmentID.ID_END];
 
-        // ***** ƒeƒXƒg—pƒR[ƒh ***** // : ƒeƒLƒg[‚ÉŠ‚µ‚Ä‚¢‚é‚±‚Æ‚É‚·‚éB
+        // æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’åˆæœŸåŒ–ã™ã‚‹ã€‚
         for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            _haveEquipmentID._equipmentsID[i] = -1;
+        }
+
+        // ***** ãƒ†ã‚¹ãƒˆç”¨ã‚³ãƒ¼ãƒ‰ ***** // : ãƒ†ã‚­ãƒˆãƒ¼ã«æ‰€æŒã—ã¦ã„ã‚‹ã“ã¨ã«ã™ã‚‹ã€‚
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length - 1; i++)
         {
             _haveEquipmentID._equipmentsID[i] = i % _equipmentData.Length;
         }
+        // Debug.LogError(_haveEquipmentID._equipmentsID[_haveEquipmentID._equipmentsID.Length - 1]);
 
-        /***** csvƒtƒ@ƒCƒ‹‚©‚ç‚·‚×‚Ä‚Ì‘•”õî•ñ‚ğæ“¾ *****/
-        OnLoad_EquipmentData_csv();
 
-        /***** Œ»İ‚Ì’…—p‚µ‚Ä‚¢‚é‘•”õ‚ğ‰Šú‰» *****/
-        _equipped._headPartsID = (int)EquipmentID.Nan;
-        _equipped._torsoPartsID = (int)EquipmentID.Nan;
-        _equipped._armRightPartsID = (int)EquipmentID.Nan;
-        _equipped._armLeftPartsID = (int)EquipmentID.Nan;
-        _equipped._footPartsID = (int)EquipmentID.Nan;
-
-        /*jsonƒtƒ@ƒCƒ‹‚©‚çŠ‚µ‚Ä‚¢‚é‘•”õ‚Æ’…—p‚µ‚Ä‚¢‚é‘•”õ‚Ìî•ñ‚ğ“Ç‚İ‚ŞB*/
-        //OnLoad_EquipmentHaveData_Json();
-        //OnLoad_EquippedData_Json();
+        // jsonãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã¨ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®æƒ…å ±ã‚’èª­ã¿è¾¼ã‚€ã€‚
+        // OnLoad_EquipmentHaveData_Json();
+        // OnLoad_EquippedData_Json();
 
         return true;
     }
-    //<======== ƒ[ƒh & ƒZ[ƒuŠÖ˜A ========>//
-    /// <summary> csvƒtƒ@ƒCƒ‹‚©‚çA‘S‚Ä‚Ì‘•”õ‚Ìƒf[ƒ^‚ğ“Ç‚İ‚ŞŠÖ” </summary>
-    /// <returns> “Ç‚İ‚ñ‚¾Œ‹‰Ê‚ğ•Ô‚·B¸”s‚µ‚½ê‡‚Ínull‚ğ•Ô‚·B </returns>
+    //<======== ãƒ­ãƒ¼ãƒ‰ & ã‚»ãƒ¼ãƒ–é–¢é€£ ========>//
+    /// <summary> csvãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã€å…¨ã¦ã®è£…å‚™ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€é–¢æ•° </summary>
+    /// <returns> èª­ã¿è¾¼ã‚“ã çµæœã‚’è¿”ã™ã€‚å¤±æ•—ã—ãŸå ´åˆã¯nullã‚’è¿”ã™ã€‚ </returns>
     void OnLoad_EquipmentData_csv()
     {
         if (_equipmentData == null) _equipmentData = new Equipment[(int)EquipmentID.ID_END];
 
         int index = 0;
-        bool isFirstLine = true;//ˆês–Ú‚©‚Ç‚¤‚©‚ğ”»’f‚·‚é’l
-        //CSVƒtƒ@ƒCƒ‹‚©‚çƒAƒCƒeƒ€ƒf[ƒ^‚ğ“Ç‚İ‚İA”z—ñ‚É•Û‘¶‚·‚é
-        StreamReader sr = new StreamReader(@_equipmentCsvFilePath);//ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-        while (!sr.EndOfStream)// ––”ö‚Ü‚ÅŒJ‚è•Ô‚·
+        bool isFirstLine = true;//ä¸€è¡Œç›®ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹å€¤
+        //CSVãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã€é…åˆ—ã«ä¿å­˜ã™ã‚‹
+        StreamReader sr = new StreamReader(@_equipmentCsvFilePath);//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+        while (!sr.EndOfStream)// æœ«å°¾ã¾ã§ç¹°ã‚Šè¿”ã™
         {
-            string[] values = sr.ReadLine().Split(',');//ˆês“Ç‚İ‚İ‹æØ‚Á‚Ä•Û‘¶‚·‚é
-            //Å‰‚Ìs(ƒwƒbƒ_[‚Ìs)‚ÍƒXƒLƒbƒv‚·‚é
+            string[] values = sr.ReadLine().Split(',');//ä¸€è¡Œèª­ã¿è¾¼ã¿åŒºåˆ‡ã£ã¦ä¿å­˜ã™ã‚‹
+            //æœ€åˆã®è¡Œ(ãƒ˜ãƒƒãƒ€ãƒ¼ã®è¡Œ)ã¯ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
             if (isFirstLine)
             {
                 isFirstLine = false;
                 continue;
             }
-            //í—Ş•Ê‚Å¶¬‚µ•Û‘¶‚·‚é
+            //ç¨®é¡åˆ¥ã§ç”Ÿæˆã—ä¿å­˜ã™ã‚‹
             switch (values[1])
             {
-                //“ª—p‘•”õ‚ğæ“¾‚µ•Û‘¶
+                //é ­ç”¨è£…å‚™ã‚’å–å¾—ã—ä¿å­˜
                 case "Head":
                     _equipmentData[index] = new HeadParts(
            (EquipmentID)int.Parse(values[0]),//ID
@@ -218,7 +227,7 @@ public class EquipmentDataBase : MonoBehaviour
            float.Parse(values[12]),
            values[13],
            values[14]); break;
-                //“·—p‘•”õ‚ğæ“¾‚µ•Û‘¶
+                //èƒ´ç”¨è£…å‚™ã‚’å–å¾—ã—ä¿å­˜
                 case "Torso":
                     _equipmentData[index] = new TorsoParts(
            (EquipmentID)int.Parse(values[0]),//ID
@@ -236,7 +245,7 @@ public class EquipmentDataBase : MonoBehaviour
            float.Parse(values[12]),
            values[13],
            values[14]); break;
-                //˜r—p‘•”õ‚ğæ“¾‚µ•Û‘¶
+                //è…•ç”¨è£…å‚™ã‚’å–å¾—ã—ä¿å­˜
                 case "Arm":
                     _equipmentData[index] = new ArmParts(
            (EquipmentID)int.Parse(values[0]),//ID
@@ -256,7 +265,7 @@ public class EquipmentDataBase : MonoBehaviour
            values[14],
            ArmParts.Get_AttackType(values[15]),
            float.Parse(values[16])); break;
-                //‘«—p‘•”õ‚ğæ“¾‚µ•Û‘¶
+                //è¶³ç”¨è£…å‚™ã‚’å–å¾—ã—ä¿å­˜
                 case "Foot":
                     _equipmentData[index] = new FootParts(
            (EquipmentID)int.Parse(values[0]),//ID
@@ -274,26 +283,26 @@ public class EquipmentDataBase : MonoBehaviour
            float.Parse(values[12]),
            values[13],
            values[14]); break;
-                default: Debug.LogError("İ’è‚³‚ê‚Ä‚¢‚È‚¢EquipmentType‚Å‚·B"); break;
+                default: Debug.LogError("è¨­å®šã•ã‚Œã¦ã„ãªã„EquipmentTypeã§ã™ã€‚"); break;
             }
             index++;
         }
 
     }
-    /// <summary> ’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÌƒXƒe[ƒ^ƒXã¸’l‚ğƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX‚É“K—p‚·‚éB : ‘Sg </summary>
+    /// <summary> ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡å€¤ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«é©ç”¨ã™ã‚‹ã€‚ : å…¨èº« </summary>
     void ApplyEquipment_ALL()
     {
-        //ƒŠƒZƒbƒg‚·‚éB
+        //ãƒªã‚»ãƒƒãƒˆã™ã‚‹ã€‚
         PlayerStatusManager.Instance.Equipment_RisingValue = PlayerStatusManager.PlayerStatus._zero;
-        //‘‰Á’l‚ğ“K—p‚·‚éB
-        ApplyEquipment_SpecificParts(_equipped._headPartsID);//“ª
-        ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//“·
-        ApplyEquipment_SpecificParts(_equipped._armLeftPartsID);//¶˜r
-        ApplyEquipment_SpecificParts(_equipped._armRightPartsID);//‰E˜r
-        ApplyEquipment_SpecificParts(_equipped._footPartsID);//‘«
+        //å¢—åŠ å€¤ã‚’é©ç”¨ã™ã‚‹ã€‚
+        ApplyEquipment_SpecificParts(_equipped._headPartsID);//é ­
+        ApplyEquipment_SpecificParts(_equipped._torsoPartsID);//èƒ´
+        ApplyEquipment_SpecificParts(_equipped._armLeftPartsID);//å·¦è…•
+        ApplyEquipment_SpecificParts(_equipped._armRightPartsID);//å³è…•
+        ApplyEquipment_SpecificParts(_equipped._footPartsID);//è¶³
     }
-    /// <summary> ’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÌƒXƒe[ƒ^ƒXã¸’l‚ğƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX‚É“K—p‚·‚éB </summary>
-    /// <param name="equipmentID"> “K—p‚·‚é‘•”õ‚ÌID </param>
+    /// <summary> ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡å€¤ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«é©ç”¨ã™ã‚‹ã€‚ </summary>
+    /// <param name="equipmentID"> é©ç”¨ã™ã‚‹è£…å‚™ã®ID </param>
     void ApplyEquipment_SpecificParts(int equipmentID)
     {
         if (equipmentID >= 0)
@@ -302,68 +311,68 @@ public class EquipmentDataBase : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("–¢‘•”õ‚Ì‰ÓŠ‚Í‚ ‚è‚Ü‚·‚©?‚»‚¤‚Å‚È‚¯‚ê‚ÎƒGƒ‰[‚Å‚·! : ‘•”õƒ}ƒl[ƒWƒƒ[ƒRƒ“ƒ|[ƒlƒ“ƒg‚æ‚è");
+            Debug.LogWarning("æœªè£…å‚™ã®ç®‡æ‰€ã¯ã‚ã‚Šã¾ã™ã‹?ãã†ã§ãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼ã§ã™! : è£…å‚™ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚ˆã‚Š");
         }
     }
 
-    //<===== publicƒƒ“ƒo[ŠÖ” =====>//
-    /// <summary> "Š"‚µ‚Ä‚¢‚é‘•”õ‚ğAjsonƒtƒ@ƒCƒ‹‚©‚çƒf[ƒ^‚ğ“Ç‚İ‚İAƒƒ“ƒo[•Ï”‚ÉŠi”[‚·‚éˆ—B </summary>
+    //<===== publicãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =====>//
+    /// <summary> "æ‰€æŒ"ã—ã¦ã„ã‚‹è£…å‚™ã‚’ã€jsonãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã€ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°ã«æ ¼ç´ã™ã‚‹å‡¦ç†ã€‚ </summary>
     public void OnLoad_EquipmentHaveData_Json()
     {
-        //Debug.Log("Š‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğƒ[ƒh‚µ‚Ü‚·I");
-        // ”O‚Ì‚½‚ßƒtƒ@ƒCƒ‹‚Ì‘¶İƒ`ƒFƒbƒN
+        //Debug.Log("æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ï¼");
+        // å¿µã®ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯
         if (!File.Exists(_equipmentHaveJsonFilePath))
         {
-            //‚±‚±‚Éƒtƒ@ƒCƒ‹‚ª–³‚¢ê‡‚Ìˆ—‚ğ‘‚­
-            Debug.Log("Š‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğ•Û‘¶‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+            //ã“ã“ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„å ´åˆã®å‡¦ç†ã‚’æ›¸ã
+            Debug.Log("æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
 
-            //ˆ—‚ğ”²‚¯‚é
+            //å‡¦ç†ã‚’æŠœã‘ã‚‹
             return;
         }
-        // ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚éê‡‚Ìˆ—B
-        // JSONƒIƒuƒWƒFƒNƒg‚ğAƒfƒVƒŠƒAƒ‰ƒCƒY(C#Œ`®‚É•ÏŠ·)‚µA’l‚ğƒƒ“ƒo[•Ï”‚ÉƒZƒbƒg‚·‚éB
+        // ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹å ´åˆã®å‡¦ç†ã€‚
+        // JSONã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã€ãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚º(C#å½¢å¼ã«å¤‰æ›)ã—ã€å€¤ã‚’ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°ã«ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
         _haveEquipmentID = JsonUtility.FromJson<HaveEquipped>(File.ReadAllText(_equipmentHaveJsonFilePath));
 
-        //***ˆÈ‰ºƒfƒoƒbƒO—p‚ÌƒR[ƒhB***
-        //Š‚µ‚Ä‚¢‚é‘•”õ‚ğƒRƒ“ƒ\[ƒ‹‚É•\¦‚·‚éB
+        //***ä»¥ä¸‹ãƒ‡ãƒãƒƒã‚°ç”¨ã®ã‚³ãƒ¼ãƒ‰ã€‚***
+        //æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã«è¡¨ç¤ºã™ã‚‹ã€‚
         foreach (var i in _haveEquipmentID._equipmentsID)
         {
-            if (i == -1) { Debug.Log("‚±‚Ì—v‘f‚Í‹ó‚Å‚·B"); }
+            if (i == -1) { Debug.Log("ã“ã®è¦ç´ ã¯ç©ºã§ã™ã€‚"); }
             else Debug.Log(_equipmentData[i]._myName);
         }
     }
-    /// <summary> "Š"‚µ‚Ä‚¢‚é‘•”õ‚Ìƒf[ƒ^‚ğAjsonƒtƒ@ƒCƒ‹‚É•Û‘¶‚·‚éˆ—B </summary>
+    /// <summary> "æ‰€æŒ"ã—ã¦ã„ã‚‹è£…å‚™ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã€jsonãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã™ã‚‹å‡¦ç†ã€‚ </summary>
     public void OnSave_EquipmentHaveData_Json()
     {
-        Debug.Log("Š‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğƒZ[ƒu‚µ‚Ü‚·I");
-        // Š‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğAJSONŒ`®‚ÉƒVƒŠƒAƒ‰ƒCƒY‚µAjsonƒtƒ@ƒCƒ‹‚É•Û‘¶
+        Debug.Log("æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒ¼ãƒ–ã—ã¾ã™ï¼");
+        // æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ã€JSONå½¢å¼ã«ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºã—ã€jsonãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
         File.WriteAllText(_equipmentHaveJsonFilePath, JsonUtility.ToJson(_haveEquipmentID, false));
     }
-    /// <summary> "’…—p"‚µ‚Ä‚¢‚é‘•”õ‚ğjsonƒtƒ@ƒCƒ‹‚©‚çæ“¾‚µAƒƒ“ƒo[•Ï”‚ÉŠi”[‚·‚éˆ—B </summary>
+    /// <summary> "ç€ç”¨"ã—ã¦ã„ã‚‹è£…å‚™ã‚’jsonãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å–å¾—ã—ã€ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°ã«æ ¼ç´ã™ã‚‹å‡¦ç†ã€‚ </summary>
     public void OnLoad_EquippedData_Json()
     {
-        Debug.Log("Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğƒ[ƒh‚µ‚Ü‚·I");
-        // ”O‚Ì‚½‚ßƒtƒ@ƒCƒ‹‚Ì‘¶İƒ`ƒFƒbƒN
+        Debug.Log("ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ï¼");
+        // å¿µã®ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯
         if (!File.Exists(_equippedJsonFilePath))
         {
-            //‚±‚±‚Éƒtƒ@ƒCƒ‹‚ª–³‚¢ê‡‚Ìˆ—‚ğ‘‚­
-            Debug.Log("Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğ•Û‘¶‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+            //ã“ã“ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„å ´åˆã®å‡¦ç†ã‚’æ›¸ã
+            Debug.Log("ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
 
-            //ˆ—‚ğ”²‚¯‚é
+            //å‡¦ç†ã‚’æŠœã‘ã‚‹
             return;
         }
-        // JSONƒIƒuƒWƒFƒNƒg‚ğAƒfƒVƒŠƒAƒ‰ƒCƒY(C#Œ`®‚É•ÏŠ·)‚µA’l‚ğƒZƒbƒgB
+        // JSONã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã€ãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚º(C#å½¢å¼ã«å¤‰æ›)ã—ã€å€¤ã‚’ã‚»ãƒƒãƒˆã€‚
         _equipped = JsonUtility.FromJson<MyEquipped>(File.ReadAllText(_equippedJsonFilePath));
     }
-    /// <summary> "’…—p"‚µ‚Ä‚¢‚é‘•”õ‚Ìƒf[ƒ^‚ğAjsonƒtƒ@ƒCƒ‹‚É•Û‘¶‚·‚éˆ—B </summary>
+    /// <summary> "ç€ç”¨"ã—ã¦ã„ã‚‹è£…å‚™ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã€jsonãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã™ã‚‹å‡¦ç†ã€‚ </summary>
     public void OnSave_EquippedData_Json()
     {
-        Debug.Log("Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğƒZ[ƒu‚µ‚Ü‚·I");
-        // Œ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õƒf[ƒ^‚ğAJSONŒ`®‚ÉƒVƒŠƒAƒ‰ƒCƒY‚µAƒtƒ@ƒCƒ‹‚É•Û‘¶
+        Debug.Log("ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒ¼ãƒ–ã—ã¾ã™ï¼");
+        // ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ãƒ‡ãƒ¼ã‚¿ã‚’ã€JSONå½¢å¼ã«ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºã—ã€ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
         File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
-    /// <summary> ƒŒƒAƒŠƒeƒB‚ğ•\‚· string ‚ğ enum ‚É•ÏŠ·‚·‚éB </summary>
-    /// <param name="str"> ‘ÎÛ‚Ì•¶š—ñ </param>
+    /// <summary> ãƒ¬ã‚¢ãƒªãƒ†ã‚£ã‚’è¡¨ã™ string ã‚’ enum ã«å¤‰æ›ã™ã‚‹ã€‚ </summary>
+    /// <param name="str"> å¯¾è±¡ã®æ–‡å­—åˆ— </param>
     /// <returns></returns>
     Equipment.EquipmentRarity Conversion_EquipmentRarity(string str)
     {
@@ -375,51 +384,51 @@ public class EquipmentDataBase : MonoBehaviour
             case "D": return Equipment.EquipmentRarity.D;
             case "E": return Equipment.EquipmentRarity.E;
         }
-        Debug.LogError("•s³‚È’l‚Å‚·B");
+        Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ã€‚");
         return Equipment.EquipmentRarity.ERROR;
     }
-    /// <summary> Š‚µ‚Ä‚¢‚é‘•”õ‚ÆA’…—p‚µ‚Ä‚¢‚é‘•”õ‚ğŒğŠ·‚·‚éB </summary>
-    /// <param name="fromNowEquipmentID"> ‚±‚ê‚©‚ç‘•”õ‚·‚é‘•”õ‚ÌID </param>
-    /// <param name="fromNowEquipmentType"> ‚±‚ê‚©‚ç‘•”õ‚·‚é‘•”õ‚ÌType </param>
-    /// <param name="armFlag"> ‚Ç‚¿‚ç‚Ì˜r‘•”õ‚·‚é‚©”»’f‚·‚é’lA0‚È‚ç¶˜rA1‚È‚ç‰E˜rB </param>
+    /// <summary> æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã¨ã€ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã‚’äº¤æ›ã™ã‚‹ã€‚ </summary>
+    /// <param name="fromNowEquipmentID"> ã“ã‚Œã‹ã‚‰è£…å‚™ã™ã‚‹è£…å‚™ã®ID </param>
+    /// <param name="fromNowEquipmentType"> ã“ã‚Œã‹ã‚‰è£…å‚™ã™ã‚‹è£…å‚™ã®Type </param>
+    /// <param name="armFlag"> ã©ã¡ã‚‰ã®è…•è£…å‚™ã™ã‚‹ã‹åˆ¤æ–­ã™ã‚‹å€¤ã€0ãªã‚‰å·¦è…•ã€1ãªã‚‰å³è…•ã€‚ </param>
     public void Swap_HaveToEquipped(int fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = -1)
     {
-        //Debug.Log("‚±‚ê‚©‚ç’…—p‚·‚é‘•”õ‚ÌID : " + fromNowEquipmentID);
-        //Debug.Log("‚±‚ê‚©‚ç’…—p‚·‚é‘•”õ‚ÌType : " + fromNowEquipmentType);
+        //Debug.Log("ã“ã‚Œã‹ã‚‰ç€ç”¨ã™ã‚‹è£…å‚™ã®ID : " + fromNowEquipmentID);
+        //Debug.Log("ã“ã‚Œã‹ã‚‰ç€ç”¨ã™ã‚‹è£…å‚™ã®Type : " + fromNowEquipmentType);
 
-        int temporary = -1;//‰¼‚Ì“ü‚ê•¨
-        //Type‚ğŠî‚É’…—p‚·‚é
-        //˜rˆÈŠO‚Ìê‡
+        int temporary = -1;//ä»®ã®å…¥ã‚Œç‰©
+        //Typeã‚’åŸºã«ç€ç”¨ã™ã‚‹
+        //è…•ä»¥å¤–ã®å ´åˆ
         if (fromNowEquipmentType != Equipment.EquipmentType.ARM_PARTS)
         {
             switch (fromNowEquipmentType)
             {
-                //“ªƒp[ƒc‚Ìê‡
+                //é ­ãƒ‘ãƒ¼ãƒ„ã®å ´åˆ
                 case Equipment.EquipmentType.HEAD_PARTS:
                     temporary = _equipped._headPartsID;
                     _equipped._headPartsID = fromNowEquipmentID;
                     break;
 
-                //“·ƒp[ƒc‚Ìê‡
+                //èƒ´ãƒ‘ãƒ¼ãƒ„ã®å ´åˆ
                 case Equipment.EquipmentType.TORSO_PARTS:
                     temporary = _equipped._torsoPartsID;
                     _equipped._torsoPartsID = fromNowEquipmentID;
                     break;
 
-                //‘«ƒp[ƒc‚Ìê‡
+                //è¶³ãƒ‘ãƒ¼ãƒ„ã®å ´åˆ
                 case Equipment.EquipmentType.FOOT_PARTS:
                     temporary = _equipped._footPartsID;
                     _equipped._footPartsID = fromNowEquipmentID;
                     break;
             }
-            //’…’E‚µ‚½‘•”õ‚ğƒCƒ“ƒxƒ“ƒgƒŠ‚ÉŠi”[‚·‚é
+            //ç€è„±ã—ãŸè£…å‚™ã‚’ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã«æ ¼ç´ã™ã‚‹
             if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
             else button.Set_Equipment(null);
-            //•\¦‚ğXV‚·‚é
+            //è¡¨ç¤ºã‚’æ›´æ–°ã™ã‚‹
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
             if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
-        //˜r‚Ìê‡
+        //è…•ã®å ´åˆ
         else
         {
             if (armFlag == 0)
@@ -434,12 +443,12 @@ public class EquipmentDataBase : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"•s³‚È’l‚Å‚·{armFlag}");
+                Debug.LogError($"ä¸æ­£ãªå€¤ã§ã™{armFlag}");
             }
-            //’…’E‚µ‚½‘•”õ‚ğƒCƒ“ƒxƒ“ƒgƒŠ‚ÉŠi”[‚·‚é
+            //ç€è„±ã—ãŸè£…å‚™ã‚’ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã«æ ¼ç´ã™ã‚‹
             if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
             else button.Set_Equipment(null);
-            //•\¦‚ğXV‚·‚é
+            //è¡¨ç¤ºã‚’æ›´æ–°ã™ã‚‹
             _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
             if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
         }
@@ -448,21 +457,56 @@ public class EquipmentDataBase : MonoBehaviour
     }
 
 
-    //<===== ˆÈ‰ºƒeƒXƒg—pB =====>//
-    /// <summary> ƒeƒXƒg—pƒXƒNƒŠƒvƒgBŒ»İ‘•”õ‚µ‚Ä‚¢‚é‘•”õ‚ğConsole‚É•\¦‚·‚éB </summary>
+    //<===== ä»¥ä¸‹ãƒ†ã‚¹ãƒˆç”¨ã€‚ =====>//
+    /// <summary> ãƒ†ã‚¹ãƒˆç”¨ã‚¹ã‚¯ãƒªãƒ—ãƒˆã€‚ç¾åœ¨è£…å‚™ã—ã¦ã„ã‚‹è£…å‚™ã‚’Consoleã«è¡¨ç¤ºã™ã‚‹ã€‚ </summary>
     void DrawDebugLog_Equipped()
     {
         Debug.Log(
-            "Œ»İ’…—p‚µ‚Ä‚¢‚é‘•”õ\n" +
-            "“ªƒp[ƒc : " + _equipped._headPartsID
+            "ç¾åœ¨ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™\n" +
+            "é ­ãƒ‘ãƒ¼ãƒ„ : " + _equipped._headPartsID
             + "/" +
-            "“·ƒp[ƒc : " + _equipped._torsoPartsID
+            "èƒ´ãƒ‘ãƒ¼ãƒ„ : " + _equipped._torsoPartsID
             + "/" +
-            "‰E˜rƒp[ƒc : " + _equipped._armRightPartsID
+            "å³è…•ãƒ‘ãƒ¼ãƒ„ : " + _equipped._armRightPartsID
             + "/" +
-            "¶˜rƒp[ƒc : " + _equipped._armLeftPartsID
+            "å·¦è…•ãƒ‘ãƒ¼ãƒ„ : " + _equipped._armLeftPartsID
             + "/" +
-            "‘«ƒp[ƒc : " + _equipped._footPartsID
+            "è¶³ãƒ‘ãƒ¼ãƒ„ : " + _equipped._footPartsID
             );
+    }
+
+    /// <summary> ç‰¹å®šã®è£…å‚™ã‚’å–å¾—ã™ã‚‹ã€‚ </summary>
+    /// <param name="id"> å–å¾—ã™ã‚‹è£…å‚™ã®ID </param>
+    /// <returns> 
+    /// å–å¾—ã«æˆåŠŸã—ãŸã‚‰true<br/>
+    /// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã«ç©ºããŒãªãã€å–å¾—ã«å¤±æ•—ã—ãŸå ´åˆã¯falseã‚’è¿”ã™ã€‚<br/>
+    /// </returns>
+    public bool Get_Equipment(int id)
+    {
+        //è£…å‚™ã®å–å¾—å‡¦ç†
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (_haveEquipmentID._equipmentsID[i] == -1 && id != -1)
+            {
+                _haveEquipmentID._equipmentsID[i] = id;
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary> ç‰¹å®šã®è£…å‚™ã‚’å¤±ã†ã€‚ </summary>
+    /// <param name="id"> æ¸›ã‚‰ã™è£…å‚™ã®ID </param>
+    public bool Lost_Equipment(int id)
+    {
+        //è£…å‚™ã®å–ªå¤±å‡¦ç†
+        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if (i == id)
+            {
+                _haveEquipmentID._equipmentsID[i] = -1;
+                return true;
+            }
+        }
+        return false;
     }
 }

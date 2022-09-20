@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Collections;
 
-/// <summary> Bossの基底クラス。 :
+/// <summary>
+/// 古いボスクラス。現在は使用していない。<br/>
+/// Bossの基底クラス。 :<br/>
 /// ***** 現在MonoBehaviourを継承しているが、のちにEnemyBaseを継承すべき。 *****
 /// ***** 現在新しいBossBaseを作成中 *****
 /// </summary>
 public class BossBase : MonoBehaviour
 {
-    //<=========== このクラスで使用する型 ===========>//
+    //===== このクラスで使用する型 =====//
     /// <summary> ボスのステートを表す型 </summary>
     public enum BossState
     {
@@ -27,7 +29,7 @@ public class BossBase : MonoBehaviour
     }
 
 
-    //<============= メンバー変数 =============>//
+    //===== フィールド / プロパティ =====//
 
     [Tooltip("体力"), SerializeField] 
     protected int _hitPoint;
@@ -92,7 +94,7 @@ public class BossBase : MonoBehaviour
     public BossState _nowState { get; protected set; }
 
 
-    //<============= protectedメンバー関数 =============>//
+    //===== protectedメンバー関数 =====//
     /// <summary> Boss共通の初期化処理 </summary>
     protected void InitBoss()
     {
@@ -215,7 +217,7 @@ public class BossBase : MonoBehaviour
         return false;
     }
 
-    //<============= コルーチン =============>//
+    //===== コルーチン =====//
     /// <summary> ノックバック処理 </summary>
     IEnumerator KnockBackMode()
     {
@@ -224,7 +226,7 @@ public class BossBase : MonoBehaviour
         _isKnockBackNow = false;
     }
 
-    //<============= 仮想関数 =============>//
+    //===== 仮想関数 =====//
     /// <summary> 派生先で独自の戦闘開始の処理をここに書く。オーバーライド可 </summary>
     virtual protected void BattleStart() { }
     /// <summary> 派生先で独自の戦闘終了の処理をここに書く。オーバーライド可 </summary>

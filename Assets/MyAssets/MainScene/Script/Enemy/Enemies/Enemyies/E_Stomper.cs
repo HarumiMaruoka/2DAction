@@ -11,13 +11,13 @@ public class E_Stomper : EnemyBase
 
     /// <summary> 右に何があるか判定用オーバーラップボックスのオフセット </summary>
     [Tooltip("右に何かがないか判定用"), SerializeField]
-    private Vector3 _overLapBoxOffsetRight;
+    Vector3 _overLapBoxOffsetRight;
     /// <summary> 左に何があるか判定用オーバーラップボックスのオフセット </summary>
     [Tooltip("左に何かがないか判定用"), SerializeField]
-    private Vector3 _overLapBoxOffsetLeft;
+    Vector3 _overLapBoxOffsetLeft;
     /// <summary> オーバーラップボックスのサイズ </summary>
     [Tooltip("上記オーバーラップボックスのサイズ"), SerializeField]
-    private Vector2 _overLapBoxSizeVertical;
+    Vector2 _overLapBoxSizeVertical;
     /// <summary> オーバーラップボックスのLayerMask </summary>
     [SerializeField] LayerMask _layerMask;
 
@@ -25,19 +25,20 @@ public class E_Stomper : EnemyBase
     //<=========== Unityメッセージ ===========>//
     protected override void Start()
     {
-        base.Initialize_EnemyBase();
+        base.Start();
     }
     protected override void Update()
     {
-        base.Update_Enemy();
+        base.Update();
     }
-    // デバッグ用 : Gizmoを表示する。
-    private void OnDrawGizmos()
+    // デバッグ用 : 接触判定用Gizmoを表示する。
+    void OnDrawGizmos()
     {
         // オーバーラップボックスを描画する
-        Gizmos.color = Color.red;
         if (_isGizmo)
         {
+            //色を指定する。
+            Gizmos.color = Color.red;
             //右のgizmo
             Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
             //左のgizmo

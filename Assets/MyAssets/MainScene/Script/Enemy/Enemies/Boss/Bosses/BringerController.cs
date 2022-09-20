@@ -59,7 +59,7 @@ public class BringerController : NewBossBase
     GameObject _weapon;
 
     /// <summary> 後退時の移動速度の倍率 </summary>
-    const float _moveSpeedMagnificationAtRecession = 0.8f;
+    const float _moveSpeedMagnificationAtRecession = 0.6f;
 
     //<===== Unityメッセージ =====>//
     protected override void Start()
@@ -138,11 +138,11 @@ public class BringerController : NewBossBase
         // プレイヤーに向かって接近する。
         if (_playerPos.position.x > transform.position.x)
         {
-            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed;
+            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed;
         }
         else
         {
-            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed;
+            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed;
         }
     }
     /// <summary> 後退の処理 </summary>
@@ -150,14 +150,14 @@ public class BringerController : NewBossBase
     {
         // 指定された時間プレイヤーから遠ざかる。
 
-        // プレイヤーに向かって接近する。
+        // プレイヤーに対して後退する。
         if (_playerPos.position.x < transform.position.x)
         {
-            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
+            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
         }
         else
         {
-            _rigidBody2d.velocity = Vector2.right * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
+            _rigidBody2d.velocity = Vector2.left * _status._moveSpeed * _moveSpeedMagnificationAtRecession;
         }
     }
     //===== 攻撃行動群 =====//
@@ -179,7 +179,7 @@ public class BringerController : NewBossBase
     /// 他に何かある時はここに書く<br/>
     /// </summary>
     void LongRangeAttack() { }
-    //===== 通常行動に遷移する処理群 =====//
+    //===== 通常行動に遷移する際に実行すべき処理群 =====//
     /// <summary>
     /// "アイドルステート"に遷移する瞬間一度だけ実行する処理。
     /// </summary>
@@ -222,7 +222,7 @@ public class BringerController : NewBossBase
         // ステートを変更する。
         _nowState = BossState.RECESSION;
     }
-    //===== 攻撃行動に遷移する処理群 =====//
+    //===== 攻撃行動に遷移する際に実行すべき処理群 =====//
     /// <summary>
     /// "弱攻撃ステート"に遷移する瞬間に一度だけ実行する処理。<br/>
     /// </summary>
@@ -267,6 +267,7 @@ public class BringerController : NewBossBase
         _rigidBody2d.velocity = Vector2.zero;
         // 死亡時のアニメーションを再生する。
         _animator.Play(_dieAnimStateName);
+        
     }
     protected override void TreatmentAfterDeath()
     {

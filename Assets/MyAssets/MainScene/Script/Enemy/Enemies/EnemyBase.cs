@@ -97,15 +97,21 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
         float diff = PlayerStatusManager.Instance.IsRight ? Constants.LEFT : Constants.RIGHT;
         _rigidBody2d.AddForce((Vector2.up + Vector2.right * diff) * knockBackPower, ForceMode2D.Impulse);
     }
+    /// <summary>
+    /// アイテムをドロップする処理。
+    /// </summary>
     protected void DropItems()
     {
-        // ドロップ率を基に落とすかどうか判定する。
+        // 配列に入ったオブジェクトを、ドロップ率を基に落とすかどうかを判定する。
         foreach (var i in _dropItemAndProbabilities)
         {
+            // nullチェック
             if (i._dropGameObjectPrefab != null)
             {
+                // 確率を判定する
                 if (i._probability > Random.Range(0f, 99.99f))
                 {
+                    // 判定を通り抜けた場合、オブジェクトを生成し、IDをセットする。
                     var drop = Instantiate(i._dropGameObjectPrefab, transform.position, Quaternion.identity);
                     if (drop.TryGetComponent(out IDrops drops))
                     {
@@ -129,8 +135,10 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
         _status._hitPoint -= playerOffensivePower;//体力がなくなった時の処理
         if (_status._hitPoint <= 0)
         {
-            //体力がなくなったら消滅する
-            Destroy(this.gameObject);
+            // 体力がなくなった時の処理を実行
+            Deth();
+            // アイテムをドロップする。
+            DropItems();
         }
         StartCoroutine(ColorChange());
     }
@@ -143,7 +151,10 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
         _status._hitPoint -= playerOffensivePower;
         if (_status._hitPoint <= 0)
         {
+            // 体力がなくなった時の処理を実行
             Deth();
+            // アイテムをドロップする。
+            DropItems();
         }
         //攻撃がヒットしたことを表現する為に一定時間色を変更する。
         StartCoroutine(ColorChange());

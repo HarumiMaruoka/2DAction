@@ -12,7 +12,7 @@ using UnityEngine;
 /// </summary>
 public class NewBossBase : EnemyBase
 {
-    //<============= メンバー変数 =============>//
+    //===== フィールド / プロパティ =====//
     /// <summary> 戦闘状態かどうかを表す変数。 </summary>
     [Header("確認用 : 戦闘中かどうか"), SerializeField]
     bool _isFight = false;
@@ -55,7 +55,7 @@ public class NewBossBase : EnemyBase
     }
 
 
-    //<============= メンバー関数 =============>//
+    //===== protectedメソッド =====//
     /// <summary>
     /// BossBase の初期化関数<br/>
     /// Animatorコンポーネント取得しメンバー変数に保存する。<br/>
@@ -111,7 +111,7 @@ public class NewBossBase : EnemyBase
             _beforeIsCoolTimerNow = _isCoolTimerNow;
         }
 
-        //戦闘中でなければ何もしない。
+        // 戦闘状態でなければ何もしない。
 
         // 次フレーム用に現在のステートを保存しておく。
         _beforeState = _nowState;
@@ -164,7 +164,7 @@ public class NewBossBase : EnemyBase
     }
 
 
-    //<===== アニメーションイベントから呼び出す想定のメソッド =====>//
+    //===== アニメーションイベントから呼び出す想定のメソッド =====//
     /// <summary> 
     /// このゲームオブジェクトを破棄する。 : <br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
@@ -182,7 +182,7 @@ public class NewBossBase : EnemyBase
     protected void AttackEnd() { _isAttackNow = false; }
 
 
-    //<============= コルーチン =============>//
+    //===== コルーチン =====//
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム中だと表す変数を true にする。 </summary>
     protected IEnumerator WaitCoolTime()
     {
@@ -192,7 +192,7 @@ public class NewBossBase : EnemyBase
     }
 
 
-    //<============= 仮想関数 =============>//
+    //===== 仮想関数 =====//
     /// <summary> 
     /// 攻撃開始処理 : オーバーライド推奨 : <br/>
     /// オーバーライド先でアニメーションの遷移処理等の<br/>
