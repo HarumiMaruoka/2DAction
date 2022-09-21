@@ -7,9 +7,8 @@ using UnityEngine.UI;
 
 /// <summary> 
 /// 装備画面に、プレイヤーステータスを描画するコンポーネント。
-/// 現在選択中のパーツを装備することによるステータスの変化量を描画する機能を追記してください。
 /// </summary>
-public class DrawPlayerStatus_OnEquipmentWindow : UseEventSystemBehavior
+public class DrawPlayerStatus_OnEquipmentWindow : EquipmentUIBase
 {
 
     /// <summary> このクラスを初期化したかどうか </summary>
@@ -18,14 +17,10 @@ public class DrawPlayerStatus_OnEquipmentWindow : UseEventSystemBehavior
     Text[] _playerStatusText;
 
     //<===== unityメッセージ =====>//
-    void Awake()
+    protected override void Start()
     {
-        //初期化する
-        _whetherInitialized = Initialize_ThisClass();
-        if (_whetherInitialized)
-        {
-            Debug.Log($"{gameObject.name}の初期化に成功しました。 ");
-        }
+        base.Start();
+        Initialize_ThisClass();
     }
     void OnEnable()
     {
@@ -35,17 +30,11 @@ public class DrawPlayerStatus_OnEquipmentWindow : UseEventSystemBehavior
     {
         EquipmentDataBase.Instance.ReplacedEquipment -= Update_StatusText;
     }
-    void Update()
-    {
-
-    }
 
     //<===== privateメンバー関数 =====>//
     /// <summary> このクラスの初期化関数。成功したらtrueを返す。 </summary>
     bool Initialize_ThisClass()
     {
-        //基底クラスを初期化
-        base.Initialized_UseEventSystemBehavior();
         //テキストを持つ全ての子オブジェクトを取得する。
         _playerStatusText = GetComponentsInChildren<Text>();
         //取得したテキストを更新する。

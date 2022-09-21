@@ -12,7 +12,7 @@ public class DropEquipment : MonoBehaviour, IDrops
 {
     //===== フィールド / プロパティ =====//
     /// <summary> プレイヤーが取得するアイテムのID </summary>
-    EquipmentDataBase.EquipmentID _getID = 0;
+    EquipmentID _getID = 0;
     /// <summary> 発生時に掛ける力 </summary>
     const float _forcePower = 5f;
 
@@ -59,6 +59,6 @@ public class DropEquipment : MonoBehaviour, IDrops
 
     public void SetID(int id)
     {
-        _getID = (EquipmentDataBase.EquipmentID)id;
+        _getID = (EquipmentID)id;
     }
 }

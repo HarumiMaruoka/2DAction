@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -157,7 +158,7 @@ public class NewBossBase : EnemyBase
             MomentOfDeath();
         }
         // それ以降の処理
-        else
+        else if(_nowState == BossState.DIE)
         {
             TreatmentAfterDeath();
         }
@@ -227,7 +228,7 @@ public class NewBossBase : EnemyBase
     protected virtual void BattleStart()
     {
         //最初のクールタイムを待つ
-        _coolTimeValue = Random.Range(_cooltimeFirstAttack._minValue, _cooltimeFirstAttack._maxValue);
+        _coolTimeValue = UnityEngine.Random.Range(_cooltimeFirstAttack._minValue, _cooltimeFirstAttack._maxValue);
         StartCoroutine(WaitCoolTime());
         _isFight = true;
     }
@@ -256,7 +257,17 @@ public class NewBossBase : EnemyBase
     {
         _nowState = BossState.DIE;
     }
+    static private void Info(int num)
+    {
+        Console.WriteLine(num);
+    }
+    static public System.Action<int> OnSelect;
 
+    static void Main()
+    {
+        OnSelect += Info;
+        OnSelect -= Info;
+    }
 }
 /// <summary> ボスのステートを表す型 </summary>
 [System.Serializable]

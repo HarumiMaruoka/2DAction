@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 選択されているパーツを装備することによる変化量を描画するコンポーネント。
 /// </summary>
-public class DrawAlteration : UseEventSystemBehavior
+public class DrawAlteration : EquipmentUIBase
 {
     //<===== メンバー変数 =====>//
     /// <summary> 子オブジェクトのテキスト群 </summary>
@@ -22,11 +22,10 @@ public class DrawAlteration : UseEventSystemBehavior
     public bool IsAmountOfChange { get => _isAmountOfChange; set => _isAmountOfChange = value; }
 
     //<===== Unityメッセージ =====>//
-    void Awake()
+    protected override void Start()
     {
-        base.Initialized_UseEventSystemBehavior();
         Initialized();
-        Update_AlterationValue();
+        base.Start();
     }
     void Update()
     {

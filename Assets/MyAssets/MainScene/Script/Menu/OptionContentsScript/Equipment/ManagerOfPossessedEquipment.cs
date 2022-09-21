@@ -1,25 +1,26 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-/// <summary> Š‚µ‚Ä‚¢‚é‘•”õ‚Ìƒ{ƒ^ƒ“‚ğŠÇ—‚·‚éƒNƒ‰ƒX </summary>
-public class ManagerOfPossessedEquipment : UseEventSystemBehavior
+/// <summary> æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã®ãƒœã‚¿ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ </summary>
+public class ManagerOfPossessedEquipment : EquipmentUIBase
 {
-    //<===== ƒƒ“ƒo[•Ï” =====>//
-    [Header("ƒ{ƒ^ƒ“‚Ìe‚Æ‚È‚é‚×‚«ƒRƒ“ƒeƒ“ƒg"), SerializeField] Transform _content;
-    [Header("‘•”õƒ{ƒ^ƒ“‚ÌƒvƒŒƒnƒu"), SerializeField] GameObject _equipmentButtonPrefab;
-    [Header("‘•”õ‚Ìî•ñ‚ğ•\¦‚·‚éƒeƒLƒXƒg‚Ìe"), SerializeField] GameObject _equipmentInformationParents;
-    [Header("‘I‘ğ’†‚Ì‘•”õ‚Ìà–¾•¶‚ğ•\¦‚·‚éƒGƒŠƒA‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg"), SerializeField] Text _ExplanatoryTextArea;
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =====>//
+    [Header("ãƒœã‚¿ãƒ³ã®è¦ªã¨ãªã‚‹ã¹ãã‚³ãƒ³ãƒ†ãƒ³ãƒˆ"), SerializeField] Transform _content;
+    [Header("è£…å‚™ãƒœã‚¿ãƒ³ã®ãƒ—ãƒ¬ãƒãƒ–"), SerializeField] GameObject _equipmentButtonPrefab;
+    [Header("è£…å‚™ã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆã®è¦ª"), SerializeField] GameObject _equipmentInformationParents;
+    [Header("é¸æŠä¸­ã®è£…å‚™ã®èª¬æ˜æ–‡ã‚’è¡¨ç¤ºã™ã‚‹ã‚¨ãƒªã‚¢ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ"), SerializeField] Text _ExplanatoryTextArea;
 
     GameObject[] _equipmentButtons;
     EquipmentButton _beforeEquipmentButton;
     Text[] _riseValueTexts;
 
-    //<===== unityƒƒbƒZ[ƒW =====>//
-    void Start()
+    //<===== unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =====>//
+    protected override void Start()
     {
+        base.Start();
         Initialized_ThisClass();
     }
     void Update()
@@ -27,26 +28,24 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
         Update_DrawEquipmentInformation();
     }
 
-    //<===== privateƒƒ“ƒo[ŠÖ” =====>//
-    /// <summary> ‚±‚ÌƒNƒ‰ƒX‚Ì‰Šú‰»ŠÖ” </summary>
+    //<===== privateãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =====>//
+    /// <summary> ã“ã®ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–é–¢æ•° </summary>
     void Initialized_ThisClass()
     {
-        //Šî’êƒNƒ‰ƒX‚ğ‰Šú‰»
-        base.Initialized_UseEventSystemBehavior();
-        //”z—ñ•ª‚Ìƒƒ‚ƒŠ‚ğŠm•Û
+        //é…åˆ—åˆ†ã®ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿
         _equipmentButtons = new GameObject[EquipmentDataBase.Instance.MaxHaveValue];
-        //Š‚Å‚«‚é”‚¾‚¯ƒ{ƒ^ƒ“‚ğ¶¬‚µA”z—ñ‚É•Û‘¶‚µ‚Ä‚¨‚­B
+        //æ‰€æŒã§ãã‚‹æ•°ã ã‘ãƒœã‚¿ãƒ³ã‚’ç”Ÿæˆã—ã€é…åˆ—ã«ä¿å­˜ã—ã¦ãŠãã€‚
         for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
         {
-            //¶¬ˆ—B
+            //ç”Ÿæˆå‡¦ç†ã€‚
             _equipmentButtons[i] = Instantiate(_equipmentButtonPrefab, Vector3.zero, Quaternion.identity, _content);
-            //¶¬‚µ‚½ƒ{ƒ^ƒ“‚É’l‚ğİ’è‚·‚éB
+            //ç”Ÿæˆã—ãŸãƒœã‚¿ãƒ³ã«å€¤ã‚’è¨­å®šã™ã‚‹ã€‚
             Set_ValueToButton(i);
         }
-        //‘•”õ‚Ìî•ñ‚ğ•\¦‚·‚éƒeƒLƒXƒgƒIƒuƒWƒFƒNƒg‚ğæ“¾‚µA•Ï”‚É•Û‘¶‚µ‚Ä‚¨‚­B
+        //è£…å‚™ã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã—ã€å¤‰æ•°ã«ä¿å­˜ã—ã¦ãŠãã€‚
         _riseValueTexts = _equipmentInformationParents.transform.GetComponentsInChildren<Text>();
     }
-    /// <summary> ‘S‚Ä‚Ìƒ{ƒ^ƒ“‚É‘•”õî•ñ‚ğİ’è‚·‚éB </summary>
+    /// <summary> å…¨ã¦ã®ãƒœã‚¿ãƒ³ã«è£…å‚™æƒ…å ±ã‚’è¨­å®šã™ã‚‹ã€‚ </summary>
     void Set_ValueToButtonALL()
     {
         for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
@@ -54,18 +53,18 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
             Set_ValueToButton(i);
         }
     }
-    /// <summary> “Á’è‚Ìƒ{ƒ^ƒ“‚É‘•”õî•ñ‚ğİ’è‚·‚éB </summary>
-    /// <param name="index"> •ÏX‚µ‚½‚¢ƒ{ƒ^ƒ“‚ÌƒCƒ“ƒfƒbƒNƒX </param>
+    /// <summary> ç‰¹å®šã®ãƒœã‚¿ãƒ³ã«è£…å‚™æƒ…å ±ã‚’è¨­å®šã™ã‚‹ã€‚ </summary>
+    /// <param name="index"> å¤‰æ›´ã—ãŸã„ãƒœã‚¿ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ </param>
     void Set_ValueToButton(int index)
     {
-        // Š‘•”õ‚Ìî•ñ‚ğ•ÛŠÇ‚µ‚Ä‚¢‚éêŠ‚©‚çA‘•”õ‚ÌID‚ğæ“¾‚·‚éB
+        // æ‰€æŒè£…å‚™ã®æƒ…å ±ã‚’ä¿ç®¡ã—ã¦ã„ã‚‹å ´æ‰€ã‹ã‚‰ã€è£…å‚™ã®IDã‚’å–å¾—ã™ã‚‹ã€‚
         int thisEquipmentID = EquipmentDataBase.Instance.HaveEquipmentID._equipmentsID[index];
-        // -1‚È‚çŠ‚µ‚Ä‚¢‚È‚¢‚Ì‚Ånull‚ğİ’è‚·‚éB‚»‚¤‚Å‚È‚¯‚ê‚ÎAƒ{ƒ^ƒ“‚É‘•”õî•ñ‚ğƒZƒbƒg‚·‚éB
+        // -1ãªã‚‰æ‰€æŒã—ã¦ã„ãªã„ã®ã§nullã‚’è¨­å®šã™ã‚‹ã€‚ãã†ã§ãªã‘ã‚Œã°ã€ãƒœã‚¿ãƒ³ã«è£…å‚™æƒ…å ±ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
         if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentDataBase.Instance.EquipmentData[thisEquipmentID]);
         else _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(null);
     }
-    /// <summary>u‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚é </summary>
-    /// <param name="equipmentButton"> ‘ÎÛ‚Ìu‘•”õvƒ{ƒ^ƒ“ </param>
+    /// <summary>ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ </summary>
+    /// <param name="equipmentButton"> å¯¾è±¡ã®ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ </param>
     void OnEnabled_EquipButton(EquipmentButton equipmentButton)
     {
         if (equipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
@@ -78,8 +77,8 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
             equipmentButton.OnEnabled_EquipButton_RightArm();
         }
     }
-    /// <summary>u‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚é </summary>
-    /// <param name="equipmentButton"> ‘ÎÛ‚Ìu‘•”õvƒ{ƒ^ƒ“ </param>
+    /// <summary>ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ </summary>
+    /// <param name="equipmentButton"> å¯¾è±¡ã®ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ </param>
     void OffEnabled_EquipButton(EquipmentButton equipmentButton)
     {
         if (equipmentButton._myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
@@ -92,49 +91,49 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
             equipmentButton.OffEnabled_EquipButton_RightArm();
         }
     }
-    //<===== publicƒƒ“ƒo[ŠÖ” =====>//
-    /// <summary> ‘•”õî•ñ‚Ì•\¦‚ğØ‚è‘Ö‚¦‚éB </summary>
+    //<===== publicãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =====>//
+    /// <summary> è£…å‚™æƒ…å ±ã®è¡¨ç¤ºã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚ </summary>
     public void Update_DrawEquipmentInformation()
     {
-        // ‘OƒtƒŒ[ƒ€‚Æ¡ƒtƒŒ[ƒ€‚Å‘I‘ğ‚µ‚Ä‚¢‚éƒIƒuƒWƒFƒNƒg‚ªˆÙ‚È‚éê‡‚Éˆ—‚ğÀs‚·‚éB
-        if (IsChangeSelectedObject())
+        // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ä»Šãƒ•ãƒ¬ãƒ¼ãƒ ã§é¸æŠã—ã¦ã„ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒç•°ãªã‚‹å ´åˆã«å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
+        if (_eventSystem.currentSelectedGameObject != _beforeSelectedGameObject)
         {
-            //ƒJƒŒƒ“ƒgƒIƒuƒWƒFƒNƒg‚Ìˆ—
+            //ã‚«ãƒ¬ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‡¦ç†
             if (_eventSystem.currentSelectedGameObject != null)
             {
-                //u‘•”õvƒ{ƒ^ƒ“‚Ìê‡
+                //ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã®å ´åˆ
                 if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton currentEquipmentButton))
                 {
                     Update_RiseValueText(currentEquipmentButton._myEquipment);
 
-                    //Œ»İ‘I‘ğ’†‚Ìƒp[ƒc‚Ìu‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚éB
+                    //ç¾åœ¨é¸æŠä¸­ã®ãƒ‘ãƒ¼ãƒ„ã®ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚
                     OnEnabled_EquipButton(currentEquipmentButton);
                 }
-                //u‘•”õ‚·‚évƒ{ƒ^ƒ“‚Ìê‡
+                //ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã®å ´åˆ
                 if (_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton currentEquipButton))
                 {
-                    //‚±‚±‚Éˆ—‚ğ‹Lq‚·‚éB
+                    //ã“ã“ã«å‡¦ç†ã‚’è¨˜è¿°ã™ã‚‹ã€‚
                 }
             }
 
-            //‘OƒtƒŒ[ƒ€‚Å‘I‘ğ‚³‚ê‚Ä‚¢‚½ƒ{ƒ^ƒ“‚Ìˆ—
+            //å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§é¸æŠã•ã‚Œã¦ã„ãŸãƒœã‚¿ãƒ³ã®å‡¦ç†
             if (_beforeSelectedGameObject != null)
             {
-                //u‘•”õvƒ{ƒ^ƒ“‚Ìê‡
+                //ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã®å ´åˆ
                 if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipmentButton))
                 {
-                    //eqŠÖŒW‚Å‚È‚¢‚±‚Æ‚ğŠm”F‚·‚éB
+                    //è¦ªå­é–¢ä¿‚ã§ãªã„ã“ã¨ã‚’ç¢ºèªã™ã‚‹ã€‚
                     if (_eventSystem.currentSelectedGameObject != null)
                     {
                         if ((_beforeSelectedGameObject.transform.parent.gameObject != _eventSystem.currentSelectedGameObject) &&
                             (_eventSystem.currentSelectedGameObject.transform.parent.gameObject != _beforeSelectedGameObject))
                         {
-                            //eqŠÖŒW‚Å‚È‚¯‚ê‚ÎAu‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚éB
+                            //è¦ªå­é–¢ä¿‚ã§ãªã‘ã‚Œã°ã€ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚
                             OffEnabled_EquipButton(beforeEquipmentButton);
                         }
                     }
                 }
-                //u‘•”õ‚·‚évƒ{ƒ^ƒ“‚Ìê‡‚Ìˆ—/V‚µ‚­‘I‘ğ‚µ‚½ƒ{ƒ^ƒ“‚ªu‘•”õ‚·‚évƒ{ƒ^ƒ“‚Å‚È‚¯‚ê‚ÎÀs‚·‚éB
+                //ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã®å ´åˆã®å‡¦ç†/æ–°ã—ãé¸æŠã—ãŸãƒœã‚¿ãƒ³ãŒã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã§ãªã‘ã‚Œã°å®Ÿè¡Œã™ã‚‹ã€‚
                 if (_beforeSelectedGameObject.TryGetComponent(out EquipmentButton beforeEquipButton) &&(
                     _eventSystem.currentSelectedGameObject == null ||
                     !_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipButton equip)))
@@ -147,32 +146,32 @@ public class ManagerOfPossessedEquipment : UseEventSystemBehavior
             }
         }
 
-        //ŒÃ‚¢ƒIƒuƒWƒFƒNƒg‚ğ•Û‘¶‚µ‚Ä‚¨‚­B
+        //å¤ã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜ã—ã¦ãŠãã€‚
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
-    /// <summary> ã¸’lƒeƒLƒXƒg‚ğXV‚·‚é </summary>
-    /// <param name="equipment"> ã¸’l‚ğ•\¦‚·‚é‘•”õ </param>
+    /// <summary> ä¸Šæ˜‡å€¤ãƒ†ã‚­ã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹ </summary>
+    /// <param name="equipment"> ä¸Šæ˜‡å€¤ã‚’è¡¨ç¤ºã™ã‚‹è£…å‚™ </param>
     public void Update_RiseValueText(Equipment equipment)
     {
-        //‘•”õ‚Ìí—Ş
-        _riseValueTexts[0].text = "‘•”õ‚Ìí—Ş : " + equipment._myTypeName;
+        //è£…å‚™ã®ç¨®é¡
+        _riseValueTexts[0].text = "è£…å‚™ã®ç¨®é¡ : " + equipment._myTypeName;
 
         var parameter = equipment.ThisEquipment_StatusRisingValue;
-        //Å‘å‘Ì—Í‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[1].text = $"Å‘å‘Ì—Í‚Ìã¸’l : {parameter._maxHp}";
-        //Å‘åƒXƒ^ƒ~ƒi‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[2].text = $"Å‘åƒXƒ^ƒ~ƒi‚Ìã¸’l : {parameter._maxStamina}";
-        //‹ß‹——£UŒ‚—Í‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[3].text = $"‹ß‹——£UŒ‚—Í‚Ìã¸’l : {parameter._shortRangeAttackPower}";
-        //‰“—£UŒ‚—Í‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[4].text = $"‰“‹——£UŒ‚—Í‚Ìã¸’l : {parameter._longRangeAttackPower}";
-        //–hŒä—Í‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[5].text = $"–hŒä—Í‚Ìã¸’l : {parameter._defensePower}";
-        //ˆÚ“®‘¬“x‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[6].text = $"ˆÚ“®‘¬“x‚Ìã¸’l : {parameter._moveSpeed}";
-        //‚Á”ò‚Ñ‚É‚­‚³‚Ì‘‰Á—Ê‚ğİ’è
-        _riseValueTexts[7].text = $"‚Á”ò‚Ñ‚É‚­‚³‚Ìã¸’l : {parameter._difficultToBlowOff}";
-        //à–¾•¶‚ğİ’è
+        //æœ€å¤§ä½“åŠ›ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[1].text = $"æœ€å¤§ä½“åŠ›ã®ä¸Šæ˜‡å€¤ : {parameter._maxHp}";
+        //æœ€å¤§ã‚¹ã‚¿ãƒŸãƒŠã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[2].text = $"æœ€å¤§ã‚¹ã‚¿ãƒŸãƒŠã®ä¸Šæ˜‡å€¤ : {parameter._maxStamina}";
+        //è¿‘è·é›¢æ”»æ’ƒåŠ›ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[3].text = $"è¿‘è·é›¢æ”»æ’ƒåŠ›ã®ä¸Šæ˜‡å€¤ : {parameter._shortRangeAttackPower}";
+        //é é›¢æ”»æ’ƒåŠ›ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[4].text = $"é è·é›¢æ”»æ’ƒåŠ›ã®ä¸Šæ˜‡å€¤ : {parameter._longRangeAttackPower}";
+        //é˜²å¾¡åŠ›ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[5].text = $"é˜²å¾¡åŠ›ã®ä¸Šæ˜‡å€¤ : {parameter._defensePower}";
+        //ç§»å‹•é€Ÿåº¦ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[6].text = $"ç§»å‹•é€Ÿåº¦ã®ä¸Šæ˜‡å€¤ : {parameter._moveSpeed}";
+        //å¹ã£é£›ã³ã«ãã•ã®å¢—åŠ é‡ã‚’è¨­å®š
+        _riseValueTexts[7].text = $"å¹ã£é£›ã³ã«ãã•ã®ä¸Šæ˜‡å€¤ : {parameter._difficultToBlowOff}";
+        //èª¬æ˜æ–‡ã‚’è¨­å®š
         _ExplanatoryTextArea.text = equipment._explanatoryText;
     }
 }

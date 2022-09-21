@@ -13,5 +13,5 @@ interface IAttackOnPlayer
     /// プレイヤーの体力を減らし、ノックバックさせる。<br/>
     /// </summary>
     /// <param name="playerRb2D"> プレイヤーのRigidBody2D </param>
-    void HitPlayer(Rigidbody2D playerRb2D);
+    public void HitPlayer(Rigidbody2D playerRb2D);
 }

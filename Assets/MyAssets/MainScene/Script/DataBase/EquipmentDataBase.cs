@@ -10,28 +10,11 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class EquipmentDataBase : MonoBehaviour
 {
-    //<======= このクラスで使用する型 =======>//
-    /// <summary> 装備のID </summary>
-    public enum EquipmentID
-    {
-        None = -1,
-        ID_0,
-        ID_1,
-        ID_2,
-        ID_3,
-        ID_4,
-        ID_5,
-        ID_6,
-        ID_7,
-        ID_8,
-        ID_9,
-
-        ID_10,
-        ID_11,
-
-        ID_END,
-    }
-    /// <summary> 現在装着している装備を表す構造体 </summary>
+    //===== このクラスで使用する型 =====//
+    #region User defined type
+    /// <summary> 
+    /// 現在装着している装備を表す構造体<br/>
+    /// </summary>
     public struct MyEquipped
     {
         /// <summary> 頭に装着しているパーツ </summary>
@@ -45,30 +28,41 @@ public class EquipmentDataBase : MonoBehaviour
         /// <summary> 足に装着しているパーツ </summary>
         public int _footPartsID;
     }
-    /// <summary> 所持している装備を格納する構造体 </summary>
+    /// <summary> 
+    /// 所持している装備を格納する構造体 :<br/>
+    /// jsonファイルに保存する用
+    /// </summary>
     public struct HaveEquipped
     {
         /// <summary> 要素は装備のID。所持していなければ-1。 </summary>
         public int[] _equipmentsID;
     }
+    #endregion
 
-    //<=========== メンバー変数 ===========>//
+    //<=========== フィールド / プロパティ ===========>//
+    #region Field and Property
     /// <summary> 装備更新時に呼び出されるデリゲート変数。 </summary>
     public System.Action ReplacedEquipment;
-    /// <summary> 全ての装備の情報を一時保存しておく変数 </summary>
+    /// <summary> 全ての装備の情報を保存しておくフィールド </summary>
     Equipment[] _equipmentData;
-    /// <summary> 全ての装備の情報 </summary>
+    /// <summary> 全ての装備の情報が保存されたプロパティ </summary>
     public Equipment[] EquipmentData { get => _equipmentData; }
-    /// <summary> 所持している装備の配列 </summary>
+    /// <summary> 所持している装備を表すフィールド </summary>
     HaveEquipped _haveEquipmentID;
+    /// <summary> 所持している装備のプロパティ </summary>
     public HaveEquipped HaveEquipmentID { get => _haveEquipmentID; }
-    /// <summary> 現在装備している装備 </summary>
+    /// <summary> 現在着用している装備を表すフィールド </summary>
     MyEquipped _equipped;
+    /// <summary> 現在着用している装備のフィールド </summary>
     public MyEquipped Equipped { get => _equipped; }
+    /// <summary> 前フレームで選択していたゲームオブジェクト </summary>
+    GameObject _beforeSelectedGameObject;
+    #endregion
+    #region Inspector Variables
+    // インスペクタから設定すべき値
     [Header("現在着用している装備の表示を管理しているクラス"), SerializeField] Draw_NowEquipped _draw_NowEquipped;
     [Header("装備の上昇値の表示を管理しているクラス"), SerializeField] ManagerOfPossessedEquipment _managerOfPossessedEquipment;
 
-    //<===== インスペクタから設定すべき値 =====>//
     [Header("装備の基本情報が格納されたcsvファイルへのパス"), SerializeField] string _equipmentCsvFilePath;
     [Header("確認用 : 所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
     [Header("確認用 : 現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
@@ -76,10 +70,13 @@ public class EquipmentDataBase : MonoBehaviour
 
     /// <summary> イベントシステム </summary>
     [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
-    GameObject _beforeSelectedGameObject;
 
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
+
+    [SerializeField] GameObject _equipmentLostPanel;
+    GameObject _holdSelectedEquipment = default;
+    #endregion
 
     //<======シングルトンパターン関連======>//
     //インスタンス
@@ -99,7 +96,7 @@ public class EquipmentDataBase : MonoBehaviour
     //プライベートなコンストラクタ
     private EquipmentDataBase() { }
 
-    //<======= Unityメッセージ =======>//
+    //===== Unityメッセージ =====//
     void Awake()
     {
         //クラスを初期化
@@ -187,8 +184,10 @@ public class EquipmentDataBase : MonoBehaviour
         return true;
     }
     //<======== ロード & セーブ関連 ========>//
-    /// <summary> csvファイルから、全ての装備のデータを読み込む関数 </summary>
-    /// <returns> 読み込んだ結果を返す。失敗した場合はnullを返す。 </returns>
+    /// <summary> 
+    /// csvファイルから、全ての装備のデータを読み込みメンバー変数に保存する。<br/>
+    /// </summary>
+    /// <returns> 読み込みに成功したらtrue,失敗した場合はfalseを返す。 </returns>
     void OnLoad_EquipmentData_csv()
     {
         if (_equipmentData == null) _equipmentData = new Equipment[(int)EquipmentID.ID_END];
@@ -289,7 +288,7 @@ public class EquipmentDataBase : MonoBehaviour
         }
 
     }
-    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。 : 全身 </summary>
+    /// <summary> 着用している装備のステータス上昇値をプレイヤーステータスに適用する。: 全身の処理 </summary>
     void ApplyEquipment_ALL()
     {
         //リセットする。
@@ -371,22 +370,6 @@ public class EquipmentDataBase : MonoBehaviour
         // 現在装備している装備データを、JSON形式にシリアライズし、ファイルに保存
         File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
-    /// <summary> レアリティを表す string を enum に変換する。 </summary>
-    /// <param name="str"> 対象の文字列 </param>
-    /// <returns></returns>
-    Equipment.EquipmentRarity Conversion_EquipmentRarity(string str)
-    {
-        switch (str)
-        {
-            case "A": return Equipment.EquipmentRarity.A;
-            case "B": return Equipment.EquipmentRarity.B;
-            case "C": return Equipment.EquipmentRarity.C;
-            case "D": return Equipment.EquipmentRarity.D;
-            case "E": return Equipment.EquipmentRarity.E;
-        }
-        Debug.LogError("不正な値です。");
-        return Equipment.EquipmentRarity.ERROR;
-    }
     /// <summary> 所持している装備と、着用している装備を交換する。 </summary>
     /// <param name="fromNowEquipmentID"> これから装備する装備のID </param>
     /// <param name="fromNowEquipmentType"> これから装備する装備のType </param>
@@ -456,26 +439,30 @@ public class EquipmentDataBase : MonoBehaviour
         ReplacedEquipment();
     }
 
-
-    //<===== 以下テスト用。 =====>//
-    /// <summary> テスト用スクリプト。現在装備している装備をConsoleに表示する。 </summary>
-    void DrawDebugLog_Equipped()
+    /// <summary> レアリティを表す string を enum に変換する。 </summary>
+    /// <param name="str"> 対象の文字列 </param>
+    /// <returns></returns>
+    Equipment.EquipmentRarity Conversion_EquipmentRarity(string str)
     {
-        Debug.Log(
-            "現在着用している装備\n" +
-            "頭パーツ : " + _equipped._headPartsID
-            + "/" +
-            "胴パーツ : " + _equipped._torsoPartsID
-            + "/" +
-            "右腕パーツ : " + _equipped._armRightPartsID
-            + "/" +
-            "左腕パーツ : " + _equipped._armLeftPartsID
-            + "/" +
-            "足パーツ : " + _equipped._footPartsID
-            );
+        switch (str)
+        {
+            case "A": return Equipment.EquipmentRarity.A;
+            case "B": return Equipment.EquipmentRarity.B;
+            case "C": return Equipment.EquipmentRarity.C;
+            case "D": return Equipment.EquipmentRarity.D;
+            case "E": return Equipment.EquipmentRarity.E;
+        }
+        Debug.LogError("不正な値です。");
+        return Equipment.EquipmentRarity.ERROR;
     }
+    
 
-    /// <summary> 特定の装備を取得する。 </summary>
+    //===== 便利機能 =====//
+    /// <summary> 
+    /// 特定の装備を取得する。:<br/>
+    /// 引数に渡されたIDの装備を、"所持している装備"を表す変数に保存する。<br/>
+    /// インベントリに空きがなければ false を返す。<br/>
+    /// </summary>
     /// <param name="id"> 取得する装備のID </param>
     /// <returns> 
     /// 取得に成功したらtrue<br/>
@@ -494,8 +481,15 @@ public class EquipmentDataBase : MonoBehaviour
         }
         return false;
     }
-    /// <summary> 特定の装備を失う。 </summary>
+    /// <summary> 
+    /// 特定の装備を失う。:<br/>
+    /// 引数に渡されたIDの装備を"所持している装備"を表す変数から削除する。<br/>
+    /// 削除に失敗した場合は false を返す。
+    /// </summary>
     /// <param name="id"> 減らす装備のID </param>
+    /// <returns> 
+    /// 削除に成功したら true,失敗した場合は false を返す。<br/>
+    /// </returns>
     public bool Lost_Equipment(int id)
     {
         //装備の喪失処理
@@ -509,4 +503,68 @@ public class EquipmentDataBase : MonoBehaviour
         }
         return false;
     }
+    /// <summary>
+    /// 選択中の装備を保持する。<br/>
+    /// 「装備を捨てる」ボタンが押された瞬間に実行する。<br/>
+    /// </summary>
+    public void HoldSelectedEquipment()
+    {
+        if (_beforeSelectedGameObject != null && _beforeSelectedGameObject.TryGetComponent(out EquipmentButton equipment))
+        {
+            _equipmentLostPanel.SetActive(true);
+        }
+    }
+    /// <summary> _holdSelectedEquipmentに保持されている装備を失う処理 </summary>
+    public void SelectedEquipmentLost()
+    {
+        // _holdSelectedEquipmentをnullチェックし、_holdSelectedEquipmentにEquipmentButtonがアタッチされている場合の処理
+        if (_holdSelectedEquipment != null && _holdSelectedEquipment.TryGetComponent(out EquipmentButton equipment))
+        {
+            // 装備を捨てる。成功の可否を表示する。
+            if (Lost_Equipment((int)equipment._myEquipment._myID))
+            {
+                Debug.Log("装備を失いました。");
+                equipment.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("装備を失うのに失敗しました。");
+            }
+            ReleaseHold();
+        }
+        // チェックに通らなかった場合の処理
+        else
+        {
+            if (_holdSelectedEquipment != null)
+                Debug.Log($"{_holdSelectedEquipment.name}はEquipmentButtonを持っていません");
+            else
+                Debug.Log("何もホールドされていません。");
+        }
+    }
+    /// <summary> ホールドしているGameObjectを開放する。 </summary>
+    public void ReleaseHold()
+    {
+        _holdSelectedEquipment = null;
+    }
+}
+
+/// <summary> 装備のID </summary>
+public enum EquipmentID
+{
+    None = -1,
+    ID_0,
+    ID_1,
+    ID_2,
+    ID_3,
+    ID_4,
+    ID_5,
+    ID_6,
+    ID_7,
+    ID_8,
+    ID_9,
+
+    ID_10,
+    ID_11,
+
+    ID_END,
 }

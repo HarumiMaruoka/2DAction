@@ -22,7 +22,7 @@ public class EquipmentButton : UseEventSystemBehavior
     //<===== Unityメッセージ =====>//
     private void Start()
     {
-        base.Initialized_UseEventSystemBehavior();
+        base.Init();
         //テキストを取得
         _myText = transform.GetComponentInChildren<Text>();
         UpdateText();

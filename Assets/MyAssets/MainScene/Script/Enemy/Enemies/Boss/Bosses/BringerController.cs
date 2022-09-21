@@ -9,6 +9,7 @@ using UnityEngine;
 public class BringerController : NewBossBase
 {
     //<===== メンバー変数 =====>//
+    #region Field and Property
     [Header("各攻撃後のクールタイム")]
     [Tooltip("弱攻撃後のクールタイム"), SerializeField]
     RandomRangeValue _cooltimeAfterLightAttack;
@@ -60,8 +61,10 @@ public class BringerController : NewBossBase
 
     /// <summary> 後退時の移動速度の倍率 </summary>
     const float _moveSpeedMagnificationAtRecession = 0.6f;
+    #endregion
 
     //<===== Unityメッセージ =====>//
+    #region Unity Message
     protected override void Start()
     {
         base.Start();
@@ -70,8 +73,11 @@ public class BringerController : NewBossBase
     {
         base.Update();
     }
+    #endregion
 
     //<===== メンバー関数 =====>//
+    #region Methods
+    #region overrides
     //===== このボスのステートを管理する軸となるメソッド =====//
     protected override void ManageState()
     {
@@ -124,7 +130,22 @@ public class BringerController : NewBossBase
         // "後退ステート"に遷移する。
         else MomentOfRecession();
     }
+    protected override void TreatmentAfterDeath()
+    {
+        // 特に何も思いつかないので何もしない。
+        // 死亡中に何かさせる場合は、ここに記述すること。
+    }
+    protected override void MomentOfDeath()
+    {
+        // その場で止まる。
+        _rigidBody2d.velocity = Vector2.zero;
+        // 死亡時のアニメーションを再生する。
+        _animator.Play(_dieAnimStateName);
 
+    }
+    #endregion
+
+    #region Private Method
     //===== 各ステート別の処理 =====//
     //===== 通常行動群 =====//
     /// <summary> アイドルの処理 </summary>
@@ -259,23 +280,10 @@ public class BringerController : NewBossBase
         // ステートを変更する。
         _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
     }
-
-    //===== overrides =====//
-    protected override void MomentOfDeath()
-    {
-        // その場で止まる。
-        _rigidBody2d.velocity = Vector2.zero;
-        // 死亡時のアニメーションを再生する。
-        _animator.Play(_dieAnimStateName);
-        
-    }
-    protected override void TreatmentAfterDeath()
-    {
-        // 特に何も思いつかないので何もしない。
-        // 死亡中に何かさせる場合は、ここに記述すること。
-    }
+    #endregion
 
     //===== アニメーションイベントから呼び出す想定のメソッド =====//
+    #region Call Animation Event
     /// <summary> 
     /// 弱攻撃判定を生成する。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
@@ -296,4 +304,6 @@ public class BringerController : NewBossBase
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
     void DestroyAttack() => Destroy(_weapon);
+    #endregion
+    #endregion
 }

@@ -7,10 +7,13 @@ using UnityEngine;
 /// </summary>
 public class BringerWeaponController : EnemyWeaponBase
 {
+    #region Field and Property
     [Header("遠距離武器かどうか : 遠距離武器であればチェックをしてください。"), SerializeField]
     bool _isLongRangeWeapon = false;
     [Header("遠距離武器の場合の出現位置オフセット"), SerializeField]
     float _appearancePositionOffsetY = 3.1f;
+    #endregion
+
     protected override void Start()
     {
         base.Start();

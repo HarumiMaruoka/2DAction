@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary> 現在装備しているパーツを表示するクラス </summary>
-public class Draw_NowEquipped : MonoBehaviour
+/// <summary> 現在装備しているパーツを表示するコンポーネント </summary>
+public class Draw_NowEquipped : EquipmentUIBase
 {
     const int REFT_ARM = 0;
     const int RIGHT_ARM = 1;
@@ -24,8 +24,9 @@ public class Draw_NowEquipped : MonoBehaviour
     [Header("右腕パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _armRightPartsTextArea;
     [Header("足パーツの情報を表示する場所のテキスト(テキスト版) : テスト用"), SerializeField] Text _footPartsTextArea;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         Update_EquippedALL();
     }
 

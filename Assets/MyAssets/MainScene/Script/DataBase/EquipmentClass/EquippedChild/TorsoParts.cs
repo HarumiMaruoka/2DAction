@@ -6,7 +6,7 @@ public class TorsoParts : Equipment
 {
     //コンストラクタ
     public TorsoParts(
-        EquipmentDataBase.EquipmentID id,
+        EquipmentID id,
         EquipmentType type,
         string name,
          EquipmentRarity rarity,

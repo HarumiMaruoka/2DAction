@@ -18,20 +18,13 @@ public class UseEventSystemBehavior : MonoBehaviour
     //<===== 初期化処理系 =====>//
     /// <summary> UseEventSystemBehaviorクラスの初期化処理 </summary>
     /// <returns> 初期化成功の可否を返す。成功したら true 。 </returns>
-    protected bool Initialized_UseEventSystemBehavior()
+    protected bool Init()
     {
-        if (!(_eventSystem = GameObject.FindObjectOfType<EventSystem>())) return false;
+        if ((_eventSystem = GameObject.FindObjectOfType<EventSystem>()) == null)
+        {
+            Debug.Log("\"EventSystem\"の取得に失敗しました。");
+            return false;
+        }
         return true;
-    }
-
-    //<===== 便利系 =====>//
-    /// <summary> 
-    /// 選択していたオブジェクトの変化を検知する。
-    /// 使用する場合、Update_UseEventSystemBehavior()をUpdate()で呼んでください。 
-    /// </summary>
-    /// <returns> 変化を検知したフレームで true を返す。 </returns>
-    protected bool IsChangeSelectedObject()
-    {
-        return _eventSystem.currentSelectedGameObject != _beforeSelectedGameObject;
     }
 }
