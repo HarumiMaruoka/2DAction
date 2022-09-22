@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 /// <summary> 
 /// 全ての装備の情報と、
 /// プレイヤーが所持している装備・着用している装備を、管理するクラス。
 /// </summary>
-public class EquipmentDataBase : MonoBehaviour
+public class EquipmentDataBase : UseEventSystemBehavior
 {
     //===== このクラスで使用する型 =====//
     #region User defined type
@@ -55,8 +54,6 @@ public class EquipmentDataBase : MonoBehaviour
     MyEquipped _equipped;
     /// <summary> 現在着用している装備のフィールド </summary>
     public MyEquipped Equipped { get => _equipped; }
-    /// <summary> 前フレームで選択していたゲームオブジェクト </summary>
-    GameObject _beforeSelectedGameObject;
     #endregion
     #region Inspector Variables
     // インスペクタから設定すべき値
@@ -67,9 +64,6 @@ public class EquipmentDataBase : MonoBehaviour
     [Header("確認用 : 所持している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equipmentHaveJsonFilePath;
     [Header("確認用 : 現在装備している装備の情報が格納されたjsonファイルへのパス"), SerializeField] string _equippedJsonFilePath;
     [Header("プレイヤーが所持できる装備の最大数"), SerializeField] int _maxHaveVolume;
-
-    /// <summary> イベントシステム </summary>
-    [Header("イベントシステム"), SerializeField] EventSystem _eventSystem;
 
     /// <summary> プレイヤーが所持できる装備の最大数 </summary>
     public int MaxHaveValue { get => _maxHaveVolume; set => _maxHaveVolume = value; }
@@ -512,6 +506,11 @@ public class EquipmentDataBase : MonoBehaviour
         if (_beforeSelectedGameObject != null && _beforeSelectedGameObject.TryGetComponent(out EquipmentButton equipment))
         {
             _equipmentLostPanel.SetActive(true);
+            _holdSelectedEquipment = equipment.gameObject;
+        }
+        else
+        {
+            Debug.LogError("ホールドに失敗しました。");
         }
     }
     /// <summary> _holdSelectedEquipmentに保持されている装備を失う処理 </summary>

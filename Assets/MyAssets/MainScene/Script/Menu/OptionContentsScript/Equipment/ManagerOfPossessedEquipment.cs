@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-/// <summary> 所持している装備のボタンを管理するコンポーネント </summary>
-public class ManagerOfPossessedEquipment : EquipmentUIBase
+/// <summary> 
+/// 所持している装備のボタンを管理するコンポーネント
+/// </summary>
+public class ManagerOfPossessedEquipment : UseEventSystemBehavior
 {
     //<===== メンバー変数 =====>//
     [Header("ボタンの親となるべきコンテント"), SerializeField] Transform _content;

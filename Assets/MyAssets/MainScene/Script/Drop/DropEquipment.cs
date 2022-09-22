@@ -42,6 +42,7 @@ public class DropEquipment : MonoBehaviour, IDrops
             }
             catch (IndexOutOfRangeException e)
             {
+                Debug.LogError($"IndexOutOfRangeException : {e.StackTrace}");
                 Debug.LogError($"{gameObject.name}のフィールド\"_getID=>{_getID}は範囲外です。");
             }
         }

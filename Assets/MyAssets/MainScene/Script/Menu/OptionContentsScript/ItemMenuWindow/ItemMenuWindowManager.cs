@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemMenuWindowManager : MonoBehaviour
+public class ItemMenuWindowManager : UseEventSystemBehavior
 {
-    //=====表示するアイテムのフィルターのenum=====//
+    /// <summary>
+    /// 表示するアイテムフィルターを表す為のenum
+    /// </summary>
     [System.Serializable]
     public enum ItemFilter
     {
@@ -20,12 +21,11 @@ public class ItemMenuWindowManager : MonoBehaviour
         ITEM_FILTER_END
     }
 
-    /////<=======このクラスで使用する変数=======>/////
-    //=====アイテムフィルター=====//
-    /// <summary> 前フレーム選択していたアイテムフィルター </summary>
-    ItemFilter _beforeItemFilter;
+    //===== フィールド / プロパティ =====//
     /// <summary> 現在のフレームで選択しているアイテムフィルター </summary>
     ItemFilter _currentItemFilter = ItemFilter.ALL;
+    /// <summary> 前フレーム選択していたアイテムフィルター </summary>
+    ItemFilter _beforeItemFilter;
     /// <summary> 前回選択していたアイテムボタン </summary>
     GameObject _beforeItemButton;
     /// <summary> 現在のアイテムボタン </summary>
@@ -34,7 +34,7 @@ public class ItemMenuWindowManager : MonoBehaviour
     bool _whetherInitialized;
     /// <summary> コンテントの子の配列 </summary>
     ItemButton[][] _contentChildren;
-    //=====コンテントの子となるボタン達=====//
+    //===== コンテントの子となるボタン達 =====//
     ItemButton[] _contentALLChildren;
     ItemButton[] _contentHealChildren;
     ItemButton[] _contentPowerUpChildren;
@@ -42,7 +42,7 @@ public class ItemMenuWindowManager : MonoBehaviour
     ItemButton[] _contentKeyChildren;
 
 
-    //=========配列類=========//
+    //===== 配列類 =====//
     /// <summary> アイテムボタンのゲームオブジェクトの配列 </summary>
     GameObject[] _itemButtons = new GameObject[(int)Item.ItemID.ITEM_ID_END];
     /// <summary> アイテムアイコンのイメージ </summary>
@@ -59,8 +59,6 @@ public class ItemMenuWindowManager : MonoBehaviour
     [SerializeField] Text _itemExplanatoryText;
     /// <summary> アイコンのイメージ </summary>
     [SerializeField] Image _itemIconImage;
-    /// <summary> イベントシステム </summary>
-    [SerializeField] EventSystem _eventSystem;
     /// <summary>  </summary>
     [SerializeField] ScrollRect _contentParent;
 
@@ -73,8 +71,9 @@ public class ItemMenuWindowManager : MonoBehaviour
     GameObject temporaryObject;
 
     //初期化処理
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         //このクラスを初期化する。
         _whetherInitialized = Initialize_ThisClass();
     }

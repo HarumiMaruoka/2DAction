@@ -1,60 +1,58 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ItemScrollViewController : MonoBehaviour
+/// <summary>
+/// ã‚¢ã‚¤ãƒ†ãƒ UIã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚’åˆ¶å¾¡ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+/// </summary>
+public class ItemScrollViewController : UseEventSystemBehavior
 {
     [SerializeField] float _lineHeight;
 
-    bool _firstAdjustment = false;//Å‰‚Í’²®‚µ‚È‚¢
+    bool _firstAdjustment = false;//æœ€åˆã¯èª¿æ•´ã—ãªã„
 
-    GameObject _currentButton;
-    GameObject _beforeButton;
-
-    void Start()
+    protected override void Start()
     {
-
+        base.Start();
     }
 
     void Update()
     {
-        //‚È‚º‚©Å‰‚ÌˆêT–Ú‚Í‚Å‚½‚ç‚ß‚È”š‚ª“ü‚Á‚Ä‚¢‚é‚Ì‚Å’²®‚µ‚È‚¢
+        //ãªãœã‹æœ€åˆã®ä¸€é€±ç›®ã¯ã§ãŸã‚‰ã‚ãªæ•°å­—ãŒå…¥ã£ã¦ã„ã‚‹ã®ã§èª¿æ•´ã—ãªã„
         if (!_firstAdjustment)
         {
             _firstAdjustment = true;
         }
         else
         {
-            _currentButton = EventSystem.current.currentSelectedGameObject;
-            //•K—v‚Å‚ ‚ê‚ÎAƒXƒNƒ[ƒ‹‚·‚éB
-            if (_currentButton != _beforeButton)
+            //å¿…è¦ã§ã‚ã‚Œã°ã€ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã™ã‚‹ã€‚
+            if (_eventSystem.currentSelectedGameObject != _beforeSelectedGameObject)
             {
                 Update_ScrollPos();
             }
-            _beforeButton = _currentButton;
+            _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
         }
     }
 
 
     void Update_ScrollPos()
     {
-        if (_currentButton != null)
+        if (_eventSystem.currentSelectedGameObject != null)
         {
-            //ã‚É‚Í‚İo‚µ‚Ä‚¢‚È‚¢‚©”»’è‚·‚é
-            if (GetComponent<RectTransform>().anchoredPosition.y >//˜g‚Ìã•Ó
-                -_currentButton.GetComponent<RectTransform>().anchoredPosition.y)//ƒ{ƒ^ƒ“‚Ìã•Ó(˜g‚ª³‚Ì’l‚É‘å‚«‚­‚È‚é‚Ì‚É‘Î‚µ‚ÄAƒ{ƒ^ƒ“‚Í•‰‚Ì’l‚ª‘å‚«‚­‚È‚é‚Ì‚ÅA•Ğ•û‚¾‚¯³•‰”½“]‚·‚é)
+            //ä¸Šã«ã¯ã¿å‡ºã—ã¦ã„ãªã„ã‹åˆ¤å®šã™ã‚‹
+            if (GetComponent<RectTransform>().anchoredPosition.y >//æ ã®ä¸Šè¾º
+                -_eventSystem.currentSelectedGameObject.GetComponent<RectTransform>().anchoredPosition.y)//ãƒœã‚¿ãƒ³ã®ä¸Šè¾º(æ ãŒæ­£ã®å€¤ã«å¤§ãããªã‚‹ã®ã«å¯¾ã—ã¦ã€ãƒœã‚¿ãƒ³ã¯è² ã®å€¤ãŒå¤§ãããªã‚‹ã®ã§ã€ç‰‡æ–¹ã ã‘æ­£è² åè»¢ã™ã‚‹)
             {
-                //‚Í‚İo‚µ‚Ä‚¢‚ê‚ÎˆÊ’u‚ğ’²®‚·‚é
-                GetComponent<RectTransform>().anchoredPosition = Vector2.up * -_currentButton.GetComponent<RectTransform>().anchoredPosition;
+                //ã¯ã¿å‡ºã—ã¦ã„ã‚Œã°ä½ç½®ã‚’èª¿æ•´ã™ã‚‹
+                GetComponent<RectTransform>().anchoredPosition = Vector2.up * -_eventSystem.currentSelectedGameObject.GetComponent<RectTransform>().anchoredPosition;
             }
 
-            //‰º‚É‚Í‚İo‚µ‚Ä‚¢‚È‚¢‚©”»’è‚·‚é
-            if (GetComponent<RectTransform>().anchoredPosition.y + 500 <//˜g‚Ì‰º•Ó(500‚ÍScrollView‚ÌHeightBƒVƒŠƒAƒ‰ƒCƒY‚Åæ‚Á‚Ä‚­‚é‚æ‚¤•ÏX‚·‚é)
-                -(_currentButton.GetComponent<RectTransform>().anchoredPosition.y - _lineHeight))//ƒ{ƒ^ƒ“‚Ì‰º•Ó
+            //ä¸‹ã«ã¯ã¿å‡ºã—ã¦ã„ãªã„ã‹åˆ¤å®šã™ã‚‹
+            if (GetComponent<RectTransform>().anchoredPosition.y + 500 <//æ ã®ä¸‹è¾º(500ã¯ScrollViewã®Heightã€‚ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºã§å–ã£ã¦ãã‚‹ã‚ˆã†å¤‰æ›´ã™ã‚‹)
+                -(_eventSystem.currentSelectedGameObject.GetComponent<RectTransform>().anchoredPosition.y - _lineHeight))//ãƒœã‚¿ãƒ³ã®ä¸‹è¾º
             {
-                //‚Í‚İo‚µ‚Ä‚¢‚ê‚ÎˆÊ’u‚ğ’²®‚·‚é
-                GetComponent<RectTransform>().anchoredPosition = Vector3.up * -(_currentButton.GetComponent<RectTransform>().anchoredPosition.y + 500f - _lineHeight);
+                //ã¯ã¿å‡ºã—ã¦ã„ã‚Œã°ä½ç½®ã‚’èª¿æ•´ã™ã‚‹
+                GetComponent<RectTransform>().anchoredPosition = Vector3.up * -(_eventSystem.currentSelectedGameObject.GetComponent<RectTransform>().anchoredPosition.y + 500f - _lineHeight);
             }
         }
     }

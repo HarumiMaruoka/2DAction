@@ -20,9 +20,9 @@ public class EquipmentButton : UseEventSystemBehavior
 
 
     //<===== Unityメッセージ =====>//
-    private void Start()
+    protected override void Start()
     {
-        base.Init();
+        base.Start();
         //テキストを取得
         _myText = transform.GetComponentInChildren<Text>();
         UpdateText();

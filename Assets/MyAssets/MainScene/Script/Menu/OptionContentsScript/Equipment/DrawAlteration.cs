@@ -6,9 +6,9 @@ using UnityEngine.UI;
 /// <summary>
 /// 選択されているパーツを装備することによる変化量を描画するコンポーネント。
 /// </summary>
-public class DrawAlteration : EquipmentUIBase
+public class DrawAlteration : UseEventSystemBehavior
 {
-    //<===== メンバー変数 =====>//
+    //===== フィールド / プロパティ =====//
     /// <summary> 子オブジェクトのテキスト群 </summary>
     Text[] _childrenText;
     Animator _animator;
@@ -21,10 +21,10 @@ public class DrawAlteration : EquipmentUIBase
     bool _isAmountOfChange = false;
     public bool IsAmountOfChange { get => _isAmountOfChange; set => _isAmountOfChange = value; }
 
-    //<===== Unityメッセージ =====>//
+    //===== Unityメッセージ =====//
     protected override void Start()
     {
-        Initialized();
+        Init();
         base.Start();
     }
     void Update()
@@ -44,17 +44,24 @@ public class DrawAlteration : EquipmentUIBase
     }
 
 
-    //<===== privateメンバー関数 =====>//
-    bool Initialized()
+    //===== privateメソッド群 =====//
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    /// <returns>
+    /// 初期化に成功したら true ,そうでない場合 false を返す。
+    /// </returns>
+    bool Init()
     {
         _animator = GetComponent<Animator>();
         _childrenText = transform.GetComponentsInChildren<Text>();
         if (_childrenText == null) return false;
         return true;
     }
+    /// <summary> このクラスの更新処理。 </summary>
     void Update_AlterationValue()
     {
-        //選択対象が「装備」かどうかで判定する。
+        //選択対象が「装備」かどうか判定する。
         if (_eventSystem.currentSelectedGameObject != null)
         {
             ChangeAlterationValue(_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment));
@@ -73,7 +80,12 @@ public class DrawAlteration : EquipmentUIBase
             ChangeAlterationValue(false);
         }
     }
-    /// <summary> 変化量(数値)を描画する。 </summary>
+    /// <summary>  変化量(数値)を描画する。 </summary>
+    /// <param name="drawAmountOfChangeFlag"> 
+    /// 表示するかどうかを表す真偽値。<br/>
+    /// true なら変化量(数値)を表示する。<br/>
+    /// false の場合、何も表示しない。<br/>
+    /// </param>
     void ChangeAlterationValue(bool drawAmountOfChangeFlag)
     {
         if (drawAmountOfChangeFlag)
@@ -129,7 +141,10 @@ public class DrawAlteration : EquipmentUIBase
             _childrenText[Constants.DIFFICULT_TO_BLOW_OFF_DRAW_AREA].text = "";
         }
     }
-    /// <summary> 指定された種類の、着用している装備の、ステータス上昇量を取得する。 </summary>
+    /// <summary> 
+    /// 指定された種類の、着用している装備の、ステータス上昇量を取得する。<br/>
+    /// Get_RiseDifference()と連携して使用する。<br/>
+    /// </summary>
     /// <param name="type"> 種類 </param>
     /// <param name="armFrag"> 腕以外 右腕 左腕 を判断する値 </param>
     /// <returns> 指定された種類の、着用している装備の、ステータス上昇量 </returns>
@@ -193,8 +208,7 @@ public class DrawAlteration : EquipmentUIBase
         return result;
     }
     /// <summary>
-    /// 選択中のパーツを装備する場合のパラメータの差を取得する。
-    /// 腕の場合の処理がまだ未記入なので修正が必要です。
+    /// 選択中のパーツを装備する場合のパラメータの差を取得する。<br/>
     /// </summary>
     /// <param name="armFrag"> 腕以外、右腕、左腕 を判断する値 </param>
     /// <returns> パラメータの差 </returns>
@@ -243,7 +257,12 @@ public class DrawAlteration : EquipmentUIBase
         }
         return result;
     }
-
+    /// <summary>
+    /// "装備の種類" を "文字列" で表したモノに変換する。
+    /// </summary>
+    /// <param name="type"> 種類 </param>
+    /// <param name="armType"> 腕の場合 左腕か右腕かを判定する。 </param>
+    /// <returns> 変換後の値を返す。 </returns>
     string Conversion_EquipmentTypeToString(Equipment.EquipmentType type,int armType=Constants.RIGHT_ARM)
     {
         switch (type)
@@ -255,18 +274,6 @@ public class DrawAlteration : EquipmentUIBase
                 else return "左腕の場合";
             case Equipment.EquipmentType.FOOT_PARTS: return "足";
             default: return "";
-        }
-    }
-
-    void ChangeArmType()
-    {
-        if (_armType == Constants.LEFT_ARM)
-        {
-            _armType = Constants.RIGHT_ARM;
-        }
-        else
-        {
-            _armType = Constants.LEFT_ARM;
         }
     }
 }

@@ -9,16 +9,22 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class UseEventSystemBehavior : MonoBehaviour
 {
-    //<===== メンバー変数 =====>//
+    //===== メンバー変数 =====//
     /// <summary> イベントシステム </summary>
     protected EventSystem _eventSystem;
     /// <summary> 前フレームで選択していたゲームオブジェクト(Button) </summary>
     protected GameObject _beforeSelectedGameObject;
 
-    //<===== 初期化処理系 =====>//
-    /// <summary> UseEventSystemBehaviorクラスの初期化処理 </summary>
-    /// <returns> 初期化成功の可否を返す。成功したら true 。 </returns>
-    protected bool Init()
+    //===== Unityメッセージ =====//
+    protected virtual void Start()
+    {
+        Init();
+    }
+
+    //===== methods =====//
+    /// <summary> 初期化処理 </summary>
+    /// <returns> 初期化成功の可否を返す。成功したら true を返す。 </returns>
+    bool Init()
     {
         if ((_eventSystem = GameObject.FindObjectOfType<EventSystem>()) == null)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary> 現在装備しているパーツを表示するコンポーネント </summary>
-public class Draw_NowEquipped : EquipmentUIBase
+public class Draw_NowEquipped : UseEventSystemBehavior
 {
     const int REFT_ARM = 0;
     const int RIGHT_ARM = 1;
@@ -30,18 +30,13 @@ public class Draw_NowEquipped : EquipmentUIBase
         Update_EquippedALL();
     }
 
-    void Update()
-    {
-
-    }
-
     /// <summary> 着用している装備の表示を更新する。 </summary>
     void Update_EquippedALL()
     {
         Update_Equipped(Equipment.EquipmentType.HEAD_PARTS);//頭
         Update_Equipped(Equipment.EquipmentType.TORSO_PARTS);//胴
-        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, REFT_ARM);//左腕
-        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, RIGHT_ARM);//右腕
+        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, Constants.RIGHT_ARM);//右腕
+        Update_Equipped(Equipment.EquipmentType.ARM_PARTS, Constants.LEFT_ARM);//左腕
         Update_Equipped(Equipment.EquipmentType.FOOT_PARTS);//足
     }
 
@@ -81,7 +76,7 @@ public class Draw_NowEquipped : EquipmentUIBase
         else
         {
             //左腕の場合
-            if (whichArm == 0)
+            if (whichArm == Constants.LEFT_ARM)
             {
                 if (EquipmentDataBase.Instance.Equipped._armLeftPartsID >= 0)
                     _armLeftPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID]._myName;
@@ -89,7 +84,7 @@ public class Draw_NowEquipped : EquipmentUIBase
                     _armLeftPartsTextArea.text = "未装備";
             }
             //右腕の場合
-            else if (whichArm == 1)
+            else if (whichArm == Constants.RIGHT_ARM)
             {
                 if (EquipmentDataBase.Instance.Equipped._armRightPartsID >= 0)
                     _armRightPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID]._myName;

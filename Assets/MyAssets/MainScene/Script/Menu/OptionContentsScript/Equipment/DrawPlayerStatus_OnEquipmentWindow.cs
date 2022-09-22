@@ -2,13 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary> 
 /// 装備画面に、プレイヤーステータスを描画するコンポーネント。
 /// </summary>
-public class DrawPlayerStatus_OnEquipmentWindow : EquipmentUIBase
+public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 {
 
     /// <summary> このクラスを初期化したかどうか </summary>
@@ -17,9 +16,8 @@ public class DrawPlayerStatus_OnEquipmentWindow : EquipmentUIBase
     Text[] _playerStatusText;
 
     //<===== unityメッセージ =====>//
-    protected override void Start()
+    void Start()
     {
-        base.Start();
         Initialize_ThisClass();
     }
     void OnEnable()
