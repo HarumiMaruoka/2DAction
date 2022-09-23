@@ -1,26 +1,26 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary> ‘•”õ‚ÌŠî’êƒNƒ‰ƒX:Še‘•”õƒNƒ‰ƒX‚Í‚±‚ÌƒNƒ‰ƒX‚ğŒp³‚·‚é </summary>
+/// <summary> è£…å‚™ã®åŸºåº•ã‚¯ãƒ©ã‚¹:å„è£…å‚™ã‚¯ãƒ©ã‚¹ã¯ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã™ã‚‹ </summary>
 abstract public class Equipment
 {
-    /// <summary> ‘•”õ‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
+    /// <summary> è£…å‚™ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
     /// <param name="id"> ID </param>
-    /// <param name="type"> Type (í—Ş) </param>
-    /// <param name="name"> –¼‘O </param>
-    /// <param name="rarity"> ƒŒƒAƒŠƒeƒB </param>
-    /// <param name="specialEffects"> “ÁêŒø‰Ê‚ÌŒø‰Ê—Ê </param>
-    /// <param name="endurance_RiseValue"> Œ»İ‚Ì‘Ï‹v—Í </param>
-    /// <==ˆÈ‰º‘‰Á—Ê==>
-    /// <param name="maxHealthPoint_RiseValue"> Å‘å‘Ì—Í </param>
-    /// <param name="maxStamina_RiseValue"> Å‘åƒXƒ^ƒ~ƒi </param>
-    /// <param name="offensivePower_ShortDistance_RiseValue"> ‹ß‹——£UŒ‚—Í </param>
-    /// <param name="offensivePower_LongDistance_RiseValue"> ‰“‹——£UŒ‚—Í </param>
-    /// <param name="defensePower_RiseValue"> –hŒä—Í </param>
-    /// <param name="moveSpeed_RiseValue"> ˆÚ“®‘¬“x </param>
-    /// <param name="difficultToBlowOff"> ‚Á”ò‚Ñ‚É‚­‚³ </param>
-    /// <param name="seriesName"> ƒVƒŠ[ƒY–¼ </param>
+    /// <param name="type"> Type (ç¨®é¡) </param>
+    /// <param name="name"> åå‰ </param>
+    /// <param name="rarity"> ãƒ¬ã‚¢ãƒªãƒ†ã‚£ </param>
+    /// <param name="specialEffects"> ç‰¹æ®ŠåŠ¹æœã®åŠ¹æœé‡ </param>
+    /// <param name="endurance_RiseValue"> ç¾åœ¨ã®è€ä¹…åŠ› </param>
+    /// <==ä»¥ä¸‹å¢—åŠ é‡==>
+    /// <param name="maxHealthPoint_RiseValue"> æœ€å¤§ä½“åŠ› </param>
+    /// <param name="maxStamina_RiseValue"> æœ€å¤§ã‚¹ã‚¿ãƒŸãƒŠ </param>
+    /// <param name="offensivePower_ShortDistance_RiseValue"> è¿‘è·é›¢æ”»æ’ƒåŠ› </param>
+    /// <param name="offensivePower_LongDistance_RiseValue"> é è·é›¢æ”»æ’ƒåŠ› </param>
+    /// <param name="defensePower_RiseValue"> é˜²å¾¡åŠ› </param>
+    /// <param name="moveSpeed_RiseValue"> ç§»å‹•é€Ÿåº¦ </param>
+    /// <param name="difficultToBlowOff"> å¹ã£é£›ã³ã«ãã• </param>
+    /// <param name="seriesName"> ã‚·ãƒªãƒ¼ã‚ºå </param>
     public Equipment(EquipmentID id, EquipmentType type, string name,
         EquipmentRarity rarity, float specialEffects = 0f, float endurance_RiseValue = 0f,
         float maxHealthPoint_RiseValue = 0f, float maxStamina_RiseValue = 0f,
@@ -58,56 +58,56 @@ abstract public class Equipment
         Set_MyTypeString();
     }
 
-    /// <summary> ƒp[ƒc‚Ìƒ^ƒCƒv </summary>
+    /// <summary> ãƒ‘ãƒ¼ãƒ„ã®ã‚¿ã‚¤ãƒ— </summary>
     public enum EquipmentType
     {
-        /// <summary> ˜r </summary>
+        /// <summary> è…• </summary>
         ARM_PARTS,
-        /// <summary> ‘« </summary>
+        /// <summary> è¶³ </summary>
         FOOT_PARTS,
-        /// <summary> “ª </summary>
+        /// <summary> é ­ </summary>
         HEAD_PARTS,
-        /// <summary> “·‘Ì </summary>
+        /// <summary> èƒ´ä½“ </summary>
         TORSO_PARTS,
 
         PARTS_TYPE_END
     }
 
-    /// <summary> ƒp[ƒc‚ÌƒŒƒAƒŠƒeƒB </summary>
+    /// <summary> ãƒ‘ãƒ¼ãƒ„ã®ãƒ¬ã‚¢ãƒªãƒ†ã‚£ </summary>
     public enum EquipmentRarity { A, B, C, D, E, ERROR }
 
-    /// <summary> ‚±‚Ì‘•”õ‚ÌID </summary>
+    /// <summary> ã“ã®è£…å‚™ã®ID </summary>
     public EquipmentID _myID { get; }
-    /// <summary> ‚±‚Ì‘•”õ‚Ìí—Ş </summary>
+    /// <summary> ã“ã®è£…å‚™ã®ç¨®é¡ </summary>
     public EquipmentType _myType { get; }
-    /// <summary> ‚±‚Ì‘•”õ‚ÌƒŒƒAƒŠƒeƒB </summary>
+    /// <summary> ã“ã®è£…å‚™ã®ãƒ¬ã‚¢ãƒªãƒ†ã‚£ </summary>
     public EquipmentRarity _myRarity { get; }
-    /// <summary> ‚±‚Ì‘•”õ‚Ì–¼‘O </summary>
+    /// <summary> ã“ã®è£…å‚™ã®åå‰ </summary>
     public string _myName { get; }
 
-    /// <summary> ‚±‚Ì‘•”õ‚Ì“ÁêŒø‰Ê‚ÌŒø‰Ê—Ê </summary>
+    /// <summary> ã“ã®è£…å‚™ã®ç‰¹æ®ŠåŠ¹æœã®åŠ¹æœé‡ </summary>
     public float _specialEffects { get; }
-    /// <summary> ‚±‚Ì‘•”õ‚ÌÅ‘å‘Ï‹v—Í </summary>
+    /// <summary> ã“ã®è£…å‚™ã®æœ€å¤§è€ä¹…åŠ› </summary>
     public float _endurance_RiseValue { get; }
-    /// <summary> à–¾•¶ </summary>
+    /// <summary> èª¬æ˜æ–‡ </summary>
     public string _explanatoryText { get; }
 
-    /// <summary> ƒVƒŠ[ƒY–¼(“¯ˆê–¼‚È‚ç“¯‚¶ƒVƒŠ[ƒYB) </summary>
+    /// <summary> ã‚·ãƒªãƒ¼ã‚ºå(åŒä¸€åãªã‚‰åŒã˜ã‚·ãƒªãƒ¼ã‚ºã€‚) </summary>
     public string _seriesName { get; }
-    /// <summary> ‚±‚Ì‘•”õ‚Ìí—Ş‚Ì–¼‘O </summary>
+    /// <summary> ã“ã®è£…å‚™ã®ç¨®é¡ã®åå‰ </summary>
     public string _myTypeName { get; private set; }
 
-    //‚±‚Ì‘•”õ‚ÌƒXƒe[ƒ^ƒXã¸—Ê
+    //ã“ã®è£…å‚™ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡é‡
     PlayerStatusManager.PlayerStatus _thisEquipment_StatusRisingValue;
     public PlayerStatusManager.PlayerStatus ThisEquipment_StatusRisingValue { get => _thisEquipment_StatusRisingValue; }
-    /// <summary> ƒXƒe[ƒ^ƒXã¸—Ê‚ğƒZƒbƒg‚·‚é </summary>
-    /// <param name="maxHp"> Å‘å‘Ì—Í </param>
-    /// <param name="maxStamina"> Å‘åƒXƒ^ƒ~ƒi </param>
-    /// <param name="offensivePow_Short"> ‹ß‹——£UŒ‚—Í </param>
-    /// <param name="offensivePow_Long"> ‰“‹——£UŒ‚—Í </param>
-    /// <param name="defensePow"> –hŒä—Í </param>
-    /// <param name="moveSpeed"> ˆÚ“®‘¬“x </param>
-    /// <param name="difficultToBlowOff"> ‚Á”ò‚Ñ‚É‚­‚³ </param>
+    /// <summary> ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡é‡ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ </summary>
+    /// <param name="maxHp"> æœ€å¤§ä½“åŠ› </param>
+    /// <param name="maxStamina"> æœ€å¤§ã‚¹ã‚¿ãƒŸãƒŠ </param>
+    /// <param name="offensivePow_Short"> è¿‘è·é›¢æ”»æ’ƒåŠ› </param>
+    /// <param name="offensivePow_Long"> é è·é›¢æ”»æ’ƒåŠ› </param>
+    /// <param name="defensePow"> é˜²å¾¡åŠ› </param>
+    /// <param name="moveSpeed"> ç§»å‹•é€Ÿåº¦ </param>
+    /// <param name="difficultToBlowOff"> å¹ã£é£›ã³ã«ãã• </param>
     void Set_ThisEquipment_StatusRisingValue(
         float maxHp,
         float maxStamina,
@@ -130,11 +130,11 @@ abstract public class Equipment
     {
         switch (_myType)
         {
-            case EquipmentType.HEAD_PARTS: _myTypeName = "“ª"; break;
-            case EquipmentType.TORSO_PARTS: _myTypeName = "“·"; break;
-            case EquipmentType.ARM_PARTS: _myTypeName = "˜r"; break;
-            case EquipmentType.FOOT_PARTS: _myTypeName = "‘«"; break;
-            default: Debug.LogError("•s³‚È’l‚Å‚·B"); _myTypeName = ""; break;
+            case EquipmentType.HEAD_PARTS: _myTypeName = "é ­"; break;
+            case EquipmentType.TORSO_PARTS: _myTypeName = "èƒ´"; break;
+            case EquipmentType.ARM_PARTS: _myTypeName = "è…•"; break;
+            case EquipmentType.FOOT_PARTS: _myTypeName = "è¶³"; break;
+            default: Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ã€‚"); _myTypeName = ""; break;
         }
     }
 }

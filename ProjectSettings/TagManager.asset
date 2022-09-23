@@ -14,10 +14,6 @@ TagManager:
   - ExitMenu
   - ToolWindow
   - Default
-  - ItemDrawContentHeal
-  - ItemDrawContentKey
-  - ItemDrawContentMinus
-  - ItemDrawContentPowerUp
   layers:
   - Default
   - TransparentFX

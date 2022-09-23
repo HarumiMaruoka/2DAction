@@ -79,7 +79,7 @@ public class CurrentEquippedDataBase
         File.WriteAllText(_equippedJsonFilePath, JsonUtility.ToJson(_equipped, false));
     }
     /// <summary>
-    /// 着用している装備を変更する
+    /// 引数に渡された値の装備を着用する。 <br/>
     /// </summary>
     /// <param name="equipmentType"> 変更を加える箇所 </param>
     /// <param name="armType"> 腕の場合どちらか </param>

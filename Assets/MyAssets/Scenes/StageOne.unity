@@ -24901,7 +24901,7 @@ GameObject:
   - component: {fileID: 44964595}
   m_Layer: 5
   m_Name: Content_Heal
-  m_TagString: ItemDrawContentHeal
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27153,7 +27153,7 @@ GameObject:
   - component: {fileID: 382632074}
   m_Layer: 5
   m_Name: Content_Key
-  m_TagString: ItemDrawContentKey
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50382,7 +50382,6 @@ MonoBehaviour:
   _equipmentHaveJsonFilePath: 
   _equippedJsonFilePath: 
   _maxHaveVolume: 20
-  _eventSystem: {fileID: 1216641984}
   _equipmentLostPanel: {fileID: 1883070068}
 --- !u!1001 &981030774
 PrefabInstance:
@@ -51009,7 +51008,6 @@ MonoBehaviour:
   _itemButtonPrefab: {fileID: 372235170206443278, guid: d071659a17a43504184296f7e8b9d3f0, type: 3}
   _itemExplanatoryText: {fileID: 478846422}
   _itemIconImage: {fileID: 1543710357}
-  _eventSystem: {fileID: 1216641984}
   _contentParent: {fileID: 380073474}
   _folderPath: icon\
   _filterButton_NomalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -55886,7 +55884,7 @@ GameObject:
   - component: {fileID: 1480564849}
   m_Layer: 5
   m_Name: Content_Minus
-  m_TagString: ItemDrawContentMinus
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59300,7 +59298,7 @@ GameObject:
   - component: {fileID: 1934831441}
   m_Layer: 5
   m_Name: Content_PowerUp
-  m_TagString: ItemDrawContentPowerUp
+  m_TagString: Default
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

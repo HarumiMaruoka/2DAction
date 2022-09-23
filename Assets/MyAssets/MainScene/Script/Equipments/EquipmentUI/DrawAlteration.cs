@@ -1,27 +1,27 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ‘I‘ğ‚³‚ê‚Ä‚¢‚éƒp[ƒc‚ğ‘•”õ‚·‚é‚±‚Æ‚É‚æ‚é•Ï‰»—Ê‚ğ•`‰æ‚·‚éƒRƒ“ƒ|[ƒlƒ“ƒgB
+/// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒ‘ãƒ¼ãƒ„ã‚’è£…å‚™ã™ã‚‹ã“ã¨ã«ã‚ˆã‚‹å¤‰åŒ–é‡ã‚’æç”»ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã€‚
 /// </summary>
 public class DrawAlteration : UseEventSystemBehavior
 {
-    //===== ƒtƒB[ƒ‹ƒh / ƒvƒƒpƒeƒB =====//
-    /// <summary> qƒIƒuƒWƒFƒNƒg‚ÌƒeƒLƒXƒgŒQ </summary>
+    //===== ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ / ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ =====//
+    /// <summary> å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ†ã‚­ã‚¹ãƒˆç¾¤ </summary>
     Text[] _childrenText;
     Animator _animator;
-    //¶˜r‚©‰E˜r‚©‚ğ•\‚·
+    //å·¦è…•ã‹å³è…•ã‹ã‚’è¡¨ã™
     int _armType;
     string _animName_None = "None";
     string _animName_EquipmentAlterationValue = "EquipmentAlterationValue";
 
-    /// <summary> •`‰æ‚·‚é‚©‚µ‚È‚¢‚©‚ğ•\‚·’l </summary>
+    /// <summary> æç”»ã™ã‚‹ã‹ã—ãªã„ã‹ã‚’è¡¨ã™å€¤ </summary>
     bool _isAmountOfChange = false;
     public bool IsAmountOfChange { get => _isAmountOfChange; set => _isAmountOfChange = value; }
 
-    //===== UnityƒƒbƒZ[ƒW =====//
+    //===== Unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =====//
     protected override void Start()
     {
         Init();
@@ -44,12 +44,12 @@ public class DrawAlteration : UseEventSystemBehavior
     }
 
 
-    //===== privateƒƒ\ƒbƒhŒQ =====//
+    //===== privateãƒ¡ã‚½ãƒƒãƒ‰ç¾¤ =====//
     /// <summary>
-    /// ‰Šú‰»ˆ—
+    /// åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     /// <returns>
-    /// ‰Šú‰»‚É¬Œ÷‚µ‚½‚ç true ,‚»‚¤‚Å‚È‚¢ê‡ false ‚ğ•Ô‚·B
+    /// åˆæœŸåŒ–ã«æˆåŠŸã—ãŸã‚‰ true ,ãã†ã§ãªã„å ´åˆ false ã‚’è¿”ã™ã€‚
     /// </returns>
     bool Init()
     {
@@ -58,10 +58,10 @@ public class DrawAlteration : UseEventSystemBehavior
         if (_childrenText == null) return false;
         return true;
     }
-    /// <summary> ‚±‚ÌƒNƒ‰ƒX‚ÌXVˆ—B </summary>
+    /// <summary> ã“ã®ã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã€‚ </summary>
     void Update_AlterationValue()
     {
-        //‘I‘ğ‘ÎÛ‚ªu‘•”õv‚©‚Ç‚¤‚©”»’è‚·‚éB
+        //é¸æŠå¯¾è±¡ãŒã€Œè£…å‚™ã€ã‹ã©ã†ã‹åˆ¤å®šã™ã‚‹ã€‚
         if (_eventSystem.currentSelectedGameObject != null)
         {
             ChangeAlterationValue(_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment));
@@ -80,11 +80,11 @@ public class DrawAlteration : UseEventSystemBehavior
             ChangeAlterationValue(false);
         }
     }
-    /// <summary>  •Ï‰»—Ê(”’l)‚ğ•`‰æ‚·‚éB </summary>
+    /// <summary>  å¤‰åŒ–é‡(æ•°å€¤)ã‚’æç”»ã™ã‚‹ã€‚ </summary>
     /// <param name="drawAmountOfChangeFlag"> 
-    /// •\¦‚·‚é‚©‚Ç‚¤‚©‚ğ•\‚·^‹U’lB<br/>
-    /// true ‚È‚ç•Ï‰»—Ê(”’l)‚ğ•\¦‚·‚éB<br/>
-    /// false ‚Ìê‡A‰½‚à•\¦‚µ‚È‚¢B<br/>
+    /// è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹ã‚’è¡¨ã™çœŸå½å€¤ã€‚<br/>
+    /// true ãªã‚‰å¤‰åŒ–é‡(æ•°å€¤)ã‚’è¡¨ç¤ºã™ã‚‹ã€‚<br/>
+    /// false ã®å ´åˆã€ä½•ã‚‚è¡¨ç¤ºã—ãªã„ã€‚<br/>
     /// </param>
     void ChangeAlterationValue(bool drawAmountOfChangeFlag)
     {
@@ -92,7 +92,7 @@ public class DrawAlteration : UseEventSystemBehavior
         {
             var riseDifference = Get_RiseDifference(_armType);
 
-            //í—Ş
+            //ç¨®é¡
             _childrenText[Constants.EQUIPMENT_TYPE_DRAW_AREA].text =
                 Conversion_EquipmentTypeToString
                 (
@@ -100,35 +100,35 @@ public class DrawAlteration : UseEventSystemBehavior
                     _armType
                 );
 
-            //‘Ì—Í
+            //ä½“åŠ›
             _childrenText[Constants.MAX_HP_DRAW_AREA].text =
-                riseDifference._maxHp.ToString("+0;-0;}0");
+                riseDifference._maxHp.ToString("+0;-0;Â±0");
 
-            //ƒXƒ^ƒ~ƒi
+            //ã‚¹ã‚¿ãƒŸãƒŠ
             _childrenText[Constants.MAX_STAMINA_TYPE_DRAW_AREA].text =
-                riseDifference._maxStamina.ToString("+0;-0;}0");
+                riseDifference._maxStamina.ToString("+0;-0;Â±0");
 
-            //‹ß‹——£UŒ‚—Í
+            //è¿‘è·é›¢æ”»æ’ƒåŠ›
             _childrenText[Constants.SHORT_RANGE_ATTACK_POWER_DRAW_AREA].text =
-                riseDifference._shortRangeAttackPower.ToString("+0;-0;}0");
+                riseDifference._shortRangeAttackPower.ToString("+0;-0;Â±0");
 
-            //‰“‹——£UŒ‚
+            //é è·é›¢æ”»æ’ƒ
             _childrenText[Constants.LONG_RANGE_ATTACK_POWER_DRAW_AREA].text =
-                riseDifference._longRangeAttackPower.ToString("+0;-0;}0");
+                riseDifference._longRangeAttackPower.ToString("+0;-0;Â±0");
 
-            //–hŒä—Í
+            //é˜²å¾¡åŠ›
             _childrenText[Constants.DEFENSE_POWER_DRAW_AREA].text =
-                riseDifference._defensePower.ToString("+0;-0;}0");
+                riseDifference._defensePower.ToString("+0;-0;Â±0");
 
-            //ˆÚ“®‘¬“x
+            //ç§»å‹•é€Ÿåº¦
             _childrenText[Constants.MOVE_SPEED_DRAW_AREA].text =
-                riseDifference._moveSpeed.ToString("+0;-0;}0");
+                riseDifference._moveSpeed.ToString("+0;-0;Â±0");
 
-            //‚Á”ò‚Ñ‚É‚­‚³
+            //å¹ã£é£›ã³ã«ãã•
             _childrenText[Constants.DIFFICULT_TO_BLOW_OFF_DRAW_AREA].text =
-                riseDifference._difficultToBlowOff.ToString("+0;-0;}0");
+                riseDifference._difficultToBlowOff.ToString("+0;-0;Â±0");
         }
-        //‘S‚Ä‹ó•¶š—ñ‚ğ‘ã“ü
+        //å…¨ã¦ç©ºæ–‡å­—åˆ—ã‚’ä»£å…¥
         else
         {
             _childrenText[Constants.EQUIPMENT_TYPE_DRAW_AREA].text = "";
@@ -142,18 +142,18 @@ public class DrawAlteration : UseEventSystemBehavior
         }
     }
     /// <summary> 
-    /// w’è‚³‚ê‚½í—Ş‚ÌA’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÌAƒXƒe[ƒ^ƒXã¸—Ê‚ğæ“¾‚·‚éB<br/>
-    /// Get_RiseDifference()‚Æ˜AŒg‚µ‚Äg—p‚·‚éB<br/>
+    /// æŒ‡å®šã•ã‚ŒãŸç¨®é¡ã®ã€ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®ã€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡é‡ã‚’å–å¾—ã™ã‚‹ã€‚<br/>
+    /// Get_RiseDifference()ã¨é€£æºã—ã¦ä½¿ç”¨ã™ã‚‹ã€‚<br/>
     /// </summary>
-    /// <param name="type"> í—Ş </param>
-    /// <param name="armFrag"> ˜rˆÈŠO ‰E˜r ¶˜r ‚ğ”»’f‚·‚é’l </param>
-    /// <returns> w’è‚³‚ê‚½í—Ş‚ÌA’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÌAƒXƒe[ƒ^ƒXã¸—Ê </returns>
+    /// <param name="type"> ç¨®é¡ </param>
+    /// <param name="armFrag"> è…•ä»¥å¤– å³è…• å·¦è…• ã‚’åˆ¤æ–­ã™ã‚‹å€¤ </param>
+    /// <returns> æŒ‡å®šã•ã‚ŒãŸç¨®é¡ã®ã€ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã®ã€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ä¸Šæ˜‡é‡ </returns>
     PlayerStatusManager.PlayerStatus Get_SelectedEquipment(Equipment.EquipmentType type, int armFrag = Constants.NOT_ARM)
     {
         PlayerStatusManager.PlayerStatus result = default;
         switch (type)
         {
-            //“ªƒp[ƒc‚Ìê‡‚Ìˆ—
+            //é ­ãƒ‘ãƒ¼ãƒ„ã®å ´åˆã®å‡¦ç†
             case Equipment.EquipmentType.HEAD_PARTS:
                 if (EquipmentDataBase.Instance.Equipped._headPartsID != -1)
                     result =
@@ -161,7 +161,7 @@ public class DrawAlteration : UseEventSystemBehavior
                         EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
-            //“·ƒp[ƒc‚Ìê‡‚Ìˆ—
+            //èƒ´ãƒ‘ãƒ¼ãƒ„ã®å ´åˆã®å‡¦ç†
             case Equipment.EquipmentType.TORSO_PARTS:
                 if (EquipmentDataBase.Instance.Equipped._torsoPartsID != -1)
                     result =
@@ -169,7 +169,7 @@ public class DrawAlteration : UseEventSystemBehavior
                         EquipmentData[EquipmentDataBase.Instance.Equipped._torsoPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
-            //‘«ƒp[ƒc‚Ìê‡‚Ìˆ—
+            //è¶³ãƒ‘ãƒ¼ãƒ„ã®å ´åˆã®å‡¦ç†
             case Equipment.EquipmentType.FOOT_PARTS:
                 if (EquipmentDataBase.Instance.Equipped._footPartsID != -1)
                     result =
@@ -177,9 +177,9 @@ public class DrawAlteration : UseEventSystemBehavior
                         EquipmentData[EquipmentDataBase.Instance.Equipped._footPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
-            //˜rƒp[ƒc‚Ìê‡‚Ìˆ—
+            //è…•ãƒ‘ãƒ¼ãƒ„ã®å ´åˆã®å‡¦ç†
             case Equipment.EquipmentType.ARM_PARTS:
-                //¶˜r‚Ìê‡‚Ìˆ—
+                //å·¦è…•ã®å ´åˆã®å‡¦ç†
                 if (armFrag == Constants.LEFT_ARM)
                 {
                     if (EquipmentDataBase.Instance.Equipped._armLeftPartsID != -1)
@@ -188,7 +188,7 @@ public class DrawAlteration : UseEventSystemBehavior
                             EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
-                //‰E˜r‚Ìê‡‚Ìˆ—
+                //å³è…•ã®å ´åˆã®å‡¦ç†
                 else if (armFrag == Constants.RIGHT_ARM)
                 {
                     if (EquipmentDataBase.Instance.Equipped._armRightPartsID != -1)
@@ -197,30 +197,30 @@ public class DrawAlteration : UseEventSystemBehavior
                             EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
-                //ƒGƒ‰[’l‚Ìˆ—
+                //ã‚¨ãƒ©ãƒ¼å€¤ã®å‡¦ç†
                 else
                 {
-                    Debug.LogError("•s³‚È’l‚Å‚·I");
+                    Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ï¼");
                 }
                 break;
-            default: Debug.LogError("•s³‚È’l‚Å‚·I"); break;
+            default: Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ï¼"); break;
         }
         return result;
     }
     /// <summary>
-    /// ‘I‘ğ’†‚Ìƒp[ƒc‚ğ‘•”õ‚·‚éê‡‚Ìƒpƒ‰ƒ[ƒ^‚Ì·‚ğæ“¾‚·‚éB<br/>
+    /// é¸æŠä¸­ã®ãƒ‘ãƒ¼ãƒ„ã‚’è£…å‚™ã™ã‚‹å ´åˆã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®å·®ã‚’å–å¾—ã™ã‚‹ã€‚<br/>
     /// </summary>
-    /// <param name="armFrag"> ˜rˆÈŠOA‰E˜rA¶˜r ‚ğ”»’f‚·‚é’l </param>
-    /// <returns> ƒpƒ‰ƒ[ƒ^‚Ì· </returns>
+    /// <param name="armFrag"> è…•ä»¥å¤–ã€å³è…•ã€å·¦è…• ã‚’åˆ¤æ–­ã™ã‚‹å€¤ </param>
+    /// <returns> ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®å·® </returns>
     PlayerStatusManager.PlayerStatus Get_RiseDifference(int armFrag = Constants.NOT_ARM)
     {
         PlayerStatusManager.PlayerStatus result = PlayerStatusManager.PlayerStatus.Zero;
         if (_eventSystem.currentSelectedGameObject != null && _eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton button))
         {
-            //‘I‘ğ’†‚Ìƒp[ƒc‚Ìí—Ş‚ğæ“¾‚·‚éB
+            //é¸æŠä¸­ã®ãƒ‘ãƒ¼ãƒ„ã®ç¨®é¡ã‚’å–å¾—ã™ã‚‹ã€‚
             Equipment.EquipmentType type = button._myEquipment._myType;
-            //‘I‘ğ’†‚Ìƒp[ƒc‚Ìí—Ş‚ğŠî‚Éˆ—‚ğs‚¤B
-            //“ª “· ‘« ‚Ìê‡‚Ìˆ—B
+            //é¸æŠä¸­ã®ãƒ‘ãƒ¼ãƒ„ã®ç¨®é¡ã‚’åŸºã«å‡¦ç†ã‚’è¡Œã†ã€‚
+            //é ­ èƒ´ è¶³ ã®å ´åˆã®å‡¦ç†ã€‚
             if (type != Equipment.EquipmentType.ARM_PARTS)
             {
                 if (type == Equipment.EquipmentType.HEAD_PARTS ||
@@ -233,10 +233,10 @@ public class DrawAlteration : UseEventSystemBehavior
                 }
                 else
                 {
-                    Debug.LogError("•s³‚È’l‚Å‚·I");
+                    Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ï¼");
                 }
             }
-            //˜r‚Ìê‡‚Ìˆ—B
+            //è…•ã®å ´åˆã®å‡¦ç†ã€‚
             else
             {
                 if (armFrag == Constants.LEFT_ARM)
@@ -251,28 +251,28 @@ public class DrawAlteration : UseEventSystemBehavior
                 }
                 else
                 {
-                    Debug.LogError("•s³‚È’l‚Å‚·I");
+                    Debug.LogError("ä¸æ­£ãªå€¤ã§ã™ï¼");
                 }
             }
         }
         return result;
     }
     /// <summary>
-    /// "‘•”õ‚Ìí—Ş" ‚ğ "•¶š—ñ" ‚Å•\‚µ‚½ƒ‚ƒm‚É•ÏŠ·‚·‚éB
+    /// "è£…å‚™ã®ç¨®é¡" ã‚’ "æ–‡å­—åˆ—" ã§è¡¨ã—ãŸãƒ¢ãƒã«å¤‰æ›ã™ã‚‹ã€‚
     /// </summary>
-    /// <param name="type"> í—Ş </param>
-    /// <param name="armType"> ˜r‚Ìê‡ ¶˜r‚©‰E˜r‚©‚ğ”»’è‚·‚éB </param>
-    /// <returns> •ÏŠ·Œã‚Ì’l‚ğ•Ô‚·B </returns>
+    /// <param name="type"> ç¨®é¡ </param>
+    /// <param name="armType"> è…•ã®å ´åˆ å·¦è…•ã‹å³è…•ã‹ã‚’åˆ¤å®šã™ã‚‹ã€‚ </param>
+    /// <returns> å¤‰æ›å¾Œã®å€¤ã‚’è¿”ã™ã€‚ </returns>
     string Conversion_EquipmentTypeToString(Equipment.EquipmentType type,int armType=Constants.RIGHT_ARM)
     {
         switch (type)
         {
-            case Equipment.EquipmentType.HEAD_PARTS: return "“ª";
-            case Equipment.EquipmentType.TORSO_PARTS: return "“·";
+            case Equipment.EquipmentType.HEAD_PARTS: return "é ­";
+            case Equipment.EquipmentType.TORSO_PARTS: return "èƒ´";
             case Equipment.EquipmentType.ARM_PARTS: 
-                if(armType==Constants.RIGHT_ARM)return "‰E˜r‚Ìê‡";
-                else return "¶˜r‚Ìê‡";
-            case Equipment.EquipmentType.FOOT_PARTS: return "‘«";
+                if(armType==Constants.RIGHT_ARM)return "å³è…•ã®å ´åˆ";
+                else return "å·¦è…•ã®å ´åˆ";
+            case Equipment.EquipmentType.FOOT_PARTS: return "è¶³";
             default: return "";
         }
     }

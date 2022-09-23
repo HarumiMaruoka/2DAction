@@ -1,28 +1,31 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary> u‘•”õv‚Ìƒ{ƒ^ƒ“ </summary>
+/// <summary> 
+/// ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã€‚ <br/>
+/// ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã¨ã¯ç•°ãªã‚‹ã€‚ <br/>
+/// </summary>
 public class EquipmentButton : UseEventSystemBehavior
 {
-    /// <summary> ‚±‚Ìƒ{ƒ^ƒ“‚Ì‘•”õ </summary>
+    /// <summary> ã“ã®ãƒœã‚¿ãƒ³ã®è£…å‚™ </summary>
     public Equipment _myEquipment { get; private set; }
 
-    //<===== ƒƒ“ƒo[•Ï” =====>//
-    /// <summary> q‚ÌƒeƒLƒXƒgƒIƒuƒWƒFƒNƒg </summary>
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•° =====>//
+    /// <summary> å­ã®ãƒ†ã‚­ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ </summary>
     Text _myText;
-    /// <summary> qƒIƒuƒWƒFƒNƒg‚Å‚ ‚éu‘•”õ‚·‚évƒ{ƒ^ƒ“ </summary>
+    /// <summary> å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã‚ã‚‹ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ </summary>
     GameObject _equipButton_OtherArm;
     GameObject _equipButton_LeftArm;
     GameObject _equipButton_RightArm;
 
 
-    //<===== UnityƒƒbƒZ[ƒW =====>//
+    //<===== Unityãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ =====>//
     protected override void Start()
     {
         base.Start();
-        //ƒeƒLƒXƒg‚ğæ“¾
+        //ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—
         _myText = transform.GetComponentInChildren<Text>();
         UpdateText();
         _equipButton_OtherArm = transform.GetChild(1).gameObject;
@@ -30,75 +33,75 @@ public class EquipmentButton : UseEventSystemBehavior
         _equipButton_RightArm = transform.GetChild(3).gameObject;
     }
 
-    //<===== ƒƒ“ƒo[ŠÖ” =====>//
-    /// <summary> ‚±‚Ìƒ{ƒ^ƒ“‚Ì‘•”õ‚ğİ’è‚·‚éB </summary>
+    //<===== ãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° =====>//
+    /// <summary> ã“ã®ãƒœã‚¿ãƒ³ã®è£…å‚™ã‚’è¨­å®šã™ã‚‹ã€‚ </summary>
     public void Set_Equipment(Equipment equipment)
     {
         _myEquipment = equipment;
     }
 
-    /// <summary> ‘•”õ–¼ƒeƒLƒXƒg‚ğXV‚·‚é </summary>
+    /// <summary> è£…å‚™åãƒ†ã‚­ã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹ </summary>
     void UpdateText()
     {
         if (_myEquipment != null) _myText.text = _myEquipment._myName;
         else gameObject.SetActive(false);
     }
 
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚éB : ˜rˆÈŠO‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : è…•ä»¥å¤–ã®å ´åˆ </summary>
     public void OnEnabled_EquipButton_OtherArm()
     {
         _equipButton_OtherArm.SetActive(true);
     }
 
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚éB : ˜rˆÈŠO‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : è…•ä»¥å¤–ã®å ´åˆ </summary>
     public void OffEnabled_EquipButton_OtherArm()
     {
         _equipButton_OtherArm.SetActive(false);
     }
 
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚éB : ¶˜r‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : å·¦è…•ã®å ´åˆ </summary>
     public void OnEnabled_EquipButton_LeftArm()
     {
         _equipButton_LeftArm.SetActive(true);
     }
 
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚éB : ¶˜r‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : å·¦è…•ã®å ´åˆ </summary>
     public void OffEnabled_EquipButton_LeftArm()
     {
         _equipButton_LeftArm.SetActive(false);
     }
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚éB : ‰E˜r‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : å³è…•ã®å ´åˆ </summary>
     public void OnEnabled_EquipButton_RightArm()
     {
         _equipButton_RightArm.SetActive(true);
     }
 
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğ”ñƒAƒNƒeƒBƒu‚É‚·‚éB : ‰E˜r‚Ìê‡ </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚ : å³è…•ã®å ´åˆ </summary>
     public void OffEnabled_EquipButton_RightArm()
     {
         _equipButton_RightArm.SetActive(false);
     }
 
-    //<====== ˆÈ‰ºƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ÉÀs‚·‚éŠÖ” : ‘¼‚ÌƒNƒ‰ƒX‚ÉˆÚ‚·‚©‚à ======>//
+    //<====== ä»¥ä¸‹ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¨ãã«å®Ÿè¡Œã™ã‚‹é–¢æ•° : ä»–ã®ã‚¯ãƒ©ã‚¹ã«ç§»ã™ã‹ã‚‚ ======>//
     /// <summary> 
-    /// u‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚ÉÀs‚·‚éB
-    /// ’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÆŠ‚µ‚Ä‚¢‚é‘•”õ‚ğŒğŠ·‚·‚éB : ˜rˆÈŠO 
+    /// ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å®Ÿè¡Œã™ã‚‹ã€‚
+    /// ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã¨æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’äº¤æ›ã™ã‚‹ã€‚ : è…•ä»¥å¤– 
     /// </summary>
     public void OnClick_ExecutionSwap_OtherArm()
     {
-        // ‚±‚Ìƒ{ƒ^ƒ“‚ª‚Â‘•”õ‚ğ’…—p‚·‚éB‚±‚Ì‹@”\‚Íu‘•”õvƒ{ƒ^ƒ“‚É‚½‚¹‚é‚×‚«‚©H
+        // ã“ã®ãƒœã‚¿ãƒ³ãŒæŒã¤è£…å‚™ã‚’ç€ç”¨ã™ã‚‹ã€‚ã“ã®æ©Ÿèƒ½ã¯ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã«æŒãŸã›ã‚‹ã¹ãã‹ï¼Ÿ
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this);
         UpdateText();
         OffEnabled_EquipButton_OtherArm();
         _eventSystem.SetSelectedGameObject(null);
     }
     /// <summary>
-    /// u‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚ÉÀs‚·‚éB
-    /// ’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÆŠ‚µ‚Ä‚¢‚é‘•”õ‚ğŒğŠ·‚·‚éB : ¶˜r 
+    /// ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å®Ÿè¡Œã™ã‚‹ã€‚
+    /// ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã¨æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’äº¤æ›ã™ã‚‹ã€‚ : å·¦è…• 
     /// </summary>
     public void OnClick_ExecutionSwap_LeftArm()
     {
-        // ‚±‚Ìƒ{ƒ^ƒ“‚ª‚Â‘•”õ‚ğ’…—p‚·‚éB‚±‚Ì‹@”\‚Íu‘•”õvƒ{ƒ^ƒ“‚É‚½‚¹‚é‚×‚«‚©H
+        // ã“ã®ãƒœã‚¿ãƒ³ãŒæŒã¤è£…å‚™ã‚’ç€ç”¨ã™ã‚‹ã€‚ã“ã®æ©Ÿèƒ½ã¯ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã«æŒãŸã›ã‚‹ã¹ãã‹ï¼Ÿ
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.LEFT_ARM);
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
@@ -106,22 +109,22 @@ public class EquipmentButton : UseEventSystemBehavior
         _eventSystem.SetSelectedGameObject(null);
     }
     /// <summary> 
-    /// u‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚ÉÀs‚·‚éB
-    /// ’…—p‚µ‚Ä‚¢‚é‘•”õ‚ÆŠ‚µ‚Ä‚¢‚é‘•”õ‚ğŒğŠ·‚·‚éB : ¶˜r 
+    /// ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å®Ÿè¡Œã™ã‚‹ã€‚
+    /// ç€ç”¨ã—ã¦ã„ã‚‹è£…å‚™ã¨æ‰€æŒã—ã¦ã„ã‚‹è£…å‚™ã‚’äº¤æ›ã™ã‚‹ã€‚ : å·¦è…• 
     /// </summary>
     public void OnClick_ExecutionSwap_RightArm()
     {
-        // ‚±‚Ìƒ{ƒ^ƒ“‚ª‚Â‘•”õ‚ğ’…—p‚·‚éB‚±‚Ì‹@”\‚Íu‘•”õvƒ{ƒ^ƒ“‚É‚½‚¹‚é‚×‚«‚©H
+        // ã“ã®ãƒœã‚¿ãƒ³ãŒæŒã¤è£…å‚™ã‚’ç€ç”¨ã™ã‚‹ã€‚ã“ã®æ©Ÿèƒ½ã¯ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã«æŒãŸã›ã‚‹ã¹ãã‹ï¼Ÿ
         EquipmentDataBase.Instance.Swap_HaveToEquipped((int)_myEquipment._myID, _myEquipment._myType, this, Constants.RIGHT_ARM);
         UpdateText();
         OffEnabled_EquipButton_LeftArm();
         OffEnabled_EquipButton_RightArm();
         _eventSystem.SetSelectedGameObject(null);
     }
-    /// <summary> u‘•”õvƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚ÉÀs‚·‚éB </summary>
+    /// <summary> ã€Œè£…å‚™ã€ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯æ™‚ã«å®Ÿè¡Œã™ã‚‹ã€‚ </summary>
     public void OnClick_EquipmentButton()
     {
-        //Œ»İ‘I‘ğ’†‚Ìƒp[ƒc‚Ìu‘•”õ‚·‚évƒ{ƒ^ƒ“‚ğƒAƒNƒeƒBƒu‚É‚·‚éB
+        //ç¾åœ¨é¸æŠä¸­ã®ãƒ‘ãƒ¼ãƒ„ã®ã€Œè£…å‚™ã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚
         if (_myEquipment._myType != Equipment.EquipmentType.ARM_PARTS)
         {
             OnEnabled_EquipButton_OtherArm();
