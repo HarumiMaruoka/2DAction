@@ -79,4 +79,20 @@ public class HaveEquipmentDataBase
         // 所持している装備データを、JSON形式にシリアライズし、jsonファイルに保存
         File.WriteAllText(_equipmentHaveJsonFilePath, JsonUtility.ToJson(_haveEquipmentID, false));
     }
+    /// <summary> 装備を取得する。 </summary>
+    /// <param name="getEquipmentsID"> 取得する装備のID </param>
+    public void GetEquipment(int getEquipmentsID)
+    {
+        // 空のスロットを見つけ、そこに保存する。
+        for(int i=0;i< _haveEquipmentID._equipmentsID.Length; i++)
+        {
+            if(_haveEquipmentID._equipmentsID[i]== (int)EquipmentID.None)
+            {
+                _haveEquipmentID._equipmentsID[i] = getEquipmentsID;
+                Debug.Log("取得に成功しました。");
+                break;
+            }
+        }
+        Debug.LogWarning("取得に失敗しました。");
+    }
 }

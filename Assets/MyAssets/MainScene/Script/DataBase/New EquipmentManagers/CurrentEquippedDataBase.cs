@@ -84,7 +84,7 @@ public class CurrentEquippedDataBase
     /// <param name="equipmentType"> 変更を加える箇所 </param>
     /// <param name="armType"> 腕の場合どちらか </param>
     /// <param name="changeID"> 変更するID </param>
-    public void ChangeEquipped(Equipment.EquipmentType equipmentType, int armType = Constants.NOT_ARM, EquipmentID changeID = EquipmentID.None)
+    public void ChangeEquipped(Equipment.EquipmentType equipmentType, EquipmentID changeID = EquipmentID.None, int armType = Constants.NOT_ARM)
     {
         // 値が正しいかチェック
         if (changeID == EquipmentID.None)

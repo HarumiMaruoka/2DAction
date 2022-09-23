@@ -6,14 +6,13 @@ using UnityEngine.UI;
 /// <summary> 「装備」のボタン </summary>
 public class EquipmentButton : UseEventSystemBehavior
 {
-    //<===== このクラスで使用する型 =====>//
     /// <summary> このボタンの装備 </summary>
     public Equipment _myEquipment { get; private set; }
 
     //<===== メンバー変数 =====>//
     /// <summary> 子のテキストオブジェクト </summary>
     Text _myText;
-    /// <summary> 子の装備ボタン </summary>
+    /// <summary> 子オブジェクトである「装備する」ボタン </summary>
     GameObject _equipButton_OtherArm;
     GameObject _equipButton_LeftArm;
     GameObject _equipButton_RightArm;

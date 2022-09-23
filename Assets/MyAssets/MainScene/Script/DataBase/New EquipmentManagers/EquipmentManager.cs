@@ -65,67 +65,37 @@ public class EquipmentManager
     /// <param name="button"></param>
     /// <param name="armFlag"></param>
     /// 
-    public void Swap_HaveToEquipped(EquipmentID fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = -1)
+    public void Swap_HaveToEquipped(EquipmentID fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = Constants.NOT_ARM)
     {
-        //Debug.Log("これから着用する装備のID : " + fromNowEquipmentID);
-        //Debug.Log("これから着用する装備のType : " + fromNowEquipmentType);
+        // 仮の入れ物
+        EquipmentID temporary = EquipmentID.None;
 
-        EquipmentID temporary = EquipmentID.None;//仮の入れ物
+        // 現在着用している装備を取得し保存する。
+        switch (fromNowEquipmentType)
+        {
+            case Equipment.EquipmentType.HEAD_PARTS:
+                temporary = _currentEquippedData.Equipped._headPartsID;
+                break;
+            case Equipment.EquipmentType.TORSO_PARTS:
+                temporary = _currentEquippedData.Equipped._torsoPartsID;
+                break;
+            case Equipment.EquipmentType.ARM_PARTS:
+                if (armFlag == Constants.LEFT_ARM) temporary = _currentEquippedData.Equipped._armLeftPartsID;
+                else if (armFlag == Constants.RIGHT_ARM) temporary = _currentEquippedData.Equipped._armRightPartsID;
+                else Debug.LogError("不正な値です。");
+                break;
+            case Equipment.EquipmentType.FOOT_PARTS:
+                temporary = _currentEquippedData.Equipped._footPartsID;
+                break;
+        }
         //Typeを基に着用する
-        //腕以外の場合
-        if (fromNowEquipmentType != Equipment.EquipmentType.ARM_PARTS)
-        {
-            switch (fromNowEquipmentType)
-            {
-                //頭パーツの場合
-                case Equipment.EquipmentType.HEAD_PARTS:
-                    temporary = _currentEquippedData.Equipped._headPartsID;
-                    _currentEquippedData.ChangeEquipped(Equipment.EquipmentType.HEAD_PARTS, Constants.NOT_ARM, fromNowEquipmentID);
-                    //_currentEquippedData.Equipped._headPartsID = fromNowEquipmentID;
-                    break;
+        _currentEquippedData.ChangeEquipped(fromNowEquipmentType, fromNowEquipmentID, armFlag);
+        //着脱した装備をインベントリに格納する
+        HaveEquipmentData.GetEquipment((int)temporary);
 
-                //胴パーツの場合
-                case Equipment.EquipmentType.TORSO_PARTS:
-                    temporary = _equipped._torsoPartsID;
-                    _equipped._torsoPartsID = fromNowEquipmentID;
-                    break;
-
-                //足パーツの場合
-                case Equipment.EquipmentType.FOOT_PARTS:
-                    temporary = _equipped._footPartsID;
-                    _equipped._footPartsID = fromNowEquipmentID;
-                    break;
-            }
-            //着脱した装備をインベントリに格納する
-            if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
-            else button.Set_Equipment(null);
-            //表示を更新する
-            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType);
-            if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
-        }
-        //腕の場合
-        else
-        {
-            if (armFlag == 0)
-            {
-                temporary = _equipped._armLeftPartsID;
-                _equipped._armLeftPartsID = fromNowEquipmentID;
-            }
-            else if (armFlag == 1)
-            {
-                temporary = _equipped._armRightPartsID;
-                _equipped._armRightPartsID = fromNowEquipmentID;
-            }
-            else
-            {
-                Debug.LogError($"不正な値です{armFlag}");
-            }
-            //着脱した装備をインベントリに格納する
-            if (temporary != -1) button.Set_Equipment(EquipmentData[temporary]);
-            else button.Set_Equipment(null);
-            //表示を更新する
-            _draw_NowEquipped.Update_Equipped(fromNowEquipmentType, armFlag);
-            if (temporary != -1) _managerOfPossessedEquipment.Update_RiseValueText(EquipmentData[temporary]);
-        }
+        //ボタンに装備を設定する。
+        if (temporary != EquipmentID.None)
+            button.Set_Equipment(NewEquipmentDataBase.EquipmentData[(int)temporary]);
+        else button.Set_Equipment(null);
     }
 }
