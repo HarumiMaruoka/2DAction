@@ -42,6 +42,15 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     /// <summary> ノックバック時間 </summary>
     float _knockBackModeTime = 0f;
     protected bool _isMove = true;
+    protected bool _isPause { get; private set; } = false;
+
+    // ポーズ用
+    float _angularVelocity;
+    Vector2 _velocity;
+
+    // コルーチン
+    IEnumerator _colorChangeCoroutine;
+    IEnumerator _moveStopCoroutine;
 
     //===== Unityメッセージ =====//
     protected virtual void Start()
@@ -50,7 +59,93 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     }
     protected virtual void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            OnPause();
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnResume();
+        }
         Update_Enemy();
+    }
+    protected virtual void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    protected virtual void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
+    /// <summary>
+    /// ポーズ開始処理
+    /// </summary>
+    protected virtual void OnPause()
+    {
+        if (!_isPause)
+        {
+            _isPause = true;
+            // RigidBody2Dを停止する処理をここに記述してください。
+            _angularVelocity = _rigidBody2d.angularVelocity;
+            _velocity = _rigidBody2d.velocity;
+            _rigidBody2d.Sleep();
+            _rigidBody2d.simulated = false;
+
+            // コルーチンを停止する。
+            PauseCoroutine();
+        }
+
+    }
+    /// <summary>
+    /// ポーズ解除処理
+    /// </summary>
+    protected virtual void OnResume()
+    {
+        if (_isPause)
+        {
+            _isPause = false;
+            // RigidBody2Dを再開する処理。
+            _rigidBody2d.simulated = true;
+            _rigidBody2d.WakeUp();
+            _rigidBody2d.angularVelocity = _angularVelocity;
+            _rigidBody2d.velocity = _velocity;
+
+            // コルーチンを再開。
+            ResumeCoroutine();
+        }
+    }
+    /// <summary>
+    /// 登録されたコルーチンのポーズ処理 <br/>
+    /// このメソッドは、Pause用に作成されたモノ。
+    /// </summary>
+    protected virtual void PauseCoroutine()
+    {
+        if (_moveStopCoroutine != null)
+        {
+            StopCoroutine(_moveStopCoroutine);
+        }
+        if (_colorChangeCoroutine != null)
+        {
+            StopCoroutine(_colorChangeCoroutine);
+        }
+    }
+    /// <summary>
+    /// 登録されたコルーチンの再開処理 <br/>
+    /// このメソッドは、Pause用に作成されたモノ。
+    /// </summary>
+    protected virtual void ResumeCoroutine()
+    {
+        if (_moveStopCoroutine != null)
+        {
+            StartCoroutine(_moveStopCoroutine);
+        }
+        if (_colorChangeCoroutine != null)
+        {
+            StartCoroutine(_colorChangeCoroutine);
+        }
     }
 
     //<============== protectedメンバー関数 ==============>//
@@ -140,7 +235,9 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
             // アイテムをドロップする。
             DropItems();
         }
-        StartCoroutine(ColorChange());
+        // 攻撃がヒットしたことを演出するために色を変更する。
+        _colorChangeCoroutine = ColorChange();
+        StartCoroutine(_colorChangeCoroutine);
     }
     /// <summary> プレイヤーからこのエネミーに対する攻撃処理。 : ノックバック有り版 </summary>
     /// <param name="playerOffensivePower"> ダメージ量 </param>
@@ -157,11 +254,13 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
             DropItems();
         }
         //攻撃がヒットしたことを表現する為に一定時間色を変更する。
-        StartCoroutine(ColorChange());
+        _colorChangeCoroutine = ColorChange();
+        StartCoroutine(_colorChangeCoroutine);
 
         //指定された時間だけ移動を停止する。
         _knockBackModeTime = (knockBackTimer - _status._weight) > 0f ? (knockBackTimer - _status._weight) : 0f;
-        StartCoroutine(MoveStop());
+        _moveStopCoroutine = MoveStop();
+        StartCoroutine(_moveStopCoroutine);
         //ノックバック処理。
         StartKnockBack((knockBackPower - _status._weight) > 0f ? knockBackPower - _status._weight : 0f);
     }
@@ -189,16 +288,33 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     /// </summary>
     IEnumerator MoveStop()
     {
+        // 計測用タイマー
+        float timer = 0f;
+        // 移動可能かどうか表す変数を false にする。
         _isMove = false;
-        yield return new WaitForSeconds(_knockBackModeTime);
+        // 停止処理
+        while (timer < _knockBackModeTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        // 移動可能かどうか表す変数を true にする。
         _isMove = true;
+        // コルーチン終了処理
+        _moveStopCoroutine = null;
     }
     /// <summary> プレイヤーから攻撃を受けると、指定された時間だけ色が変わる。 </summary>
     IEnumerator ColorChange()
     {
+        float timer = 0f;
         _isColorChange = true;
-        yield return new WaitForSeconds(_colorChangeTime);
+        while (timer < 1f/*_colorChangeTime*/)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         _isColorChange = false;
+        _colorChangeCoroutine = null;
     }
 
     //<============= 仮想関数 =============>//

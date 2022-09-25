@@ -36,7 +36,7 @@ public class BringerController : NewBossBase
 
     [Header("アニメーション関連")]
     [Tooltip("アニメーションスピードのパラメーター名"), SerializeField]
-    string _animSpeedParamName = "WalkSpeed";
+    string _animSpeedParamName = "AnimSpeed";
     [Tooltip("アイドルを表現するアニメーションの名前"), SerializeField]
     string _idleAnimStateName = "Idle";
     [Tooltip("接近/後退を表現するアニメーションの名前"), SerializeField]
@@ -68,6 +68,7 @@ public class BringerController : NewBossBase
     protected override void Start()
     {
         base.Start();
+        _holdAnimSpeed = 1f;
     }
     protected override void Update()
     {
@@ -143,6 +144,16 @@ public class BringerController : NewBossBase
         _animator.Play(_dieAnimStateName);
 
     }
+    protected override void OnPause()
+    {
+        base.OnPause();
+        _animator.SetFloat(_animSpeedParamName, 0f);
+    }
+    protected override void OnResume()
+    {
+        base.OnResume();
+        _animator.SetFloat(_animSpeedParamName, _holdAnimSpeed);
+    }
     #endregion
 
     #region Private Method
@@ -208,8 +219,11 @@ public class BringerController : NewBossBase
     {
         // アイドル状態のアニメーションを再生する。
         _animator.Play(_idleAnimStateName);
+        // ポーズ用にアニメーションスピードを保存する。
+        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイムを開始する。
-        StartCoroutine(WaitCoolTime());
+        _waitCoolTimeCoroutine = WaitCoolTime();
+        StartCoroutine(_waitCoolTimeCoroutine);
         // ステートを変更する。
         _nowState = BossState.IDLE;
     }
@@ -222,8 +236,11 @@ public class BringerController : NewBossBase
         _animator.Play(_runAnimStateName);
         // 通常再生する。(逆再生している可能性があるので)
         _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
+        // ポーズ用にアニメーションスピードを保存する。
+        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイムを開始する。
-        StartCoroutine(WaitCoolTime());
+        _waitCoolTimeCoroutine = WaitCoolTime();
+        StartCoroutine(_waitCoolTimeCoroutine);
 
         // ステートを変更する。
         _nowState = BossState.APPROACH;
@@ -237,8 +254,11 @@ public class BringerController : NewBossBase
         _animator.Play(_runAnimStateName);
         // アニメーションを逆再生する。(これで後退を表す。)
         _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
+        // アニメーションスピードを保持する。
+        _holdAnimSpeed = Constants.REVERSE_PLAYBACK_ANIM_SPEED;
         // クールタイムを開始する。
-        StartCoroutine(WaitCoolTime());
+        _waitCoolTimeCoroutine = WaitCoolTime();
+        StartCoroutine(_waitCoolTimeCoroutine);
 
         // ステートを変更する。
         _nowState = BossState.RECESSION;
@@ -251,6 +271,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_lightAttackAnimStateName);
+        // ポーズ用にアニメーションスピードを保存する。
+        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterLightAttack._minValue, _cooltimeAfterLightAttack._maxValue);
         // ステートを変更する。
@@ -263,6 +285,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_heavyAttackAnimStateName);
+        // ポーズ用にアニメーションスピードを保存する。
+        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterHeavyAttack._minValue, _cooltimeAfterHeavyAttack._maxValue);
         // ステートを変更する。
@@ -275,6 +299,8 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_longRangeAttackAnimStateName);
+        // ポーズ用にアニメーションスピードを保存する。
+        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterLongRangeAttack._minValue, _cooltimeAfterLongRangeAttack._maxValue);
         // ステートを変更する。

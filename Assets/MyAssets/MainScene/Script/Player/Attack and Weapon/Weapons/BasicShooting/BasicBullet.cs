@@ -95,12 +95,12 @@ public class BasicBullet : LongRangeWeaponBase
     //<===== コルーチン =====>//
     IEnumerator WaitDestroy()
     {
-        float clickTime = 0;
+        float timer = 0f;
 
         // コルーチン進行中は数値を増加させる
-        while (clickTime < _dethTime)
+        while (timer < _dethTime)
         {
-            clickTime += Time.deltaTime;
+            timer += Time.deltaTime;
             yield return null;
         }
         Destroy(gameObject);

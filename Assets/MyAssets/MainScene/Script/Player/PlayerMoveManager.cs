@@ -116,14 +116,14 @@ public class PlayerMoveManager : MonoBehaviour
     {
         Move();
 
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    OnPause();
-        //}
-        //else if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    OnResume();
-        //}
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            OnPause();
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnResume();
+        }
     }
 
     void OnEnable()
@@ -169,7 +169,7 @@ public class PlayerMoveManager : MonoBehaviour
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
-        Debug.Log(_playerStateManagement._isMove);
+        
         if (_playerStateManagement._isMove &&
             !_playerStateManagement._isDead &&
             !_playerStateManagement._isPause)

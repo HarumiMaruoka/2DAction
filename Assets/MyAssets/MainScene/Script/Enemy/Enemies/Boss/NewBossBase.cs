@@ -43,6 +43,10 @@ public class NewBossBase : EnemyBase
 
     protected Animator _animator;
 
+    protected float _holdAnimSpeed;
+
+    protected IEnumerator _waitCoolTimeCoroutine;
+
     //===== Unityメッセージ =====//
     protected override void Start()
     {
@@ -54,7 +58,22 @@ public class NewBossBase : EnemyBase
         base.Update();
         CommonUpdate_BossBase();
     }
-
+    protected override void OnPause()
+    {
+        base.OnPause();
+        if (_waitCoolTimeCoroutine != null)
+        {
+            StopCoroutine(_waitCoolTimeCoroutine);
+        }
+    }
+    protected override void OnResume()
+    {
+        base.OnResume();
+        if (_waitCoolTimeCoroutine != null)
+        {
+            StartCoroutine(_waitCoolTimeCoroutine);
+        }
+    }
 
     //===== protectedメソッド =====//
     /// <summary>
@@ -158,7 +177,7 @@ public class NewBossBase : EnemyBase
             MomentOfDeath();
         }
         // それ以降の処理
-        else if(_nowState == BossState.DIE)
+        else if (_nowState == BossState.DIE)
         {
             TreatmentAfterDeath();
         }
@@ -187,9 +206,15 @@ public class NewBossBase : EnemyBase
     /// <summary> クールタイムを開始する。 : 指定された時間クールタイム中だと表す変数を true にする。 </summary>
     protected IEnumerator WaitCoolTime()
     {
+        float timer = 0f;
         _isCoolTimerNow = true;
-        yield return new WaitForSeconds(_coolTimeValue);
+        while (timer < _coolTimeValue)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         _isCoolTimerNow = false;
+        _waitCoolTimeCoroutine = null;
     }
 
 
@@ -229,7 +254,8 @@ public class NewBossBase : EnemyBase
     {
         //最初のクールタイムを待つ
         _coolTimeValue = UnityEngine.Random.Range(_cooltimeFirstAttack._minValue, _cooltimeFirstAttack._maxValue);
-        StartCoroutine(WaitCoolTime());
+        _waitCoolTimeCoroutine = WaitCoolTime();
+        StartCoroutine(_waitCoolTimeCoroutine);
         _isFight = true;
     }
     /// <summary>

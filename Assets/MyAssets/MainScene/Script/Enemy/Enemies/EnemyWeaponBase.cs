@@ -16,6 +16,8 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
     [Header("攻撃力"), SerializeField] float _offensivePower;
     [Header("ノックバック力"), SerializeField] float _blowingPower;
 
+    protected Animator _animator;
+
     //===== Unityメッセージ =====//
     /// <summary>
     /// 初期化処理。コライダーを取得する。
@@ -23,6 +25,7 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
     protected virtual void Start()
     {
         _collider2D = GetComponent<Collider2D>();
+        _animator = GetComponent<Animator>();
     }
     /// <summary> プレイヤーに接触したらプレイヤーの体力を減らす。 </summary>
     /// <param name="collision"> 接触相手 </param>
@@ -35,6 +38,32 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
                 HitPlayer(playerRb2D);
         }
     }
+    protected virtual void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    protected virtual void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
+    /// <summary>
+    /// ポーズ処理
+    /// </summary>
+    protected virtual void OnPause()
+    {
+
+    }
+    /// <summary>
+    /// ポーズ解除処理
+    /// </summary>
+    protected virtual void OnResume()
+    {
+
+    }
+
     /// <summary> 
     /// このオブジェクトにアタッチされているコライダーをアクティブにする。<br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>

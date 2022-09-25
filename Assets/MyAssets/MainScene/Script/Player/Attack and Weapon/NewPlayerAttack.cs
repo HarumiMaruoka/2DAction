@@ -60,7 +60,7 @@ public class NewPlayerAttack : MonoBehaviour
     /// <summary> 更新処理 </summary>
     void Update_Attack()
     {
-        if (!_playerState._isDead && _playerState._isMove)
+        if (!_playerState._isDead && _playerState._isMove && !_playerState._isPause)
         {
             // 左クリック押下時の処理 デリゲート変数に登録された処理を実行する。
             if (_isFireOneDown && _playerLeftArmWeapon_Moment != null)
