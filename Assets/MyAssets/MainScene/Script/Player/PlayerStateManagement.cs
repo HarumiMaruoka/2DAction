@@ -45,6 +45,7 @@ public class PlayerStateManagement : MonoBehaviour
     public bool _isHitEnemy { get; set; }
     public bool _isDead { get; set; }
     public bool _isMove { get; set; }
+    public bool _isPause { get; set; }
 
     bool _isHoverMode;
 
@@ -63,9 +64,8 @@ public class PlayerStateManagement : MonoBehaviour
         _hitEnemySound = GetComponent<AudioSource>();
 
         _isMove = true;
+        _isPause = false;
     }
-
-
     void Update()
     {
         UpdateState();

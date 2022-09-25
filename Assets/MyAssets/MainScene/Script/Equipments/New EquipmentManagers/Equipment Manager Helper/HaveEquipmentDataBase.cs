@@ -18,38 +18,44 @@ public class HaveEquipmentDataBase
     public struct HaveEquipped
     {
         /// <summary> 要素は装備のID。所持していなければ-1。 </summary>
-        public int[] _equipmentsID;
+        public int[] _equipments;
     }
 
     //===== フィールド / プロパティ =====//
     /// <summary> 所持している装備を表すフィールド </summary>
     HaveEquipped _haveEquipmentID;
     /// <summary> 所持している装備のプロパティ </summary>
-    public HaveEquipped HaveEquipmentID { get => _haveEquipmentID; }
+    public HaveEquipped HaveEquipment { get => _haveEquipmentID; }
     /// <summary> プレイヤーが所持できるパーツの最大数 </summary>
     const int _maxHaveVolume = 20;
     /// <summary> 所持している装備のデータを保存しているファイルへのパス </summary>
-    const string _equipmentHaveJsonFilePath = "";
+    string _equipmentHaveJsonFilePath = "";
 
     // コンストラクタ
     public HaveEquipmentDataBase()
     {
-
+        if (!Init())
+        {
+            Debug.LogError("初期化に失敗しました");
+        }
     }
 
     //===== methods =====//
     /// <summary>
     /// このクラスの初期化処理
     /// </summary>
-    void Init()
+    bool Init()
     {
+        _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquippedFile.json");
         // 所持できる装備分の配列用のメモリを確保する。
-        _haveEquipmentID._equipmentsID = new int[_maxHaveVolume];
+        _haveEquipmentID._equipments = new int[_maxHaveVolume];
         // 配列を初期化する。
-        for (int i = 0; i < _haveEquipmentID._equipmentsID.Length; i++)
+        for (int i = 0; i < _haveEquipmentID._equipments.Length; i++)
         {
-            _haveEquipmentID._equipmentsID[i] = -1;
+            _haveEquipmentID._equipments[i] = -1;
         }
+
+        return true;
     }
     /// <summary> 
     /// "所持"している装備の情報をjsonファイルから読み取りメンバー変数に格納する。<br/>
@@ -84,11 +90,11 @@ public class HaveEquipmentDataBase
     public void GetEquipment(int getEquipmentsID)
     {
         // 空のスロットを見つけ、そこに保存する。
-        for(int i=0;i< _haveEquipmentID._equipmentsID.Length; i++)
+        for(int i=0;i< _haveEquipmentID._equipments.Length; i++)
         {
-            if(_haveEquipmentID._equipmentsID[i]== (int)EquipmentID.None)
+            if(_haveEquipmentID._equipments[i]== (int)EquipmentID.None)
             {
-                _haveEquipmentID._equipmentsID[i] = getEquipmentsID;
+                _haveEquipmentID._equipments[i] = getEquipmentsID;
                 Debug.Log("取得に成功しました。");
                 break;
             }

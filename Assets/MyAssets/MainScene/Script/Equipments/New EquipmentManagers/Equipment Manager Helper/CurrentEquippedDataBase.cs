@@ -35,6 +35,14 @@ public class CurrentEquippedDataBase
     /// <summary> 着用しているパーツを保存しているファイルへのパス </summary>
     string _equippedJsonFilePath;
 
+    public CurrentEquippedDataBase()
+    {
+        if (!Init())
+        {
+            Debug.LogError("初期化に失敗しました");
+        }
+    }
+
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -81,38 +89,37 @@ public class CurrentEquippedDataBase
     /// <summary>
     /// 引数に渡された値の装備を着用する。 <br/>
     /// </summary>
-    /// <param name="equipmentType"> 変更を加える箇所 </param>
+    /// <param name="equipment"> 装備するパーツ </param>
     /// <param name="armType"> 腕の場合どちらか </param>
-    /// <param name="changeID"> 変更するID </param>
-    public void ChangeEquipped(Equipment.EquipmentType equipmentType, EquipmentID changeID = EquipmentID.None, int armType = Constants.NOT_ARM)
+    public void ChangeEquipped(EquipmentButton equipment, int armType = Constants.NOT_ARM)
     {
         // 値が正しいかチェック
-        if (changeID == EquipmentID.None)
+        if (equipment._myEquipment._myID == EquipmentID.None)
         {
             Debug.LogWarning(
-                $"装備箇所\"{equipmentType}\"に対して\"{EquipmentID.None}\"を代入します。\n" +
-                $"つまり、装備箇所\"{equipmentType}\"を未装備にします。\n");
+                $"装備箇所\"{equipment._myEquipment._myType}\"に対して\"{EquipmentID.None}\"を代入します。\n" +
+                $"つまり、装備箇所\"{equipment._myEquipment._myType}\"を未装備にします。\n");
         }
 
         // 現在の装備を取得
         var changeValue = _equipped;
         // 変更を加える
-        switch (equipmentType)
+        switch (equipment._myEquipment._myType)
         {
             case Equipment.EquipmentType.HEAD_PARTS:
-                changeValue._headPartsID = changeID;
+                changeValue._headPartsID = equipment._myEquipment._myID;
                 break;
             case Equipment.EquipmentType.TORSO_PARTS:
-                changeValue._torsoPartsID = changeID;
+                changeValue._torsoPartsID = equipment._myEquipment._myID;
                 break;
             case Equipment.EquipmentType.ARM_PARTS:
                 if (armType == Constants.LEFT_ARM)
                 {
-                    changeValue._armLeftPartsID = changeID;
+                    changeValue._armLeftPartsID = equipment._myEquipment._myID;
                 }
                 else if (armType == Constants.RIGHT_ARM)
                 {
-                    changeValue._armRightPartsID = changeID;
+                    changeValue._armRightPartsID = equipment._myEquipment._myID;
                 }
                 else
                 {
@@ -120,10 +127,32 @@ public class CurrentEquippedDataBase
                 }
                 break;
             case Equipment.EquipmentType.FOOT_PARTS:
-                changeValue._footPartsID = changeID;
+                changeValue._footPartsID = equipment._myEquipment._myID;
                 break;
             default: Debug.Log("不正な値です！"); break;
         }
         _equipped = changeValue;
+    }
+    /// <summary>
+    /// 装備分のステータス上昇量を取得する。
+    /// </summary>
+    /// <returns> 装備分のステータス上昇量 </returns>
+    public PlayerStatusManager.PlayerStatus GetEquipmentStatus(Equipment[] equipmentData)
+    {
+        PlayerStatusManager.PlayerStatus result = default;
+
+        // 未装備かどうかチェックし結果を加える
+        if (_equipped._headPartsID != EquipmentID.None) 
+            result += equipmentData[(int)_equipped._headPartsID].ThisEquipment_StatusRisingValue;     // 頭
+        if (_equipped._torsoPartsID != EquipmentID.None) 
+            result += equipmentData[(int)_equipped._torsoPartsID].ThisEquipment_StatusRisingValue;    // 胴
+        if (_equipped._armLeftPartsID != EquipmentID.None) 
+            result += equipmentData[(int)_equipped._armLeftPartsID].ThisEquipment_StatusRisingValue;  // 左腕
+        if (_equipped._armRightPartsID != EquipmentID.None) 
+            result += equipmentData[(int)_equipped._armRightPartsID].ThisEquipment_StatusRisingValue; // 右腕
+        if (_equipped._footPartsID != EquipmentID.None) 
+            result += equipmentData[(int)_equipped._footPartsID].ThisEquipment_StatusRisingValue;     // 足
+
+        return result;
     }
 }

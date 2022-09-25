@@ -11,13 +11,46 @@ using UnityEngine.SceneManagement;
 /// ゲーム全体で使用可能なクラス。未だに何も記述していないので必要ないかもしれない。
 /// </summary>
 public class GameManager : MonoBehaviour
-{    
+{
+    //===== フィールド / プロパティ =====//
+
     /// <summary> 初期化に成功したかどうかを表す変数。 </summary>
     bool _isInitialized = false;
 
     [Header("フェードイン/アウト用のパネル"), SerializeField] GameObject _fadePanel;
-    [Header("フェードインに掛ける時間"),SerializeField] float _timeToFadeIn;
+    [Header("フェードインに掛ける時間"), SerializeField] float _timeToFadeIn;
 
+    // ポーズ開始時に実行するデリゲート
+    static public System.Action OnPause = default;
+    // ポーズ解除時に実行するデリゲート
+    static public System.Action OnResume = default;
+
+
+    //===== Unityメッセージ =====//
+    void Awake()
+    {
+
+    }
+    void Start()
+    {
+
+    }
+    void Update()
+    {
+
+    }
+
+    //===== priveteメソッド =====//
+    /// <summary> 初期化関数 </summary>
+    /// <returns> 初期化に成功したら true を返す。 </returns>
+    bool Initialized()
+    {
+
+        return true;
+    }
+
+    //===== publicメソッド =====//
+    // フェードインする
     public void FadeIn(string nextSceneName)
     {
         //フェードイン用パネルをアクティブにする。
@@ -32,31 +65,19 @@ public class GameManager : MonoBehaviour
                 () => SceneManager.LoadScene(nextSceneName)
             );
     }
+    // フェードアウトする
     public void FadeOut()
     {
 
     }
 
-    //<===== Unityメッセージ =====>//
-    void Awake()
-    {
-
-    }
-    void Start()
-    {
-
-    }
-    void Update()
-    {
-
-    }
-
-    //<===== priveteメンバー関数 =====>//
-    /// <summary> 初期化関数 </summary>
-    /// <returns> 初期化に成功したら true を返す。 </returns>
-    bool Initialized()
-    {
-
-        return true;
-    }
+    //===== ボタンから呼び出す想定で作成したメソッド =====//
+    /// <summary>
+    /// ポーズ開始処理
+    /// </summary>
+    public void OnPauseStart() => OnPause();
+    /// <summary>
+    /// ポーズ終了処理
+    /// </summary>
+    public void OnPauseEnd() => OnResume();
 }

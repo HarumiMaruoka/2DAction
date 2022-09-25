@@ -12,18 +12,43 @@ public class BasicBullet : LongRangeWeaponBase
     [Header("ダッシュ時の加速度"), SerializeField] float _dashAcceleration = 1.5f;
     [Header("消滅までの時間"), SerializeField] float _dethTime = 1.5f;
 
+    IEnumerator _coroutine = default;
+    Coroutine _coroutine2 = default;
+
     const float RIGHT = 1f;
     const float LEFT = -1f;
+
+    Vector2 _velocity = default;
+    Rigidbody2D _rb2D;
+    float _angularVelocity;
+    bool _isStop;
 
     void Start()
     {
         Initialized();
     }
 
+    private void Update()
+    {
+
+    }
+
+    void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
     protected override bool Initialized()
     {
+        _rb2D = GetComponent<Rigidbody2D>();
         //プレイヤーの向きに応じて飛んでいく方向を決める。
-        GetComponent<Rigidbody2D>().velocity =
+        _rb2D.velocity =
             Vector2.right * _moveSpeed * (PlayerStatusManager.Instance.IsRight ? LEFT : RIGHT) + Vector2.right * GameObject.Find("ChibiRobo").GetComponent<Rigidbody2D>().velocity.x;
         if (PlayerStatusManager.Instance.IsRight)
         {
@@ -33,8 +58,11 @@ public class BasicBullet : LongRangeWeaponBase
         }
         // 発射音を鳴らす
         AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, transform.position);
+
         // デストロイするまで待つ
-        StartCoroutine(WaitDestroy());
+        _coroutine = WaitDestroy();
+        //_coroutine2 = StartCoroutine(_coroutine);
+        StartCoroutine(_coroutine);
 
         // 現在コルーチンを使用して弾を消失させているが、
         // 弾を少しづつ小さくして消失させるという表現の方がよいと思うので、
@@ -42,11 +70,39 @@ public class BasicBullet : LongRangeWeaponBase
 
         return true;
     }
+    /// <summary> ポーズ開始 </summary>
+    void OnPause()
+    {
+        StopCoroutine(_coroutine);
+
+        _angularVelocity = _rb2D.angularVelocity;
+        _velocity = _rb2D.velocity;
+        _rb2D.Sleep();
+        _rb2D.simulated = false;
+    }
+    /// <summary> ポーズ解除 </summary>
+    void OnResume()
+    {
+        _rb2D.simulated = true;
+        _rb2D.WakeUp();
+        _rb2D.angularVelocity = _angularVelocity;
+        _rb2D.velocity = _velocity;
+
+        StartCoroutine(_coroutine);
+    }
+
 
     //<===== コルーチン =====>//
     IEnumerator WaitDestroy()
     {
-        yield return new WaitForSeconds(_dethTime);
+        float clickTime = 0;
+
+        // コルーチン進行中は数値を増加させる
+        while (clickTime < _dethTime)
+        {
+            clickTime += Time.deltaTime;
+            yield return null;
+        }
         Destroy(gameObject);
     }
 }

@@ -130,20 +130,22 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
             if (beforeButton.TryGetComponent(out EquipmentButton beforeEquipmentButton))
             {
                 //親子関係でないことを確認する。
-                if (_eventSystem.currentSelectedGameObject != null)
+                if (currentButton != null)
                 {
-                    if ((beforeButton.transform.parent.gameObject != _eventSystem.currentSelectedGameObject) &&
-                        (_eventSystem.currentSelectedGameObject.transform.parent.gameObject != beforeButton))
+                    if ((beforeButton.transform.parent.gameObject != currentButton) &&
+                        (currentButton.transform.parent.gameObject != beforeButton))
                     {
                         //親子関係でなければ、「装備する」ボタンを非アクティブにする。
                         OffEnabled_EquipButton(beforeEquipmentButton);
                     }
                 }
             }
-            //「装備する」ボタンの場合の処理/新しく選択したボタンが「装備する」ボタンでなければ実行する。
-            if (beforeButton.TryGetComponent(out EquipmentButton beforeEquipButton) &&
+            //「装備する」ボタンの場合の処理。
+            if (beforeButton.TryGetComponent(out EquipmentButton beforeEquipButton)
+                &&
                 (currentButton == null ||
-                !currentButton.TryGetComponent(out EquipButton equip)))
+                !currentButton.TryGetComponent(out EquipButton equip))
+                )
             {
                 foreach (var button in beforeEquipButton.transform.GetComponentsInChildren<EquipButton>())
                 {

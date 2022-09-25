@@ -25346,6 +25346,7 @@ GameObject:
   - component: {fileID: 131973555}
   - component: {fileID: 131973554}
   - component: {fileID: 131973556}
+  - component: {fileID: 131973557}
   m_Layer: 5
   m_Name: NowEquippedArea
   m_TagString: Untagged
@@ -25422,7 +25423,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 131973552}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15f528a235cda754c8ad17f487355740, type: 3}
   m_Name: 
@@ -25434,6 +25435,30 @@ MonoBehaviour:
   _armRightPartsImageArea: {fileID: 0}
   _footPartsImageArea: {fileID: 0}
   _bodyPartsTextArea: {fileID: 0}
+  _headPartsTextArea: {fileID: 830168613}
+  _torsoPartsTextArea: {fileID: 396345809}
+  _armLeftPartsTextArea: {fileID: 726368838}
+  _armRightPartsTextArea: {fileID: 1156393982}
+  _footPartsTextArea: {fileID: 2064449060}
+--- !u!114 &131973557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131973552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcbfd079f2cee2845a804e28eeae76fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bodyPartsImageArea: {fileID: 0}
+  _headPartsImageArea: {fileID: 0}
+  _torsoPartsImageArea: {fileID: 0}
+  _armLeftPartsImageArea: {fileID: 0}
+  _armRightPartsImageArea: {fileID: 0}
+  _footPartsImageArea: {fileID: 0}
+  _bodyPartsTextArea: {fileID: 208230277}
   _headPartsTextArea: {fileID: 830168613}
   _torsoPartsTextArea: {fileID: 396345809}
   _armLeftPartsTextArea: {fileID: 726368838}
@@ -26493,9 +26518,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 978293688}
-        m_TargetAssemblyTypeName: EquipmentDataBase, Assembly-CSharp
-        m_MethodName: ReleaseHold
+      - m_Target: {fileID: 1696901683}
+        m_TargetAssemblyTypeName: EquipLostButton, Assembly-CSharp
+        m_MethodName: ReleaseHoldObject
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -26721,11 +26746,10 @@ Transform:
   - {fileID: 1291259327}
   - {fileID: 131973553}
   - {fileID: 666761392}
+  - {fileID: 1696901682}
   - {fileID: 1819883041}
   - {fileID: 1453766361}
   - {fileID: 606142405}
-  - {fileID: 1696901682}
-  - {fileID: 1883070069}
   m_Father: {fileID: 422285946}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28927,7 +28951,7 @@ RectTransform:
   m_Children:
   - {fileID: 1115372004}
   m_Father: {fileID: 325018512}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29480,6 +29504,7 @@ GameObject:
   - component: {fileID: 666761394}
   - component: {fileID: 666761393}
   - component: {fileID: 666761395}
+  - component: {fileID: 666761396}
   m_Layer: 5
   m_Name: EquipmentHaveArea
   m_TagString: Untagged
@@ -29554,9 +29579,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 666761391}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f5e9b29a96cfd74ebcf7a747f14957a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _content: {fileID: 1666462733}
+  _equipmentButtonPrefab: {fileID: 8071526735733986614, guid: 8c694ca9312240e43a04241edb3d531d, type: 3}
+  _equipmentInformationParents: {fileID: 401724061}
+  _ExplanatoryTextArea: {fileID: 28844780}
+--- !u!114 &666761396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666761391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a9839bd6cfc144b945932ad2213d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _content: {fileID: 1666462733}
@@ -50343,6 +50384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 978293687}
   - component: {fileID: 978293688}
+  - component: {fileID: 978293689}
   m_Layer: 0
   m_Name: <<<EquipmentManager>>>
   m_TagString: Untagged
@@ -50383,6 +50425,18 @@ MonoBehaviour:
   _equippedJsonFilePath: 
   _maxHaveVolume: 20
   _equipmentLostPanel: {fileID: 1883070068}
+--- !u!114 &978293689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978293686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dae5f3d9346a484a9024f836a48a19b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &981030774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53167,6 +53221,7 @@ GameObject:
   - component: {fileID: 1291259329}
   - component: {fileID: 1291259328}
   - component: {fileID: 1291259331}
+  - component: {fileID: 1291259333}
   - component: {fileID: 1291259332}
   m_Layer: 5
   m_Name: Draw Alteration Area
@@ -53273,7 +53328,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1291259326}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed6f4d7b222a934c9c8250e98b6fd61, type: 3}
   m_Name: 
@@ -53297,6 +53352,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1291259333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291259326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed90eca5c69167a43b1f286886b84a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1303529387
 GameObject:
   m_ObjectHideFlags: 0
@@ -55184,7 +55251,7 @@ RectTransform:
   m_Children:
   - {fileID: 177428105}
   m_Father: {fileID: 325018512}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -55580,6 +55647,7 @@ GameObject:
   - component: {fileID: 1459033353}
   - component: {fileID: 1459033355}
   - component: {fileID: 1459033356}
+  - component: {fileID: 1459033357}
   m_Layer: 5
   m_Name: PlayerStatusArea
   m_TagString: Untagged
@@ -55685,9 +55753,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459033351}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d88fc8359a17994ab6b1c8d13f7f080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1459033357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459033351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c0ea792f2245241801989c45bc0472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1460723106
@@ -57519,6 +57599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1696901682}
+  - component: {fileID: 1696901683}
   m_Layer: 0
   m_Name: SelectedEquipment_LostButton_DrawArea
   m_TagString: Untagged
@@ -57539,9 +57620,23 @@ Transform:
   m_Children:
   - {fileID: 353963666}
   - {fileID: 1744246445}
+  - {fileID: 1883070069}
   m_Father: {fileID: 325018512}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1696901683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696901681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3c1edade990a34aaa9fd262ac458ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _confirmationPanel: {fileID: 0}
 --- !u!1 &1698489401
 GameObject:
   m_ObjectHideFlags: 0
@@ -57953,9 +58048,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 978293688}
-          m_TargetAssemblyTypeName: EquipmentDataBase, Assembly-CSharp
-          m_MethodName: HoldSelectedEquipment
+        - m_Target: {fileID: 1696901683}
+          m_TargetAssemblyTypeName: EquipLostButton, Assembly-CSharp
+          m_MethodName: HoldObject
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -58338,7 +58433,7 @@ RectTransform:
   m_Children:
   - {fileID: 10769866}
   m_Father: {fileID: 325018512}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -58821,15 +58916,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1883070068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 90, y: 90, z: 90}
+  m_LocalPosition: {x: -3.0439222, y: 3.5663507, z: 58.415726}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1285893060}
   - {fileID: 624138656}
   - {fileID: 887657378}
   - {fileID: 265886033}
-  m_Father: {fileID: 325018512}
-  m_RootOrder: 9
+  m_Father: {fileID: 1696901682}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1884285950
 GameObject:

@@ -66,9 +66,13 @@ public class NewDraw_NowEquipped : UseEventSystemBehavior
                 // 頭の場合
                 case Equipment.EquipmentType.HEAD_PARTS:
                     if (EquipmentManager.Instance.CurrentEquippedData.Equipped._headPartsID != EquipmentID.None)
+                    {
+                        if (EquipmentManager.Instance.NewEquipmentDataBase.
+                            EquipmentData == null) Debug.LogError("こいつがnullだ");
                         _headPartsTextArea.text =
-                            EquipmentManager.Instance.NewEquipmentDataBase.
-                            EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._headPartsID]._myName;
+                        EquipmentManager.Instance.NewEquipmentDataBase.
+                        EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._headPartsID]._myName;
+                    }
                     else
                         _headPartsTextArea.text = "未装備";
                     break;

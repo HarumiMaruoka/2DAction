@@ -12,7 +12,7 @@ public class NewEquipmentDataBase
 {
     //===== フィールド / プロパティ =====//
     /// <summary> 装備情報を格納しているファイルへのパス </summary>
-    const string _csvFilePath = "";
+    const string _csvFilePath = @"C:\Users\vantan\Desktop\2DActionBasicInformation\EquipmentDataBase.csv";
     /// <summary> 全ての装備の情報を保存しておくフィールド </summary>
     Equipment[] _equipmentData;
     /// <summary> 全ての装備の情報が保存されたプロパティ </summary>
@@ -21,7 +21,10 @@ public class NewEquipmentDataBase
     //コンストラクタ
     public NewEquipmentDataBase()
     {
-
+        if (!Init())
+        {
+            Debug.LogError($"初期化に失敗しました");
+        }
     }
 
     //===== methods =====//

@@ -72,18 +72,18 @@ public class EquipmentManager
     /// <summary>
     /// "所持"している装備と、"着用"している装備を交換する。
     /// </summary>
-    /// <param name="fromNowEquipmentID"></param>
-    /// <param name="fromNowEquipmentType"></param>
-    /// <param name="button"></param>
-    /// <param name="armFlag"></param>
+    /// <param name="fromNowEquipmentID"> 装着する装備のID </param>
+    /// <param name="fromNowEquipmentType"> 装着するする装備の種類 </param>
+    /// <param name="button"> 基となる「装備」ボタン </param>
+    /// <param name="armFlag"> 腕の場合どちらか </param>
     /// 
-    public void Swap_HaveToEquipped(EquipmentID fromNowEquipmentID, Equipment.EquipmentType fromNowEquipmentType, EquipmentButton button, int armFlag = Constants.NOT_ARM)
+    public void Swap_HaveToEquipped(EquipmentButton button, int armFlag = Constants.NOT_ARM)
     {
         // 仮の入れ物
         EquipmentID temporary = EquipmentID.None;
 
         // 現在着用している装備を取得し保存する。
-        switch (fromNowEquipmentType)
+        switch (button._myEquipment._myType)
         {
             case Equipment.EquipmentType.HEAD_PARTS:
                 temporary = _currentEquippedData.Equipped._headPartsID;
@@ -100,8 +100,8 @@ public class EquipmentManager
                 temporary = _currentEquippedData.Equipped._footPartsID;
                 break;
         }
-        //Typeを基に着用する
-        _currentEquippedData.ChangeEquipped(fromNowEquipmentType, fromNowEquipmentID, armFlag);
+        // 着用する。
+        _currentEquippedData.ChangeEquipped(button, armFlag);
         //着脱した装備をインベントリに格納する
         HaveEquipmentData.GetEquipment((int)temporary);
 
@@ -109,6 +109,11 @@ public class EquipmentManager
         if (temporary != EquipmentID.None)
             button.Set_Equipment(NewEquipmentDataBase.EquipmentData[(int)temporary]);
         else button.Set_Equipment(null);
+
+        //プレイヤーに装備分の上昇ステータスを適用する。
+        PlayerStatusManager.Instance.Equipment_RisingValue = _currentEquippedData.GetEquipmentStatus(_newEquipmentDataBase.EquipmentData);
+
+        _isSwap = true;
     }
     /// <summary> 装備を取得する。</summary>
     /// <param name="getEquipmentID"> 取得する装備のID </param>
@@ -116,6 +121,28 @@ public class EquipmentManager
     public bool EquippedGet(int getEquipmentID)
     {
 
+        // 範囲内である事をチェックする。
+        if (getEquipmentID > (int)EquipmentID.None && getEquipmentID < (int)EquipmentID.ID_END)
+        {
+            // 装備の取得処理
+            for (int i = 0; i < _haveEquipmentData.HaveEquipment._equipments.Length; i++)
+            {
+
+                // 空のスロットを見つける
+                if (_haveEquipmentData.HaveEquipment._equipments[i] == (int)EquipmentID.None)
+                {
+                    // その箇所に値を代入する。
+                    _haveEquipmentData.HaveEquipment._equipments[i] = getEquipmentID;
+                    // 取得メッセージをコンソールに表示する。
+                    Debug.Log($"\"{_newEquipmentDataBase.EquipmentData[getEquipmentID]._myName}\"を取得しました。");
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("不正な値です。修正してください。");
+        }
         return false;
     }
     /// <summary> 装備を失う。</summary>
@@ -123,7 +150,15 @@ public class EquipmentManager
     /// <returns> 喪失に成功したらtrue,失敗したらfalseを返す。 </returns>
     public bool EquippedLost(int lostEquipmentID)
     {
-
+        //装備の喪失処理
+        for (int i = 0; i < _haveEquipmentData.HaveEquipment._equipments.Length; i++)
+        {
+            if (_haveEquipmentData.HaveEquipment._equipments[i] == lostEquipmentID)
+            {
+                _haveEquipmentData.HaveEquipment._equipments[i] = -1;
+                return true;
+            }
+        }
         return false;
     }
 }

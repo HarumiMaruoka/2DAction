@@ -5,41 +5,42 @@ using UnityEngine;
 public class PlayerMoveManager : MonoBehaviour
 {
     //パラメータ
-    [Tooltip("横移動速度")]
-    [SerializeField] float _moveSpeedX;
+    [Header("各ステータス")]
+    [Tooltip("横移動速度"), SerializeField]
+    float _moveSpeedX;
     public float MoveSpeedX { get => _moveSpeedX; }
 
-    [Tooltip("ダッシュ時の加速度")]
-    [SerializeField] float _moveDashSpeed;
+    [Tooltip("ダッシュ時の加速度"), SerializeField]
+    float _moveDashSpeed;
     public float MoveDashSpeed { get => _moveDashSpeed; }
 
-    [Tooltip("ジャンプ力")]
-    [SerializeField] float _jumpPower;
+    [Tooltip("ジャンプ力"), SerializeField]
+    float _jumpPower;
     public float JumpPower { get => _jumpPower; }
 
-    [Tooltip("ホバー時の上昇力")]
-    [SerializeField] float _hoverPower;
+    [Tooltip("ホバー時の上昇力"), SerializeField]
+    float _hoverPower;
     public float HoverPower { get => _hoverPower; }
 
-    [Tooltip("ホバー中のガソリン消費量")]
-    [SerializeField] float _gasConsumptionValue;
+    [Tooltip("ホバー中のガソリン消費量"), SerializeField]
+    float _gasConsumptionValue;
     public float GasConsumptionValue { get => _gasConsumptionValue; }
 
 
-    [Tooltip("ホバー用のガソリン回復量")]
-    [SerializeField] float _gasRecoveryValue;
+    [Tooltip("ホバー用のガソリン回復量"), SerializeField]
+    float _gasRecoveryValue;
     public float GasRecoveryValue { get => _gasRecoveryValue; }
 
-    [Tooltip("梯子の昇降速度")]
-    [SerializeField] float _climbSpeed;
+    [Tooltip("梯子の昇降速度"), SerializeField]
+    float _climbSpeed;
     public float ClimbSpeed { get => _climbSpeed; }
 
-    [Tooltip("横移動速度の減速率")]
-    [SerializeField] float _decelerationRateX;
+    [Tooltip("横移動速度の減速率"), SerializeField]
+    float _decelerationRateX;
     public float DecelerationRateX { get => _decelerationRateX; }
 
-    [Tooltip("スライディング速度")]
-    [SerializeField] float _slidingSpeed;
+    [Tooltip("スライディング速度"), SerializeField]
+    float _slidingSpeed;
     public float SlidingSpeed { get => _slidingSpeed; }
 
     //コンポーネント
@@ -91,6 +92,7 @@ public class PlayerMoveManager : MonoBehaviour
 
     float _groundCheckPositionY = -0.725f;
 
+    //===== Unityメッセージ =====//
     void Start()
     {
         //コンポーネントの初期化
@@ -113,15 +115,64 @@ public class PlayerMoveManager : MonoBehaviour
     void Update()
     {
         Move();
+
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    OnPause();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    OnResume();
+        //}
     }
 
+    void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        if (_isGizmo)
+        {
+            //右のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
+            //左のgizmo
+            Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
+
+            Gizmos.DrawCube(_overLapBoxCenter, _overLapBoxSize);
+        }
+    }
+    /// <summary>
+    /// ポーズ処理
+    /// </summary>
+    void OnPause() => _playerStateManagement._isPause = true;
+    /// <summary>
+    /// ポーズ解除処理
+    /// </summary>
+    void OnResume() => _playerStateManagement._isPause = false;
+
+
+    //===== privateメソッド =====//
+    /// <summary>
+    /// 移動のメインメソッド <br/>
+    /// </summary>
     void Move()
     {
         //加える力の初期化
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
-        if (_playerStateManagement._isMove && !_playerStateManagement._isDead)
+        Debug.Log(_playerStateManagement._isMove);
+        if (_playerStateManagement._isMove &&
+            !_playerStateManagement._isDead &&
+            !_playerStateManagement._isPause)
         {
             //プレイヤーが向いている方向を取得
             _isRigth = !_spriteRendere.flipX;
@@ -146,7 +197,7 @@ public class PlayerMoveManager : MonoBehaviour
             if (Mathf.Approximately(_newImpulse.x, 0f) && Mathf.Approximately(_newImpulse.y, 0f))
             {
                 //_newVelocity *= PlayerStatusManager.Instance.ConsequentialPlayerStatus._moveSpeed * 0.01f;
-                _newVelocity *= 
+                _newVelocity *=
                     PlayerStatusManager.Instance.BaseStatus._moveSpeed +
                     PlayerStatusManager.Instance.Equipment_RisingValue._moveSpeed * 0.005f;
                 _rigidBody2D.velocity = (Vector2.right * _newVelocity) + (Vector2.up * _rigidBody2D.velocity.y);
@@ -169,7 +220,7 @@ public class PlayerMoveManager : MonoBehaviour
             _newVelocity += new Vector2(_inputManager._inputHorizontal * MoveSpeedX, 0f);
         }
     }
-
+    /// <summary> ダッシュ時処理 </summary>
     void Dash()
     {
         //LeftShiftキーで加速
@@ -178,7 +229,7 @@ public class PlayerMoveManager : MonoBehaviour
             _newVelocity *= _moveDashSpeed;
         }
     }
-
+    /// <summary> スライディング処理 </summary>
     void Sliding()
     {
         _canJump = true;
@@ -194,7 +245,7 @@ public class PlayerMoveManager : MonoBehaviour
             }
         }
     }
-
+    /// <summary> ジャンプ処理 </summary>
     void Jump()
     {
         //接地かつスペースキーでジャンプ
@@ -208,7 +259,7 @@ public class PlayerMoveManager : MonoBehaviour
             _isJump = false;
         }
     }
-
+    /// <summary> 梯子の昇降処理 </summary>
     void Climb()
     {
         //梯子を昇降する時の処理
@@ -237,7 +288,7 @@ public class PlayerMoveManager : MonoBehaviour
             }
         }
     }
-
+    /// <summary> ホバー時処理 </summary>
     void Hover()
     {
         //ホバーの処理。
@@ -267,6 +318,8 @@ public class PlayerMoveManager : MonoBehaviour
         }
     }
 
+    /// <summary> 接触時処理 </summary>
+    /// <param name="collision"> 接触対象 </param>
     private void OnTriggerStay2D(Collider2D collision)
     {
         //梯子と接触しているときの処理
@@ -279,8 +332,8 @@ public class PlayerMoveManager : MonoBehaviour
             }
         }
     }
-
-    //コライダーが接触しているときの処理
+    /// <summary> 接触対象と離れた時の処理 </summary>
+    /// <param name="collision"> 接触対象 </param>
     private void OnTriggerExit2D(Collider2D collision)
     {
         //梯子と接触しているときの処理
@@ -290,7 +343,6 @@ public class PlayerMoveManager : MonoBehaviour
             _rigidBody2D.gravityScale = _gravity;
         }
     }
-
     /// <summary> プレイヤーの右に何かあるか </summary>
     bool BodyContactRight()
     {
@@ -307,8 +359,6 @@ public class PlayerMoveManager : MonoBehaviour
         }
         return false;
     }
-
-
     /// <summary> プレイヤーの左に何かあるか </summary>
     bool BodyContactLeft()
     {
@@ -325,7 +375,8 @@ public class PlayerMoveManager : MonoBehaviour
         }
         return false;
     }
-
+    /// <summary> 接地判定 </summary>
+    /// <returns> 接地していれば true,そうでなければ false を返す。 </returns>
     public bool GetIsGround()
     {
         _overLapBoxCenter = transform.position + new Vector3(0f, _groundCheckPositionY, 0);
@@ -343,20 +394,6 @@ public class PlayerMoveManager : MonoBehaviour
         else
         {
             return false;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        if (_isGizmo)
-        {
-            //右のgizmo
-            Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
-            //左のgizmo
-            Gizmos.DrawCube(_overLapBoxOffsetLeft + transform.position, _overLapBoxSizeVertical);
-
-            Gizmos.DrawCube(_overLapBoxCenter, _overLapBoxSize);
         }
     }
 }

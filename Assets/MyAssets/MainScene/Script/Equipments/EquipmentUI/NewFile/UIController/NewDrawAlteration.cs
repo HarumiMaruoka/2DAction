@@ -165,26 +165,26 @@ public class NewDrawAlteration : UseEventSystemBehavior
         {
             //頭パーツの場合の処理
             case Equipment.EquipmentType.HEAD_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._headPartsID != -1)
+                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._headPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID].
+                        EquipmentManager.Instance.
+                        NewEquipmentDataBase.EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._headPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //胴パーツの場合の処理
             case Equipment.EquipmentType.TORSO_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._torsoPartsID != -1)
+                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._torsoPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._torsoPartsID].
+                        EquipmentManager.Instance.
+                        NewEquipmentDataBase.EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._torsoPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //足パーツの場合の処理
             case Equipment.EquipmentType.FOOT_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._footPartsID != -1)
+                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._footPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._footPartsID].
+                        EquipmentManager.Instance.
+                        NewEquipmentDataBase.EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._footPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //腕パーツの場合の処理
@@ -192,19 +192,19 @@ public class NewDrawAlteration : UseEventSystemBehavior
                 //左腕の場合の処理
                 if (armFrag == Constants.LEFT_ARM)
                 {
-                    if (EquipmentDataBase.Instance.Equipped._armLeftPartsID != -1)
+                    if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armLeftPartsID != EquipmentID.None)
                         result =
-                            EquipmentDataBase.Instance.
-                            EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID].
+                            EquipmentManager.Instance.
+                            NewEquipmentDataBase.EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._armLeftPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
                 //右腕の場合の処理
                 else if (armFrag == Constants.RIGHT_ARM)
                 {
-                    if (EquipmentDataBase.Instance.Equipped._armRightPartsID != -1)
+                    if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armRightPartsID != EquipmentID.None)
                         result =
-                            EquipmentDataBase.Instance.
-                            EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID].
+                            EquipmentManager.Instance.
+                            NewEquipmentDataBase.EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._armRightPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
                 //エラー値の処理
@@ -284,6 +284,22 @@ public class NewDrawAlteration : UseEventSystemBehavior
                 else return "左腕の場合";
             case Equipment.EquipmentType.FOOT_PARTS: return "足";
             default: return "";
+        }
+    }
+
+    void ChangeArmType()
+    {
+        if (_armType == Constants.RIGHT_ARM)
+        {
+            _armType = Constants.LEFT_ARM;
+        }
+        else if (_armType == Constants.LEFT_ARM)
+        {
+            _armType = Constants.RIGHT_ARM;
+        }
+        else
+        {
+            Debug.LogError("不正な値です！修正してください！");
         }
     }
 }
