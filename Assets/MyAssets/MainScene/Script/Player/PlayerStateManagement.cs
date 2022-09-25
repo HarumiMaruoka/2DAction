@@ -50,6 +50,8 @@ public class PlayerStateManagement : MonoBehaviour
     bool _isHoverMode;
 
     public bool _isSlidingNow { get; set; }
+
+    IEnumerator _stopProcessingCoroutine = default;
     [Tooltip("スライディングの時間"), SerializeField] float _slidingTime;
 
     void Start()
@@ -69,6 +71,32 @@ public class PlayerStateManagement : MonoBehaviour
     void Update()
     {
         UpdateState();
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    private void OnDestroy()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
+    void OnPause()
+    {
+        if (_stopProcessingCoroutine != null)
+        {
+            StopCoroutine(_stopProcessingCoroutine);
+        }
+    }
+    void OnResume()
+    {
+        if (_stopProcessingCoroutine != null)
+        {
+            StartCoroutine(_stopProcessingCoroutine);
+        }
     }
 
     void UpdateState()
@@ -102,6 +130,10 @@ public class PlayerStateManagement : MonoBehaviour
         else
         {
             _isMove = true;
+        }
+        if (_hitEnemySound.time > 0.8f)
+        {
+            _hitEnemySound.Stop();
         }
         Killed();
     }
@@ -197,7 +229,8 @@ public class PlayerStateManagement : MonoBehaviour
         if (_isSlidingNow)
         {
             _playerState = PlayerState.SLIDING;
-            StartCoroutine(StopProcessing(_slidingTime));
+            _stopProcessingCoroutine = StopProcessing(_slidingTime);
+            StartCoroutine(_stopProcessingCoroutine);
         }
     }
 
@@ -316,8 +349,14 @@ public class PlayerStateManagement : MonoBehaviour
 
     IEnumerator StopProcessing(float stopTime)
     {
+        float timer = 0f;
         _isSlidingNow = true;
-        yield return new WaitForSeconds(stopTime);
+        while (timer < stopTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         _isSlidingNow = false;
+        _stopProcessingCoroutine = null;
     }
 }

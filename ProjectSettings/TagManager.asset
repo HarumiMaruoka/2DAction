@@ -14,6 +14,7 @@ TagManager:
   - ExitMenu
   - ToolWindow
   - Default
+  - BossArea
   layers:
   - Default
   - TransparentFX

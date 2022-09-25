@@ -103,12 +103,15 @@ public class NewDrawAlteration : UseEventSystemBehavior
             var riseDifference = Get_RiseDifference(_armType);
 
             //種類
-            _childrenText[Constants.EQUIPMENT_TYPE_DRAW_AREA].text =
-                Conversion_EquipmentTypeToString
-                (
-                    _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._myType,
-                    _armType
-                );
+            if (_eventSystem.currentSelectedGameObject && _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>() != null)
+            {
+                _childrenText[Constants.EQUIPMENT_TYPE_DRAW_AREA].text =
+                    Conversion_EquipmentTypeToString
+                    (
+                        _eventSystem.currentSelectedGameObject.GetComponent<EquipmentButton>()._myEquipment._myType,
+                        _armType
+                    );
+            }
 
             //体力
             _childrenText[Constants.MAX_HP_DRAW_AREA].text =

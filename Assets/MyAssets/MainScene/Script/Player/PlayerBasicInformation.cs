@@ -23,6 +23,8 @@ public class PlayerBasicInformation : MonoBehaviour
     [Tooltip("最大ガス量"), SerializeField] private float _maxHealthForHover;
     public float MaxHealthForHover { get => _maxHealthForHover; }
 
+    IEnumerator _waitGodModeIntervalCoroutine = default;
+
     void Start()
     {
         _hoverValue = MaxHealthForHover;
@@ -41,6 +43,32 @@ public class PlayerBasicInformation : MonoBehaviour
             _botton.SetActive(true);
         }
     }
+    private void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
+    void OnPause()
+    {
+        if (_waitGodModeIntervalCoroutine != null)
+        {
+            StopCoroutine(_waitGodModeIntervalCoroutine);
+        }
+    }
+    void OnResume()
+    {
+        if (_waitGodModeIntervalCoroutine != null)
+        {
+            StartCoroutine(_waitGodModeIntervalCoroutine);
+        }
+    }
+
 
     //敵と接触したとき、敵の攻撃力分damageを受け、敵のforce分後方へ飛ばされる
     private void OnCollisionStay2D(Collision2D collision)
@@ -54,23 +82,31 @@ public class PlayerBasicInformation : MonoBehaviour
                 enemy.HitPlayer(_rigidbody2D);
                 _newPlayerStateManagement._isHitEnemy = true;
                 _hitEnemySound.Play();
-                StartCoroutine(GodMode());
+                _waitGodModeIntervalCoroutine = WaitGodModeInterval();
+                StartCoroutine(_waitGodModeIntervalCoroutine);
             }
             if (collision.gameObject.TryGetComponent(out BossBase boss))
             {
                 boss.HitPlayer();
                 _newPlayerStateManagement._isHitEnemy = true;
                 _hitEnemySound.Play();
-                StartCoroutine(GodMode());
+                _waitGodModeIntervalCoroutine = WaitGodModeInterval();
+                StartCoroutine(_waitGodModeIntervalCoroutine);
             }
         }
     }
 
-    IEnumerator GodMode()
+    IEnumerator WaitGodModeInterval()
     {
+        float timer = 0f;
         _isGodMode = true;
-        yield return new WaitForSeconds(_godModeTime);
+        while (timer < _godModeTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         _isGodMode = false;
+        _waitGodModeIntervalCoroutine = null;
     }
 
     // 何かと接触したときの処理
@@ -79,27 +115,14 @@ public class PlayerBasicInformation : MonoBehaviour
         // Godモードでも"Deadステート"でもなければ実行する。
         if (!_isGodMode && !_newPlayerStateManagement._isDead)
         {
-            //if (collision.gameObject.TryGetComponent(out SpellController spell))
-            //{
-            //    spell.HitPlayer();
-            //    _newPlayerStateManagement._isHitEnemy = true;
-            //    _hitEnemySound.Play();
-            //    StartCoroutine(GodMode());
-            //}
-            //if (collision.gameObject.TryGetComponent(out BossWeapon bossAttack))
-            //{
-            //    bossAttack.HitPlayer();
-            //    _newPlayerStateManagement._isHitEnemy = true;
-            //    _hitEnemySound.Play();
-            //    StartCoroutine(GodMode());
-            //}
-            if(collision.gameObject.TryGetComponent(out IAttackOnPlayer _enemy))
+            if (collision.gameObject.TryGetComponent(out IAttackOnPlayer _enemy))
             {
                 _enemy.HitPlayer(_rigidbody2D);
                 _newPlayerStateManagement._isHitEnemy = true;
                 _hitEnemySound.Play();
                 //一定時間無敵にする。
-                StartCoroutine(GodMode());
+                _waitGodModeIntervalCoroutine = WaitGodModeInterval();
+                StartCoroutine(_waitGodModeIntervalCoroutine);
             }
             //バッテリーと接触したときの処理
             if (collision.gameObject.tag == "Battery")

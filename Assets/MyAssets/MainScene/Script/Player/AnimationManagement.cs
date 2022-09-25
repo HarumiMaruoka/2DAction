@@ -41,6 +41,25 @@ public class AnimationManagement : MonoBehaviour
         ChangeAnimation();
         SetAnim();
     }
+    void OnEnable()
+    {
+        GameManager.OnPause += OnPause;
+        GameManager.OnResume += OnResume;
+    }
+    void OnDisable()
+    {
+        GameManager.OnPause -= OnPause;
+        GameManager.OnResume -= OnResume;
+    }
+
+    void OnPause()
+    {
+        _animator.speed=Constants.PAUSE_ANIM_SPEED;
+    }
+    void OnResume()
+    {
+        _animator.speed = Constants.NOMAL_ANIM_SPEED;
+    }
 
     void SetAnimFalse()
     {

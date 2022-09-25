@@ -14,12 +14,13 @@ public class BasicShooting : FireBehavior
     /// <summary> 弾を撃てるかどうかを表す変数。 </summary>
     bool _isFire = true;
 
+
     //<===== Unityメッセージ =====>//
     void Start()
     {
         Initialized(Constants.ON_FIRE_PRESS_TYPE_CONSECUTIVELY);
 
-        
+
 
         //***テスト用処理***//
         //*左腕に装備する。*//

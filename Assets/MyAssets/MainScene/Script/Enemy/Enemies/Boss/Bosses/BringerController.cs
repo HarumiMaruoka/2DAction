@@ -59,6 +59,7 @@ public class BringerController : NewBossBase
     GameObject _longRangeAttackPrefab;
     GameObject _weapon;
 
+
     /// <summary> 後退時の移動速度の倍率 </summary>
     const float _moveSpeedMagnificationAtRecession = 0.6f;
     #endregion
@@ -104,32 +105,38 @@ public class BringerController : NewBossBase
     /// <summary> 設定された確率を基に"攻撃"行動ステートに遷移する。 </summary>
     protected override void StartAttackProcess()
     {
-        //速度をリセットする。(0にする)
-        _rigidBody2d.velocity = Vector2.zero;
+        if (_nowState != BossState.DIE)
+        {
+            //速度をリセットする。(0にする)
+            _rigidBody2d.velocity = Vector2.zero;
 
-        // 入力された値を基にランダムに遷移先を決める。
-        float probability = Random.Range(0f, 100f);
-        // "弱攻撃"に遷移する処理 / 遷移時に実行する処理
-        if (probability < _lightAttackProbability) MomentOfLightAttack();
-        // "強攻撃"に遷移する処理 / 遷移時に実行する処理
-        else if (probability < _heavyAttackProbability + _lightAttackProbability) MomentOfHeavyAttack();
-        // "遠距離攻撃"に遷移する処理 / 遷移時に実行する処理
-        else MomentOfLongRangeAttack();
+            // 入力された値を基にランダムに遷移先を決める。
+            float probability = Random.Range(0f, 100f);
+            // "弱攻撃"に遷移する処理 / 遷移時に実行する処理
+            if (probability < _lightAttackProbability) MomentOfLightAttack();
+            // "強攻撃"に遷移する処理 / 遷移時に実行する処理
+            else if (probability < _heavyAttackProbability + _lightAttackProbability) MomentOfHeavyAttack();
+            // "遠距離攻撃"に遷移する処理 / 遷移時に実行する処理
+            else MomentOfLongRangeAttack();
+        }
     }
     /// <summary> 設定された確率を基に"通常"行動ステートに遷移する。 </summary>
     protected override void EndAttackProcess()
     {
-        //速度をリセットする。(0にする)
-        _rigidBody2d.velocity = Vector2.zero;
+        if (_nowState != BossState.DIE)
+        {
+            //速度をリセットする。(0にする)
+            _rigidBody2d.velocity = Vector2.zero;
 
-        // 入力された値を基にランダムに遷移先を決める
-        float probability = Random.Range(0f, 100f);
-        // "アイドル"に遷移する。
-        if (probability < _idleProbability) MomentOfIdle();
-        // "接近ステート"に遷移する。
-        else if (probability < _approachProbability + _idleProbability) MomentOfApproach();
-        // "後退ステート"に遷移する。
-        else MomentOfRecession();
+            // 入力された値を基にランダムに遷移先を決める
+            float probability = Random.Range(0f, 100f);
+            // "アイドル"に遷移する。
+            if (probability < _idleProbability) MomentOfIdle();
+            // "接近ステート"に遷移する。
+            else if (probability < _approachProbability + _idleProbability) MomentOfApproach();
+            // "後退ステート"に遷移する。
+            else MomentOfRecession();
+        }
     }
     protected override void TreatmentAfterDeath()
     {
@@ -147,12 +154,12 @@ public class BringerController : NewBossBase
     protected override void OnPause()
     {
         base.OnPause();
-        _animator.SetFloat(_animSpeedParamName, 0f);
+        _animator.SetFloat(_animSpeedParamName, Constants.PAUSE_ANIM_SPEED);
     }
     protected override void OnResume()
     {
         base.OnResume();
-        _animator.SetFloat(_animSpeedParamName, _holdAnimSpeed);
+        SetAnimSpeed(_nowState);
     }
     #endregion
 
@@ -218,9 +225,8 @@ public class BringerController : NewBossBase
     void MomentOfIdle()
     {
         // アイドル状態のアニメーションを再生する。
+        SetAnimSpeed(BossState.IDLE);
         _animator.Play(_idleAnimStateName);
-        // ポーズ用にアニメーションスピードを保存する。
-        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイムを開始する。
         _waitCoolTimeCoroutine = WaitCoolTime();
         StartCoroutine(_waitCoolTimeCoroutine);
@@ -234,10 +240,9 @@ public class BringerController : NewBossBase
     {
         // 歩行アニメーションを再生する。
         _animator.Play(_runAnimStateName);
+        SetAnimSpeed(BossState.APPROACH);
         // 通常再生する。(逆再生している可能性があるので)
         _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
-        // ポーズ用にアニメーションスピードを保存する。
-        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
         // クールタイムを開始する。
         _waitCoolTimeCoroutine = WaitCoolTime();
         StartCoroutine(_waitCoolTimeCoroutine);
@@ -252,10 +257,9 @@ public class BringerController : NewBossBase
     {
         // 歩行アニメーションを再生する。
         _animator.Play(_runAnimStateName);
+        SetAnimSpeed(BossState.RECESSION);
         // アニメーションを逆再生する。(これで後退を表す。)
         _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
-        // アニメーションスピードを保持する。
-        _holdAnimSpeed = Constants.REVERSE_PLAYBACK_ANIM_SPEED;
         // クールタイムを開始する。
         _waitCoolTimeCoroutine = WaitCoolTime();
         StartCoroutine(_waitCoolTimeCoroutine);
@@ -271,8 +275,7 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_lightAttackAnimStateName);
-        // ポーズ用にアニメーションスピードを保存する。
-        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
+        SetAnimSpeed(BossState.LIGHT_ATTACK_PATTERN_ONE);
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterLightAttack._minValue, _cooltimeAfterLightAttack._maxValue);
         // ステートを変更する。
@@ -285,8 +288,7 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_heavyAttackAnimStateName);
-        // ポーズ用にアニメーションスピードを保存する。
-        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
+        SetAnimSpeed(BossState.HEAVY_ATTACK_PATTERN_ONE);
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterHeavyAttack._minValue, _cooltimeAfterHeavyAttack._maxValue);
         // ステートを変更する。
@@ -299,12 +301,22 @@ public class BringerController : NewBossBase
     {
         // アニメーションを再生する。
         _animator.Play(_longRangeAttackAnimStateName);
-        // ポーズ用にアニメーションスピードを保存する。
-        _holdAnimSpeed = Constants.NOMAL_ANIM_SPEED;
+        SetAnimSpeed(BossState.LONG_RANGE_ATTACK_PATTERN_ONE);
         // クールタイム時間を設定する。
         _coolTimeValue = Random.Range(_cooltimeAfterLongRangeAttack._minValue, _cooltimeAfterLongRangeAttack._maxValue);
         // ステートを変更する。
         _nowState = BossState.LONG_RANGE_ATTACK_PATTERN_ONE;
+    }
+    /// <summary>
+    /// アニメーションの再生速度を設定する。
+    /// </summary>
+    /// <param name="newState"> 変更する対象ステート </param>
+    void SetAnimSpeed(BossState newState)
+    {
+        if (newState == BossState.RECESSION)
+            _animator.SetFloat(_animSpeedParamName, Constants.REVERSE_PLAYBACK_ANIM_SPEED);
+        else
+            _animator.SetFloat(_animSpeedParamName, Constants.NOMAL_ANIM_SPEED);
     }
     #endregion
 

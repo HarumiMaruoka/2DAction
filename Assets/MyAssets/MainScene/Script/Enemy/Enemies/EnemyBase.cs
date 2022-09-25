@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class EnemyBase : MonoBehaviour, IAttackOnPlayer
 {
-    //<============= メンバー変数 =============>//
+    //===== メンバー変数 =====//
     //エネミー共通のステータス
     [SerializeField] protected EnemyStatus _status;
     public EnemyStatus Status { get => _status; }
@@ -59,14 +59,6 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     }
     protected virtual void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            OnPause();
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            OnResume();
-        }
         Update_Enemy();
     }
     protected virtual void OnEnable()
@@ -148,7 +140,7 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
         }
     }
 
-    //<============== protectedメンバー関数 ==============>//
+    //===== protectedメンバー関数 =====//
     /// <summary> 全エネミーで共通のEnemyの初期化関数。継承先のStart関数で呼び出す。 </summary>
     /// <returns> 成功したら true を返す。 </returns>
     protected bool Initialize_EnemyBase()
@@ -224,16 +216,16 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     //***** 攻撃ヒット関連 *****//
     /// <summary> プレイヤーからこのエネミーに対する攻撃処理。 : ノックバック無し版 </summary>
     /// <param name="playerOffensivePower"> ダメージ量 </param>
-    public void HitPlayerAttack(float playerOffensivePower)
+    public virtual void HitPlayerAttack(float playerOffensivePower)
     {
         //自身の体力を減らし、一定時間 色を被ダメ用の色に変える。
         _status._hitPoint -= playerOffensivePower;//体力がなくなった時の処理
         if (_status._hitPoint <= 0)
         {
-            // 体力がなくなった時の処理を実行
-            Deth();
             // アイテムをドロップする。
             DropItems();
+            // 体力がなくなった時の処理を実行
+            Deth();
         }
         // 攻撃がヒットしたことを演出するために色を変更する。
         _colorChangeCoroutine = ColorChange();
@@ -242,16 +234,16 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     /// <summary> プレイヤーからこのエネミーに対する攻撃処理。 : ノックバック有り版 </summary>
     /// <param name="playerOffensivePower"> ダメージ量 </param>
     /// <param name="knockBackTimer"> ノックバック時間 </param>
-    public void HitPlayerAttack(float playerOffensivePower, float knockBackTimer, float knockBackPower)
+    public virtual void HitPlayerAttack(float playerOffensivePower, float knockBackTimer, float knockBackPower)
     {
         //自身の体力を減らす。
         _status._hitPoint -= playerOffensivePower;
         if (_status._hitPoint <= 0)
         {
-            // 体力がなくなった時の処理を実行
-            Deth();
             // アイテムをドロップする。
             DropItems();
+            // 体力がなくなった時の処理を実行
+            Deth();
         }
         //攻撃がヒットしたことを表現する為に一定時間色を変更する。
         _colorChangeCoroutine = ColorChange();
@@ -281,7 +273,7 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     }
 
 
-    //<============= コルーチン =============>//
+    //===== コルーチン =====//
     /// <summary> 
     /// ノックバック実行用コルーチン。 : <br/>
     /// 一定時間 _isMove変数を、falseにする。<br/>
@@ -308,7 +300,7 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     {
         float timer = 0f;
         _isColorChange = true;
-        while (timer < 1f/*_colorChangeTime*/)
+        while (timer < _colorChangeTime)
         {
             timer += Time.deltaTime;
             yield return null;

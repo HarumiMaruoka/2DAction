@@ -10,13 +10,18 @@ using UnityEngine;
 /// </summary>
 public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
 {
-    //===== メンバー変数 =====//
+    //===== フィールド / プロパティ =====//
     Collider2D _collider2D;
 
     [Header("攻撃力"), SerializeField] float _offensivePower;
     [Header("ノックバック力"), SerializeField] float _blowingPower;
 
     protected Animator _animator;
+    protected Rigidbody2D _rigidbody2D;
+
+    // ポーズ用
+    float _angularVelocity;
+    Vector2 _velocity;
 
     //===== Unityメッセージ =====//
     /// <summary>
@@ -24,6 +29,7 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
     /// </summary>
     protected virtual void Start()
     {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _collider2D = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
     }
@@ -38,6 +44,7 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
                 HitPlayer(playerRb2D);
         }
     }
+
     protected virtual void OnEnable()
     {
         GameManager.OnPause += OnPause;
@@ -54,13 +61,38 @@ public class EnemyWeaponBase : MonoBehaviour, IAttackOnPlayer
     /// </summary>
     protected virtual void OnPause()
     {
-
+        // アニメーションをポーズする。
+        if (_animator != null)
+        {
+            _animator.speed = Constants.PAUSE_ANIM_SPEED;
+        }
+        // RigidBody2Dをポーズする。
+        if (_rigidbody2D != null)
+        {
+            _angularVelocity = _rigidbody2D.angularVelocity;
+            _velocity = _rigidbody2D.velocity;
+            _rigidbody2D.Sleep();
+            _rigidbody2D.simulated = false;
+        }
     }
     /// <summary>
     /// ポーズ解除処理
     /// </summary>
     protected virtual void OnResume()
     {
+        // アニメーションのポーズを解除する。
+        if (_animator != null)
+        {
+            _animator.speed = Constants.NOMAL_ANIM_SPEED;
+        }
+        // RigidBody2Dのポーズを解除する。
+        if (_rigidbody2D != null)
+        {
+            _rigidbody2D.simulated = true;
+            _rigidbody2D.WakeUp();
+            _rigidbody2D.angularVelocity = _angularVelocity;
+            _rigidbody2D.velocity = _velocity;
+        }
 
     }
 

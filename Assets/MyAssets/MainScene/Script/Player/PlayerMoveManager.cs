@@ -92,6 +92,10 @@ public class PlayerMoveManager : MonoBehaviour
 
     float _groundCheckPositionY = -0.725f;
 
+    // ポーズ用
+    float _angularVelocity;
+    Vector2 _velocity;
+
     //===== Unityメッセージ =====//
     void Start()
     {
@@ -115,15 +119,6 @@ public class PlayerMoveManager : MonoBehaviour
     void Update()
     {
         Move();
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            OnPause();
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            OnResume();
-        }
     }
 
     void OnEnable()
@@ -152,11 +147,29 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary>
     /// ポーズ処理
     /// </summary>
-    void OnPause() => _playerStateManagement._isPause = true;
+    void OnPause()
+    {
+        _playerStateManagement._isPause = true;
+
+        // Rigidbody2Dを停止させる。
+        _angularVelocity = _rigidBody2D.angularVelocity;
+        _velocity = _rigidBody2D.velocity;
+        _rigidBody2D.Sleep();
+        _rigidBody2D.simulated = false;
+    }
     /// <summary>
     /// ポーズ解除処理
     /// </summary>
-    void OnResume() => _playerStateManagement._isPause = false;
+    void OnResume() 
+    {
+        _playerStateManagement._isPause = false;
+
+        // Rigidbody2Dの停止を解除する。
+        _rigidBody2D.simulated = true;
+        _rigidBody2D.WakeUp();
+        _rigidBody2D.angularVelocity = _angularVelocity;
+        _rigidBody2D.velocity = _velocity;
+    }
 
 
     //===== privateメソッド =====//
@@ -169,7 +182,7 @@ public class PlayerMoveManager : MonoBehaviour
         _newForce = Vector2.zero;
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
-        
+
         if (_playerStateManagement._isMove &&
             !_playerStateManagement._isDead &&
             !_playerStateManagement._isPause)
@@ -202,7 +215,6 @@ public class PlayerMoveManager : MonoBehaviour
                     PlayerStatusManager.Instance.Equipment_RisingValue._moveSpeed * 0.005f;
                 _rigidBody2D.velocity = (Vector2.right * _newVelocity) + (Vector2.up * _rigidBody2D.velocity.y);
             }
-
         }
     }
 

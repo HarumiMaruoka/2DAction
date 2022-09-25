@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     // ポーズ解除時に実行するデリゲート
     static public System.Action OnResume = default;
 
+    bool _isPause = false;
+
 
     //===== Unityメッセージ =====//
     void Awake()
@@ -37,7 +39,15 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-
+        // 以下ポーズテスト用コード
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            OnPauseStart();
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnPauseEnd();
+        }
     }
 
     //===== priveteメソッド =====//
@@ -75,9 +85,23 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// ポーズ開始処理
     /// </summary>
-    public void OnPauseStart() => OnPause();
+    public void OnPauseStart()
+    {
+        if (!_isPause)
+        {
+            _isPause = true;
+            OnPause();
+        }
+    }
     /// <summary>
     /// ポーズ終了処理
     /// </summary>
-    public void OnPauseEnd() => OnResume();
+    public void OnPauseEnd()
+    {
+        if (_isPause)
+        {
+            _isPause = false;
+            OnResume();
+        }
+    }
 }

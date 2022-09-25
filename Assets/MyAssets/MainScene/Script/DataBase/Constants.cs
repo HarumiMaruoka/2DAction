@@ -50,4 +50,6 @@ public class Constants
     public const float PAUSE_ANIM_SPEED = 0f;
 
     public const string EQUIPMENT_UI_COMPONENTS_MANAGER_TAG = "EquipmentUIComponentsManager";
+
+    public const string GROUND_TAG_NAME = "Ground";
 }

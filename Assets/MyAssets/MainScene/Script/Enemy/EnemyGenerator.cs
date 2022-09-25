@@ -14,7 +14,11 @@ public class EnemyGenerator : MonoBehaviour
     GameObject _child;
 
     //Gizmo表示
-    [SerializeField, Tooltip("Gizmo表示")] bool _isGizmo = true;
+    [Header("Gizmo関連")]
+    [SerializeField, Tooltip("Gizmo表示")] 
+    bool _isGizmo = true;
+    [SerializeField, Tooltip("Gizmoの色")]
+    Color _gizmoColor;
 
     //Startで子オブジェクトを取得する。
     private void Start()
@@ -39,7 +43,7 @@ public class EnemyGenerator : MonoBehaviour
     //このオブジェクトの位置を見やすいように表示する。
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = _gizmoColor;
         if (_isGizmo)
         {
             Gizmos.DrawCube(transform.position, new Vector3(1, 1, 0));

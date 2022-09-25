@@ -90,15 +90,15 @@ public class HaveEquipmentDataBase
     public void GetEquipment(int getEquipmentsID)
     {
         // 空のスロットを見つけ、そこに保存する。
-        for(int i=0;i< _haveEquipmentID._equipments.Length; i++)
+        for (int i = 0; i < _haveEquipmentID._equipments.Length; i++)
         {
-            if(_haveEquipmentID._equipments[i]== (int)EquipmentID.None)
+            if (_haveEquipmentID._equipments[i] == (int)EquipmentID.None)
             {
                 _haveEquipmentID._equipments[i] = getEquipmentsID;
                 Debug.Log("取得に成功しました。");
                 break;
             }
         }
-        Debug.LogWarning("取得に失敗しました。");
+        Debug.LogWarning("取得に失敗しました。\"空の装備\"を取得しましたか？そうでなければエラーです。");
     }
 }

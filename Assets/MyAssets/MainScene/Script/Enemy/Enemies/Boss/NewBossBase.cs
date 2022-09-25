@@ -17,6 +17,7 @@ public class NewBossBase : EnemyBase
     /// <summary> 戦闘状態かどうかを表す変数。 </summary>
     [Header("確認用 : 戦闘中かどうか"), SerializeField]
     bool _isFight = false;
+    public bool IsFight { get => _isFight; }
 
     //クールタイム関連
     [Header("戦闘を開始して最初の攻撃までのクールタイム"), SerializeField]
@@ -47,6 +48,10 @@ public class NewBossBase : EnemyBase
 
     protected IEnumerator _waitCoolTimeCoroutine;
 
+    [Header("BossUI関連")]
+    [Tooltip("BossUI"), SerializeField]
+    GameObject _bossUI = default;
+
     //===== Unityメッセージ =====//
     protected override void Start()
     {
@@ -57,6 +62,11 @@ public class NewBossBase : EnemyBase
     {
         base.Update();
         CommonUpdate_BossBase();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        _bossUI?.SetActive(false);
     }
     protected override void OnPause()
     {
@@ -96,12 +106,14 @@ public class NewBossBase : EnemyBase
         // プレイヤーがいる方向に向かって向きを変える
         if (_playerPos.position.x > transform.position.x && transform.localScale.x > 0)
         {
+            _isRight = true;
             var localScale = transform.localScale;
             localScale.x *= -1;
             transform.localScale = localScale;
         }
         else if (_playerPos.position.x < transform.position.x && transform.localScale.x < 0)
         {
+            _isRight = false;
             var localScale = transform.localScale;
             localScale.x *= -1;
             transform.localScale = localScale;
@@ -256,6 +268,7 @@ public class NewBossBase : EnemyBase
         _coolTimeValue = UnityEngine.Random.Range(_cooltimeFirstAttack._minValue, _cooltimeFirstAttack._maxValue);
         _waitCoolTimeCoroutine = WaitCoolTime();
         StartCoroutine(_waitCoolTimeCoroutine);
+        _bossUI?.SetActive(true);
         _isFight = true;
     }
     /// <summary>
@@ -268,6 +281,7 @@ public class NewBossBase : EnemyBase
     {
         // このコンポーネントから開始された全てのコルーチンを停止する。
         StopAllCoroutines();
+        _bossUI?.SetActive(false);
         // 戦闘状態を表す変数をfalseにする。
         _isFight = false;
     }
@@ -283,6 +297,22 @@ public class NewBossBase : EnemyBase
     {
         _nowState = BossState.DIE;
     }
+    public override void HitPlayerAttack(float playerOffensivePower)
+    {
+        if (_nowState != BossState.DIE)
+        {
+            base.HitPlayerAttack(playerOffensivePower);
+        }
+    }
+    public override void HitPlayerAttack(float playerOffensivePower, float knockBackTimer, float knockBackPower)
+    {
+        if (_nowState != BossState.DIE)
+        {
+            base.HitPlayerAttack(playerOffensivePower, knockBackTimer, knockBackPower);
+        }
+    }
+
+
     static private void Info(int num)
     {
         Console.WriteLine(num);

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1199475471138267986}
   m_Layer: 0
   m_Name: NewBringer
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,15 +186,16 @@ MonoBehaviour:
     _offensivePower: 10
     _blowingPower: {x: 100, y: 100}
     _weight: 100
-    _moveSpeed: 10
+    _moveSpeed: 6
   _dropItemAndProbabilities: []
   _isFight: 0
   _cooltimeFirstAttack:
-    _minValue: 0
-    _maxValue: 0
+    _minValue: 1
+    _maxValue: 5
   _coolTimeValue: 0
-  _fightStartDistance: {x: 12, y: 6}
-  _fightStopDistance: {x: 30, y: 14}
+  _fightStartDistance: {x: 20, y: 6}
+  _fightStopDistance: {x: 40, y: 14}
+  _bossUI: {fileID: 0}
   _cooltimeAfterLightAttack:
     _minValue: 1
     _maxValue: 3
@@ -208,9 +209,9 @@ MonoBehaviour:
   _heavyAttackProbability: 30
   _longRangeAttackProbability: 30
   _idleProbability: 15
-  _approachProbability: 55
-  _recessionProbability: 30
-  _animSpeedParamName: WalkSpeed
+  _approachProbability: 70
+  _recessionProbability: 15
+  _animSpeedParamName: AnimSpeed
   _idleAnimStateName: Idle
   _runAnimStateName: Run
   _lightAttackAnimStateName: LightAttack

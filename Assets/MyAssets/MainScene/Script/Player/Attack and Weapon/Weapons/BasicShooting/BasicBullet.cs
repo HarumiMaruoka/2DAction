@@ -12,6 +12,9 @@ public class BasicBullet : LongRangeWeaponBase
     [Header("ダッシュ時の加速度"), SerializeField] float _dashAcceleration = 1.5f;
     [Header("消滅までの時間"), SerializeField] float _dethTime = 1.5f;
 
+    [Header("発射高さオフセット"), SerializeField]
+    float _shotPosOffsetY = -0.2f;
+
     IEnumerator _coroutine = default;
     Coroutine _coroutine2 = default;
 
@@ -27,12 +30,6 @@ public class BasicBullet : LongRangeWeaponBase
     {
         Initialized();
     }
-
-    private void Update()
-    {
-
-    }
-
     void OnEnable()
     {
         GameManager.OnPause += OnPause;
@@ -43,9 +40,19 @@ public class BasicBullet : LongRangeWeaponBase
         GameManager.OnPause -= OnPause;
         GameManager.OnResume -= OnResume;
     }
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == Constants.GROUND_TAG_NAME)
+        {
+            Destroy(gameObject);
+        }
+        base.OnTriggerEnter2D(collision);
+    }
 
     protected override bool Initialized()
     {
+
+        transform.position += Vector3.up * _shotPosOffsetY;
         _rb2D = GetComponent<Rigidbody2D>();
         //プレイヤーの向きに応じて飛んでいく方向を決める。
         _rb2D.velocity =
@@ -61,7 +68,6 @@ public class BasicBullet : LongRangeWeaponBase
 
         // デストロイするまで待つ
         _coroutine = WaitDestroy();
-        //_coroutine2 = StartCoroutine(_coroutine);
         StartCoroutine(_coroutine);
 
         // 現在コルーチンを使用して弾を消失させているが、
