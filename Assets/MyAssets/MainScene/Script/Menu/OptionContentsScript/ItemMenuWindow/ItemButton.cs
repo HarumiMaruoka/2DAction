@@ -77,6 +77,16 @@ public class ItemButton : MonoBehaviour
     /// <summary> ボタンを押したら実行する </summary>
     public void Use_ThisItem()
     {
+        // ゲームオブジェクトに処理を預ける必要がない処理はアイテム自身から実行する。
         ItemDataBase.Instance.ItemData[(int)MyItem._myID].UseItem();
+
+        // ゲームオブジェクトとして表現すべきものはインスタンシエイトする。
+        switch (MyItem._myID)
+        {
+            case Item.ItemID.ITEM_ID_03: Instantiate(UseItemManager.Instance._itemID3); break;
+            case Item.ItemID.ITEM_ID_04: Instantiate(UseItemManager.Instance._itemID4); break;
+            case Item.ItemID.ITEM_ID_05: Instantiate(UseItemManager.Instance._itemID5); break;
+            case Item.ItemID.ITEM_ID_06: Instantiate(UseItemManager.Instance._itemID6); break;
+        }
     }
 }

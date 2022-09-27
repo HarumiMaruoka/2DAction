@@ -75,7 +75,7 @@ abstract public class Item
     public string _myExplanatoryText { get; }
 
     /// <summary> アイテムを使用する:継承先で内容を定義する。 </summary>
-    virtual public void UseItem()
+    public virtual void UseItem()
     {
         Debug.Log($"アイテム共通の処理 : アイテムID.{_myID}を使用。");
         ItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_myID, -1);

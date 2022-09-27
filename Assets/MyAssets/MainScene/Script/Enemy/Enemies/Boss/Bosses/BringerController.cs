@@ -147,6 +147,8 @@ public class BringerController : NewBossBase
     {
         // その場で止まる。
         _rigidBody2d.velocity = Vector2.zero;
+        // 実行中のコルーチンを停止する。
+        StopAllCoroutines();
         // 死亡時のアニメーションを再生する。
         _animator.Play(_dieAnimStateName);
 

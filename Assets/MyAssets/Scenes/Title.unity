@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 1154704048}
   - component: {fileID: 1154704047}
   - component: {fileID: 1154704046}
+  - component: {fileID: 1154704049}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -712,28 +713,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 358692189}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: LoadMainScene
-        m_Mode: 1
+      - m_Target: {fileID: 1154704049}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: SceneChange
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 599137471}
-        m_TargetAssemblyTypeName: ButtonPushSound, Assembly-CSharp
-        m_MethodName: DecisionSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: StageTow
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1154704047
@@ -774,6 +763,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154704044}
   m_CullTransparentMesh: 1
+--- !u!114 &1154704049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154704044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d080e8e77356f8f4b895defdb537aa3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fadePanel: {fileID: 0}
+  _timeToFadeIn: 0
 --- !u!1 &1537636618
 GameObject:
   m_ObjectHideFlags: 0

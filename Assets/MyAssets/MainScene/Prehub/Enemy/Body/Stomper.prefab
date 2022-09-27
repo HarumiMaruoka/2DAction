@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _status:
-    _hitPoint: 1
+    _hitPoint: 1500
     _offensivePower: 0
     _blowingPower: {x: 100, y: 100}
     _weight: 0

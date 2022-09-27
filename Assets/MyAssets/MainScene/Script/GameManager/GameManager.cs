@@ -39,15 +39,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        // 以下ポーズテスト用コード
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            OnPauseStart();
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            OnPauseEnd();
-        }
+
     }
 
     //===== priveteメソッド =====//
@@ -103,5 +95,13 @@ public class GameManager : MonoBehaviour
             _isPause = false;
             OnResume();
         }
+    }
+    /// <summary>
+    /// シーンを変更する。
+    /// </summary>
+    /// <param name="nextSceneName"> 読み込むシーン名 </param>
+    public void SceneChange(string nextSceneName)
+    {
+        SceneManager.LoadScene(nextSceneName);
     }
 }

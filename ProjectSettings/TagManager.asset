@@ -15,6 +15,7 @@ TagManager:
   - ToolWindow
   - Default
   - BossArea
+  - ItemManager
   layers:
   - Default
   - TransparentFX

@@ -103,7 +103,6 @@ public class BasicBullet : LongRangeWeaponBase
     {
         float timer = 0f;
 
-        // コルーチン進行中は数値を増加させる
         while (timer < _dethTime)
         {
             timer += Time.deltaTime;

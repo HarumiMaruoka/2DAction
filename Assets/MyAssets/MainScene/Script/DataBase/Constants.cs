@@ -52,4 +52,6 @@ public class Constants
     public const string EQUIPMENT_UI_COMPONENTS_MANAGER_TAG = "EquipmentUIComponentsManager";
 
     public const string GROUND_TAG_NAME = "Ground";
+
+    public const string ITEM_MANAGER_TAG_NAME = "ItemManager";
 }

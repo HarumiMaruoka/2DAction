@@ -42,7 +42,7 @@ public class E_MachineBat : EnemyBase
             if (!Mathf.Approximately(moveY, 0f)) moveY = (moveY > 0) ? Constants.UP : Constants.DOWN;
 
             // ˆÚ“®ˆ—
-            _rigidBody2d.velocity = new Vector2(moveX, moveY).normalized * _moveSpeed;
+            _rigidBody2d.velocity = new Vector2(moveX, moveY).normalized * _moveSpeed * (100f - UseItemManager.Instance._enemyMoveSpeedDownValue) * 0.01f;
             _isRight = _rigidBody2d.velocity.x > 0;
         }
     }

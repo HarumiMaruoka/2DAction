@@ -9,8 +9,12 @@ public class ExitMenu : MonoBehaviour
     public void GameExit()
     {
         //エディター上で終了する場合の処理(ビルド時にはエラーを投げるので消す)
-        //UnityEditor.EditorApplication.isPlaying = false;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+#if UNITY_EDITOR_WIN
         //ビルドしたゲームを終了する場合の処理(エディター実行中はコメントアウトする)
         Application.Quit();
+#endif
     }
 }

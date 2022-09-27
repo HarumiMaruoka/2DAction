@@ -212,7 +212,7 @@ public class PlayerMoveManager : MonoBehaviour
                 //_newVelocity *= PlayerStatusManager.Instance.ConsequentialPlayerStatus._moveSpeed * 0.01f;
                 _newVelocity *=
                     PlayerStatusManager.Instance.BaseStatus._moveSpeed +
-                    PlayerStatusManager.Instance.Equipment_RisingValue._moveSpeed * 0.005f;
+                    PlayerStatusManager.Instance.Equipment_RisingValue._moveSpeed * 0.0005f;
                 _rigidBody2D.velocity = (Vector2.right * _newVelocity) + (Vector2.up * _rigidBody2D.velocity.y);
             }
         }

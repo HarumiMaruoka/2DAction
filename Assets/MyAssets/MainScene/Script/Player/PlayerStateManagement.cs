@@ -43,6 +43,7 @@ public class PlayerStateManagement : MonoBehaviour
     bool _isAttack = false;
 
     public bool _isHitEnemy { get; set; }
+    bool _beforeFrameIsHitEnemy;
     public bool _isDead { get; set; }
     public bool _isMove { get; set; }
     public bool _isPause { get; set; }
@@ -118,9 +119,9 @@ public class PlayerStateManagement : MonoBehaviour
                 //ó‘Ô‚ğ•ÏX‚·‚é
                 MoveManage();
                 AttackManage();
-                OtherActionManage();
                 Sliding();
             }
+            OtherActionManage();
         }
         //ˆÚ“®‚Å‚«‚é‚©‚Ç‚¤‚©
         if (_isSlidingNow || _isHitEnemy)

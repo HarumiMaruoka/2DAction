@@ -66,7 +66,10 @@ public class NewBossBase : EnemyBase
     protected override void OnDisable()
     {
         base.OnDisable();
-        _bossUI?.SetActive(false);
+        if (_bossUI != null)
+        {
+            _bossUI.SetActive(false);
+        }
     }
     protected override void OnPause()
     {
@@ -195,23 +198,22 @@ public class NewBossBase : EnemyBase
         }
     }
 
-
     //===== アニメーションイベントから呼び出す想定のメソッド =====//
     /// <summary> 
     /// このゲームオブジェクトを破棄する。 : <br/>
     /// このメソッドは、アニメーションイベントから呼び出す想定で作成したもの。<br/>
     /// </summary>
-    protected void DestroyThisObject() { Destroy(gameObject); }
+    protected void DestroyThisObject() => Destroy(gameObject);
     /// <summary> 
     /// 攻撃開始処理。<br/>
     /// このメソッドはアニメーションイベントから呼び出す想定で作成したもの。 
     /// </summary>
-    protected void AttackStart() { _isAttackNow = true; }
+    protected void AttackStart() => _isAttackNow = true;
     /// <summary> 
     /// 攻撃終了処理。<br/>
     /// このメソッドはアニメーションイベントから呼び出す想定で作成したもの。 
     /// </summary>
-    protected void AttackEnd() { _isAttackNow = false; }
+    protected void AttackEnd() => _isAttackNow = false;
 
 
     //===== コルーチン =====//
@@ -228,7 +230,6 @@ public class NewBossBase : EnemyBase
         _isCoolTimerNow = false;
         _waitCoolTimeCoroutine = null;
     }
-
 
     //===== 仮想関数 =====//
     /// <summary> 
@@ -286,7 +287,6 @@ public class NewBossBase : EnemyBase
         _isFight = false;
     }
 
-
     //===== overrides =====//
     /// <summary>
     /// 体力がなくなった時の処理 : <br/>
@@ -310,19 +310,6 @@ public class NewBossBase : EnemyBase
         {
             base.HitPlayerAttack(playerOffensivePower, knockBackTimer, knockBackPower);
         }
-    }
-
-
-    static private void Info(int num)
-    {
-        Console.WriteLine(num);
-    }
-    static public System.Action<int> OnSelect;
-
-    static void Main()
-    {
-        OnSelect += Info;
-        OnSelect -= Info;
     }
 }
 /// <summary> ボスのステートを表す型 </summary>

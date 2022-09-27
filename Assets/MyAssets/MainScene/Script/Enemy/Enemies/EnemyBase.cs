@@ -56,6 +56,7 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     protected virtual void Start()
     {
         Initialize_EnemyBase();
+        ;
     }
     protected virtual void Update()
     {
@@ -89,7 +90,6 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
             // コルーチンを停止する。
             PauseCoroutine();
         }
-
     }
     /// <summary>
     /// ポーズ解除処理
@@ -173,6 +173,7 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     /// <summary> 全エネミーで共通のEnemyのUpdate関数。継承先のUpdate関数で呼び出す。 </summary>
     protected void Update_Enemy()
     {
+        // アイテムによる移動速度の減退がないかチェック
         ChangeColor();
         Move();
     }
@@ -318,15 +319,18 @@ public class EnemyBase : MonoBehaviour, IAttackOnPlayer
     /// </summary>
     protected virtual void ChangeColor()
     {
-        //色を変える必要があれば変える
-        if (_isColorChange)
+        if (_status._hitPoint > 0.0f)
         {
-            _spriteRenderer.color = Color.red;
-        }
-        //色を元に戻す
-        else
-        {
-            _spriteRenderer.color = new Color(255, 255, 255, 255);
+            //色を変える必要があれば変える
+            if (_isColorChange)
+            {
+                _spriteRenderer.color = Color.red;
+            }
+            //色を元に戻す
+            else
+            {
+                _spriteRenderer.color = new Color(255, 255, 255, 255);
+            }
         }
     }
     /// <summary>

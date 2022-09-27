@@ -103,7 +103,8 @@ public class NewDraw_NowEquipped : UseEventSystemBehavior
             //左腕の場合
             if (whichArm == Constants.LEFT_ARM)
             {
-                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armLeftPartsID != EquipmentID.None)
+                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armLeftPartsID != EquipmentID.None &&
+                    _armLeftPartsTextArea != null)
                     _armLeftPartsTextArea.text =
                         EquipmentManager.Instance.NewEquipmentDataBase.
                             EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._armLeftPartsID]._myName;
@@ -113,7 +114,8 @@ public class NewDraw_NowEquipped : UseEventSystemBehavior
             //右腕の場合
             else if (whichArm == Constants.RIGHT_ARM)
             {
-                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armRightPartsID != EquipmentID.None)
+                if (EquipmentManager.Instance.CurrentEquippedData.Equipped._armRightPartsID != EquipmentID.None &&
+                    _armRightPartsTextArea != null)
                     _armRightPartsTextArea.text =
                         EquipmentManager.Instance.NewEquipmentDataBase.
                             EquipmentData[(int)EquipmentManager.Instance.CurrentEquippedData.Equipped._armRightPartsID]._myName;

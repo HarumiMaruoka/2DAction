@@ -54,12 +54,12 @@ public class E_Stomper : EnemyBase
         if (_isRight)
         {
             _spriteRenderer.flipX = _isRight;
-            _rigidBody2d.velocity = new Vector2(1 * _moveSpeed, _rigidBody2d.velocity.y);
+            _rigidBody2d.velocity = new Vector2(1 * _moveSpeed, _rigidBody2d.velocity.y) * (100f - UseItemManager.Instance._enemyMoveSpeedDownValue) * 0.01f;
         }
         else
         {
             _spriteRenderer.flipX = _isRight;
-            _rigidBody2d.velocity = new Vector2(-1 * _moveSpeed, _rigidBody2d.velocity.y);
+            _rigidBody2d.velocity = new Vector2(-1 * _moveSpeed, _rigidBody2d.velocity.y) * (100f - UseItemManager.Instance._enemyMoveSpeedDownValue) * 0.01f;
         }
 
         // êiÇÒÇ≈Ç¢ÇÈï˚å¸Ç…âΩÇ©Ç†ÇÍÇŒîΩì]Ç∑ÇÈÅB
