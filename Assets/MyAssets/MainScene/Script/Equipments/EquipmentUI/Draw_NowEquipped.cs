@@ -45,6 +45,8 @@ public class Draw_NowEquipped : UseEventSystemBehavior
     /// <param name="whichArm"> 腕の場合左腕か右腕か。0なら左腕を更新し、1なら右腕を更新する。その他の値は不正。 </param>
     public void Update_Equipped(Equipment.EquipmentType updateType, int whichArm = -1)
     {
+        var currentEquipped = EquipmentManager.Instance.CurrentEquippedData.Equipped;
+        var equipmentData = EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData;
         // 腕以外の装備を更新する場合の処理。
         // 装備マネージャーが現在着用している装備を知っているので、そこから情報を取得し、各コンポーネントに適用する。
         if (updateType != Equipment.EquipmentType.ARM_PARTS)
@@ -52,20 +54,23 @@ public class Draw_NowEquipped : UseEventSystemBehavior
             switch (updateType)
             {
                 case Equipment.EquipmentType.HEAD_PARTS:
-                    if (EquipmentDataBase.Instance.Equipped._headPartsID >= 0)
-                        _headPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID]._myName;
+                    if (currentEquipped._headPartsID >= 0)
+                        _headPartsTextArea.text = 
+                            equipmentData[(int)currentEquipped._headPartsID]._myName;
                     else
                         _headPartsTextArea.text = "未装備";
                     break;
                 case Equipment.EquipmentType.TORSO_PARTS:
-                    if (EquipmentDataBase.Instance.Equipped._torsoPartsID >= 0)
-                        _torsoPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._torsoPartsID]._myName;
+                    if (currentEquipped._torsoPartsID >= 0)
+                        _torsoPartsTextArea.text = 
+                            equipmentData[(int)currentEquipped._torsoPartsID]._myName;
                     else
                         _torsoPartsTextArea.text = "未装備";
                     break;
                 case Equipment.EquipmentType.FOOT_PARTS:
-                    if (EquipmentDataBase.Instance.Equipped._footPartsID >= 0)
-                        _footPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._footPartsID]._myName;
+                    if (currentEquipped._footPartsID >= 0)
+                        _footPartsTextArea.text = 
+                            equipmentData[(int)currentEquipped._footPartsID]._myName;
                     else
                         _footPartsTextArea.text = "未装備";
                     break;
@@ -78,16 +83,18 @@ public class Draw_NowEquipped : UseEventSystemBehavior
             //左腕の場合
             if (whichArm == Constants.LEFT_ARM)
             {
-                if (EquipmentDataBase.Instance.Equipped._armLeftPartsID >= 0)
-                    _armLeftPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID]._myName;
+                if (currentEquipped._armLeftPartsID >= 0)
+                    _armLeftPartsTextArea.text = 
+                        equipmentData[(int)currentEquipped._armLeftPartsID]._myName;
                 else
                     _armLeftPartsTextArea.text = "未装備";
             }
             //右腕の場合
             else if (whichArm == Constants.RIGHT_ARM)
             {
-                if (EquipmentDataBase.Instance.Equipped._armRightPartsID >= 0)
-                    _armRightPartsTextArea.text = EquipmentDataBase.Instance.EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID]._myName;
+                if (currentEquipped._armRightPartsID >= 0)
+                    _armRightPartsTextArea.text = 
+                        equipmentData[(int)currentEquipped._armRightPartsID]._myName;
                 else
                     _armRightPartsTextArea.text = "未装備";
             }

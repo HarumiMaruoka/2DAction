@@ -15,19 +15,23 @@ public class EquipmentUIComponentsManager : MonoBehaviour
     [Header("全ての装備のUIを制御するコンポーネント : 必ずアサインしてください")]
 
     [Tooltip("現在装備しているパーツを表示するコンポーネント"), SerializeField]
-    Draw_NowEquipped _draw_NowEquipped = default;
+    NewDraw_NowEquipped _draw_NowEquipped = default;
     [Tooltip("選択されているパーツを装備することによる変化量を描画するコンポーネント"), SerializeField]
-    DrawAlteration _drawAlteration = default;
+    NewDrawAlteration _drawAlteration = default;
     [Tooltip("装備画面に、プレイヤーステータスを描画するコンポーネント。"), SerializeField]
-    DrawPlayerStatus_OnEquipmentWindow _drawPlayerStatus_OnEquipmentWindow = default;
+    NewDrawPlayerStatus_OnEquipmentWindow _drawPlayerStatus_OnEquipmentWindow = default;
     [Tooltip("所持している装備のボタンを管理するコンポーネント"), SerializeField]
-    ManagerOfPossessedEquipment _managerOfPossessedEquipment = default;
+    NewManagerOfPossessedEquipment _managerOfPossessedEquipment = default;
 
     //===== プロパティ =====//
-    Draw_NowEquipped Draw_NowEquippedReference => _draw_NowEquipped;
-    DrawAlteration DrawAlterationReference => _drawAlteration;
-    DrawPlayerStatus_OnEquipmentWindow DrawPlayerStatus_OnEquipmentWindowReference => _drawPlayerStatus_OnEquipmentWindow;
-    ManagerOfPossessedEquipment ManagerOfPossessedEquipmentReference => _managerOfPossessedEquipment;
+    /// <summary> 現在装備しているパーツを表示するコンポーネント </summary>
+    public NewDraw_NowEquipped Draw_NowEquippedReference => _draw_NowEquipped;
+    /// <summary> 選択されているパーツを装備することによる変化量を描画するコンポーネント </summary>
+    public NewDrawAlteration DrawAlterationReference => _drawAlteration;
+    /// <summary> 装備画面に、プレイヤーステータスを描画するコンポーネント。 </summary>
+    public NewDrawPlayerStatus_OnEquipmentWindow DrawPlayerStatus_OnEquipmentWindowReference => _drawPlayerStatus_OnEquipmentWindow;
+    /// <summary> 所持している装備のボタンを管理するコンポーネント </summary>
+    public NewManagerOfPossessedEquipment ManagerOfPossessedEquipmentReference => _managerOfPossessedEquipment;
 
     //===== Unityメッセージ =====//
     void Start()

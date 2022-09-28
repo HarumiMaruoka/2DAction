@@ -92,8 +92,10 @@ public class EquipmentManager
                 temporary = _currentEquippedData.Equipped._torsoPartsID;
                 break;
             case Equipment.EquipmentType.ARM_PARTS:
-                if (armFlag == Constants.LEFT_ARM) temporary = _currentEquippedData.Equipped._armLeftPartsID;
-                else if (armFlag == Constants.RIGHT_ARM) temporary = _currentEquippedData.Equipped._armRightPartsID;
+                if (armFlag == Constants.LEFT_ARM) 
+                    temporary = _currentEquippedData.Equipped._armLeftPartsID;
+                else if (armFlag == Constants.RIGHT_ARM) 
+                    temporary = _currentEquippedData.Equipped._armRightPartsID;
                 else Debug.LogError("不正な値です。");
                 break;
             case Equipment.EquipmentType.FOOT_PARTS:
@@ -107,8 +109,9 @@ public class EquipmentManager
 
         //ボタンに装備を設定する。
         if (temporary != EquipmentID.None)
-            button.Set_Equipment(NewEquipmentDataBase.EquipmentData[(int)temporary]);
-        else button.Set_Equipment(null);
+            button.Set_EquipmentButton(
+                NewEquipmentDataBase.EquipmentData[(int)temporary]);
+        else button.Set_EquipmentButton(null);
 
         //プレイヤーに装備分の上昇ステータスを適用する。
         PlayerStatusManager.Instance.Equipment_RisingValue = _currentEquippedData.GetEquipmentStatus(_newEquipmentDataBase.EquipmentData);

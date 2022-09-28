@@ -27,7 +27,7 @@ public class HaveEquipmentDataBase
     /// <summary> 所持している装備のプロパティ </summary>
     public HaveEquipped HaveEquipment { get => _haveEquipmentID; }
     /// <summary> プレイヤーが所持できるパーツの最大数 </summary>
-    const int _maxHaveVolume = 20;
+    public const int _maxHaveVolume = 20;
     /// <summary> 所持している装備のデータを保存しているファイルへのパス </summary>
     string _equipmentHaveJsonFilePath = "";
 
@@ -48,7 +48,7 @@ public class HaveEquipmentDataBase
     {
         _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquippedFile.json");
         // 所持できる装備分の配列用のメモリを確保する。
-        _haveEquipmentID._equipments = new int[_maxHaveVolume];
+        _haveEquipmentID._equipments = new int[Constants.EQUIPMENT_MAX_HAVE_VALUE];
         // 配列を初期化する。
         for (int i = 0; i < _haveEquipmentID._equipments.Length; i++)
         {
@@ -87,18 +87,38 @@ public class HaveEquipmentDataBase
     }
     /// <summary> 装備を取得する。 </summary>
     /// <param name="getEquipmentsID"> 取得する装備のID </param>
-    public void GetEquipment(int getEquipmentsID)
+    public bool GetEquipment(int getEquipmentsID)
     {
         // 空のスロットを見つけ、そこに保存する。
         for (int i = 0; i < _haveEquipmentID._equipments.Length; i++)
         {
+            // 空スロットであればブロックを実行。
             if (_haveEquipmentID._equipments[i] == (int)EquipmentID.None)
             {
                 _haveEquipmentID._equipments[i] = getEquipmentsID;
-                Debug.Log("取得に成功しました。");
-                break;
+                var haveEquipUI = GameObject.FindObjectOfType<EquipmentUIComponentsManager>()?.
+                    ManagerOfPossessedEquipmentReference;
+
+                //if (haveEquipUI != null)
+                //{
+                //    if (_haveEquipmentID._equipments[i] != -1)
+                //    {
+                //        haveEquipUI.EquipmentButtons[i].
+                //            Set_EquipmentButton(
+                //            EquipmentManager.Instance.NewEquipmentDataBase.
+                //            EquipmentData[_haveEquipmentID._equipments[i]]);
+                //    }
+                //    else
+                //    {
+                //        haveEquipUI.EquipmentButtons[i].
+                //            Set_EquipmentButton(null);
+                //    }
+                //}
+                //Debug.Log("取得に成功しました。");
+                return true;
             }
         }
         Debug.LogWarning("取得に失敗しました。\"空の装備\"を取得しましたか？そうでなければエラーです。");
+        return false;
     }
 }

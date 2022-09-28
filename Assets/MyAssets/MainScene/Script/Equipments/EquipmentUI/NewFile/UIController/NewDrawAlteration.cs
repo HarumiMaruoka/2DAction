@@ -36,11 +36,11 @@ public class NewDrawAlteration : UseEventSystemBehavior
     }
     void OnEnable()
     {
-        EquipmentUIUpdateManager.ChangeEquipmentButtonUpdate += Update_AlterationValue;
+        EquipmentUIUpdateManager.ChangeSelectedObject += Update_AlterationValue;
     }
     void OnDisable()
     {
-        EquipmentUIUpdateManager.ChangeEquipmentButtonUpdate -= Update_AlterationValue;
+        EquipmentUIUpdateManager.ChangeSelectedObject -= Update_AlterationValue;
     }
 
 

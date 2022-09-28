@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 選択されているパーツを装備することによる変化量を描画するコンポーネント。
+/// 選択されているパーツを装備することによる変化量を描画するコンポーネント。<br/>
+/// 描画するエリア : 左上のエリアの右側 <br/>
 /// </summary>
 public class DrawAlteration : UseEventSystemBehavior
 {
@@ -36,11 +37,13 @@ public class DrawAlteration : UseEventSystemBehavior
     }
     void OnEnable()
     {
-        EquipmentDataBase.Instance.ReplacedEquipment += Update_AlterationValue;
+        EquipmentUIUpdateManager.ChangeSelectedObject += Update_AlterationValue;
+        EquipmentUIUpdateManager.SwapEquipmentUpdate_UseSelectedGameObject += Update_AlterationValue;
     }
     void OnDisable()
     {
-        EquipmentDataBase.Instance.ReplacedEquipment -= Update_AlterationValue;
+        EquipmentUIUpdateManager.ChangeSelectedObject -= Update_AlterationValue;
+        EquipmentUIUpdateManager.SwapEquipmentUpdate_UseSelectedGameObject -= Update_AlterationValue;
     }
 
 
@@ -58,13 +61,13 @@ public class DrawAlteration : UseEventSystemBehavior
         if (_childrenText == null) return false;
         return true;
     }
-    /// <summary> このクラスの更新処理。 </summary>
-    void Update_AlterationValue()
+    /// <summary> 表示の更新処理。 </summary>
+    void Update_AlterationValue(GameObject currentSelected, GameObject beforeSelected)
     {
         //選択対象が「装備」かどうか判定する。
-        if (_eventSystem.currentSelectedGameObject != null)
+        if (currentSelected != null)
         {
-            ChangeAlterationValue(_eventSystem.currentSelectedGameObject.TryGetComponent(out EquipmentButton equipment));
+            ChangeAlterationValue(currentSelected.TryGetComponent(out EquipmentButton equipment));
             if (equipment?._myEquipment._myType == Equipment.EquipmentType.ARM_PARTS)
             {
                 _armType = Constants.RIGHT_ARM;
@@ -151,30 +154,34 @@ public class DrawAlteration : UseEventSystemBehavior
     PlayerStatusManager.PlayerStatus Get_SelectedEquipment(Equipment.EquipmentType type, int armFrag = Constants.NOT_ARM)
     {
         PlayerStatusManager.PlayerStatus result = default;
+        var equippedData = EquipmentManager.Instance.CurrentEquippedData.Equipped;
+        var equipmentData = EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData;
         switch (type)
         {
             //頭パーツの場合の処理
             case Equipment.EquipmentType.HEAD_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._headPartsID != -1)
+                //if (EquipmentDataBase.Instance.Equipped._headPartsID != -1)
+                //    result =
+                //        EquipmentDataBase.Instance.
+                //        EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID].
+                //        ThisEquipment_StatusRisingValue;
+                if (equippedData._headPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._headPartsID].
+                        equipmentData[(int)equippedData._headPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //胴パーツの場合の処理
             case Equipment.EquipmentType.TORSO_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._torsoPartsID != -1)
+                if (equippedData._torsoPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._torsoPartsID].
+                        equipmentData[(int)equippedData._torsoPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //足パーツの場合の処理
             case Equipment.EquipmentType.FOOT_PARTS:
-                if (EquipmentDataBase.Instance.Equipped._footPartsID != -1)
+                if (equippedData._footPartsID != EquipmentID.None)
                     result =
-                        EquipmentDataBase.Instance.
-                        EquipmentData[EquipmentDataBase.Instance.Equipped._footPartsID].
+                        equipmentData[(int)equippedData._footPartsID].
                         ThisEquipment_StatusRisingValue;
                 break;
             //腕パーツの場合の処理
@@ -182,19 +189,17 @@ public class DrawAlteration : UseEventSystemBehavior
                 //左腕の場合の処理
                 if (armFrag == Constants.LEFT_ARM)
                 {
-                    if (EquipmentDataBase.Instance.Equipped._armLeftPartsID != -1)
+                    if (equippedData._armLeftPartsID != EquipmentID.None)
                         result =
-                            EquipmentDataBase.Instance.
-                            EquipmentData[EquipmentDataBase.Instance.Equipped._armLeftPartsID].
+                            equipmentData[(int)equippedData._armLeftPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
                 //右腕の場合の処理
                 else if (armFrag == Constants.RIGHT_ARM)
                 {
-                    if (EquipmentDataBase.Instance.Equipped._armRightPartsID != -1)
+                    if (equippedData._armRightPartsID != EquipmentID.None)
                         result =
-                            EquipmentDataBase.Instance.
-                            EquipmentData[EquipmentDataBase.Instance.Equipped._armRightPartsID].
+                            equipmentData[(int)equippedData._armRightPartsID].
                             ThisEquipment_StatusRisingValue;
                 }
                 //エラー値の処理
@@ -263,14 +268,14 @@ public class DrawAlteration : UseEventSystemBehavior
     /// <param name="type"> 種類 </param>
     /// <param name="armType"> 腕の場合 左腕か右腕かを判定する。 </param>
     /// <returns> 変換後の値を返す。 </returns>
-    string Conversion_EquipmentTypeToString(Equipment.EquipmentType type,int armType=Constants.RIGHT_ARM)
+    string Conversion_EquipmentTypeToString(Equipment.EquipmentType type, int armType = Constants.RIGHT_ARM)
     {
         switch (type)
         {
             case Equipment.EquipmentType.HEAD_PARTS: return "頭";
             case Equipment.EquipmentType.TORSO_PARTS: return "胴";
-            case Equipment.EquipmentType.ARM_PARTS: 
-                if(armType==Constants.RIGHT_ARM)return "右腕の場合";
+            case Equipment.EquipmentType.ARM_PARTS:
+                if (armType == Constants.RIGHT_ARM) return "右腕の場合";
                 else return "左腕の場合";
             case Equipment.EquipmentType.FOOT_PARTS: return "足";
             default: return "";

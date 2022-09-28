@@ -8,42 +8,57 @@ using UnityEngine.UI;
 /// </summary>
 public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
 {
-    //===== メンバー変数 =====//
+    //===== フィールド =====//
     [Header("ボタンの親となるべきコンテント"), SerializeField] Transform _content;
     [Header("装備ボタンのプレハブ"), SerializeField] GameObject _equipmentButtonPrefab;
     [Header("装備の情報を表示するテキストの親"), SerializeField] GameObject _equipmentInformationParents;
     [Header("選択中の装備の説明文を表示するエリアのゲームオブジェクト"), SerializeField] Text _ExplanatoryTextArea;
 
-    GameObject[] _equipmentButtons;
-    EquipmentButton _beforeEquipmentButton;
+    /// <summary> 管理するボタンのゲームオブジェクト群 </summary>
+    GameObject[] _equipmentButtonGameObjects;
+    /// <summary> 管理するボタン群 </summary>
+    EquipmentButton[] _equipmentButtons;
+    /// <summary>
+    /// 装備UI 右下のエリアのテキスト群 : <br/>
+    /// 選択中の装備のステータス上昇量等を表示するエリア。<br/>
+    /// </summary>
     Text[] _riseValueTexts;
+
+    //===== プロパティ =====//
+    /// <summary> 管理するボタン群のプロパティ </summary>
+    public EquipmentButton[] EquipmentButtons { get => _equipmentButtons; }
+
 
     //===== unityメッセージ =====//
     protected override void Start()
     {
         base.Start();
-        Initialized_ThisClass();
+        Init();
     }
     void OnEnable()
     {
-        EquipmentUIUpdateManager.ChangeEquipmentButtonUpdate += Update_DrawEquipmentInformation;
+        EquipmentUIUpdateManager.ChangeSelectedObject += Update_DrawEquipmentInformation;
     }
     void OnDisable()
     {
-        EquipmentUIUpdateManager.ChangeEquipmentButtonUpdate -= Update_DrawEquipmentInformation;
+        EquipmentUIUpdateManager.ChangeSelectedObject -= Update_DrawEquipmentInformation;
     }
 
     //===== privateメンバー関数 =====//
     /// <summary> このクラスの初期化関数 </summary>
-    void Initialized_ThisClass()
+    void Init()
     {
         //配列分のメモリを確保
-        _equipmentButtons = new GameObject[EquipmentDataBase.Instance.MaxHaveValue];
+        _equipmentButtonGameObjects = new GameObject[Constants.EQUIPMENT_MAX_HAVE_VALUE];
+        _equipmentButtons = new EquipmentButton[Constants.EQUIPMENT_MAX_HAVE_VALUE];
+
         //所持できる数だけボタンを生成し、配列に保存しておく。
-        for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
+        for (int i = 0; i < Constants.EQUIPMENT_MAX_HAVE_VALUE; i++)
         {
             //生成処理。
-            _equipmentButtons[i] = Instantiate(_equipmentButtonPrefab, Vector3.zero, Quaternion.identity, _content);
+            _equipmentButtonGameObjects[i] = 
+                Instantiate(_equipmentButtonPrefab, Vector3.zero, Quaternion.identity, _content);
+            _equipmentButtons[i] = _equipmentButtonGameObjects[i].GetComponent<EquipmentButton>();
             //生成したボタンに値を設定する。
             Set_ValueToButton(i);
         }
@@ -53,7 +68,7 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
     /// <summary> 全てのボタンに装備情報を設定する。 </summary>
     void Set_ValueToButtonALL()
     {
-        for (int i = 0; i < EquipmentDataBase.Instance.MaxHaveValue; i++)
+        for (int i = 0; i < Constants.EQUIPMENT_MAX_HAVE_VALUE; i++)
         {
             Set_ValueToButton(i);
         }
@@ -62,11 +77,17 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
     /// <param name="index"> 変更したいボタンのインデックス </param>
     void Set_ValueToButton(int index)
     {
-        // 所持装備の情報を保管している場所から、装備のIDを取得する。
-        int thisEquipmentID = EquipmentDataBase.Instance.HaveEquipmentID._equipmentsID[index];
-        // -1なら所持していないのでnullを設定する。そうでなければ、ボタンに装備情報をセットする。
-        if (thisEquipmentID != -1) _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(EquipmentDataBase.Instance.EquipmentData[thisEquipmentID]);
-        else _equipmentButtons[index].GetComponent<EquipmentButton>().Set_Equipment(null);
+        // 所持している装備のIDを取得する。
+        //int thisEquipmentID = EquipmentDataBase.Instance.HaveEquipmentID._equipmentsID[index];
+        int thisEquipmentID =
+            EquipmentManager.Instance.HaveEquipmentData.HaveEquipment._equipments[index];
+        
+        // ボタンに装備情報をセットする。
+        if (thisEquipmentID != -1)
+            _equipmentButtonGameObjects[index].GetComponent<EquipmentButton>().
+                Set_EquipmentButton(EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData[thisEquipmentID]);
+        // -1なら所持していないのでボタンにnullを設定する。
+        else _equipmentButtonGameObjects[index].GetComponent<EquipmentButton>().Set_EquipmentButton(null);
     }
     /// <summary>「装備する」ボタンをアクティブにする </summary>
     /// <param name="equipmentButton"> 対象の「装備」ボタン </param>

@@ -28,9 +28,10 @@ public class DropEquipment : MonoBehaviour, IDrops
             try
             {
                 // 取得時にメッセージを表示する。
-                Debug.Log($"{EquipmentDataBase.Instance.EquipmentData[(int)_getID]._myName}を取得しました!");
+                Debug.Log($"{EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData[(int)_getID]._myName}を取得しました!");
                 // 装備を増やす。
-                if (EquipmentDataBase.Instance.Get_Equipment((int)_getID))
+                //if (EquipmentDataBase.Instance.Get_Equipment((int)_getID))
+                if (EquipmentManager.Instance.HaveEquipmentData.GetEquipment((int)_getID))
                 {
                     Debug.Log("装備の取得に成功しました。");
                 }

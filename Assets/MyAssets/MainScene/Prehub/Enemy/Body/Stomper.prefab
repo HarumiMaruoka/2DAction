@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _status:
-    _hitPoint: 1500
+    _hitPoint: 0
     _offensivePower: 0
     _blowingPower: {x: 100, y: 100}
     _weight: 0
@@ -153,13 +153,19 @@ MonoBehaviour:
   _dropItemAndProbabilities:
   - _iD: 0
     _dropGameObjectPrefab: {fileID: 8068929610626211850, guid: 2e03901abc100364fa38e7df049a8644, type: 3}
-    _probability: 20
+    _probability: 200
   - _iD: 1
     _dropGameObjectPrefab: {fileID: 8068929610626211850, guid: 2e03901abc100364fa38e7df049a8644, type: 3}
-    _probability: 20
+    _probability: 100
   - _iD: 2
     _dropGameObjectPrefab: {fileID: 8068929610626211850, guid: 2e03901abc100364fa38e7df049a8644, type: 3}
-    _probability: 20
+    _probability: 200
+  - _iD: 3
+    _dropGameObjectPrefab: {fileID: 8068929610626211850, guid: 2e03901abc100364fa38e7df049a8644, type: 3}
+    _probability: 200
+  - _iD: 4
+    _dropGameObjectPrefab: {fileID: 8068929610626211850, guid: 2e03901abc100364fa38e7df049a8644, type: 3}
+    _probability: 200
   _moveSpeed: 2
   _isGizmo: 1
   _overLapBoxOffsetRight: {x: 1.15, y: 0, z: 0}

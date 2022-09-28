@@ -97,7 +97,9 @@ abstract public class Equipment
     /// <summary> この装備の種類の名前 </summary>
     public string _myTypeName { get; private set; }
 
-    //この装備のステータス上昇量
+    /// <summary>
+    /// この装備のステータス上昇量
+    /// </summary>
     PlayerStatusManager.PlayerStatus _thisEquipment_StatusRisingValue;
     public PlayerStatusManager.PlayerStatus ThisEquipment_StatusRisingValue { get => _thisEquipment_StatusRisingValue; }
     /// <summary> ステータス上昇量をセットする </summary>

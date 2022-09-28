@@ -22,11 +22,11 @@ public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
     }
     void OnEnable()
     {
-        EquipmentDataBase.Instance.ReplacedEquipment += Update_StatusText;
+        EquipmentUIUpdateManager.SwapEquipmentUpdate += Update_StatusText;
     }
     void OnDisable()
     {
-        EquipmentDataBase.Instance.ReplacedEquipment -= Update_StatusText;
+        EquipmentUIUpdateManager.SwapEquipmentUpdate -= Update_StatusText;
     }
 
     //<===== privateメンバー関数 =====>//

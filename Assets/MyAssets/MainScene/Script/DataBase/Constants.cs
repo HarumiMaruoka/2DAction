@@ -18,7 +18,7 @@ public class Constants
     /// <summary> 変化幅を表示しない </summary>
     public const bool NOT_DRAW_AMPLITUDE = false;
 
-    //装備関係のクラスで使用する定数
+    //装備UIクラスでステータス等を表示するのに使用する定数
     public const int PLAYER_NAME_DRAW_AREA = 0;
     public const int EQUIPMENT_TYPE_DRAW_AREA = 0;
     public const int MAX_HP_DRAW_AREA = 1;
@@ -40,7 +40,9 @@ public class Constants
     public const float RIGHT = 1f;
     public const float LEFT = -1;
 
-    public const string PLAYER_TAG_NAME = "Player";
+
+    /// <summary> プレイヤーが所持できる装備の最大数。 </summary>
+    public const int EQUIPMENT_MAX_HAVE_VALUE = 20;
 
     /// <summary> アニメーション通常再生時のスピード </summary>
     public const float NOMAL_ANIM_SPEED = 1f;
@@ -49,9 +51,14 @@ public class Constants
     /// <summary> アニメーション一時停止時のスピード </summary>
     public const float PAUSE_ANIM_SPEED = 0f;
 
-    public const string EQUIPMENT_UI_COMPONENTS_MANAGER_TAG = "EquipmentUIComponentsManager";
-
+    //===== Tag一覧 =====//
+    /// <summary> プレイヤーのタグ名 </summary>
+    public const string PLAYER_TAG_NAME = "Player";
+    /// <summary> グラウンド(地面)のタグ名 </summary>
     public const string GROUND_TAG_NAME = "Ground";
 
+    /// <summary> アイテムマネージャーのタグ名 </summary>
     public const string ITEM_MANAGER_TAG_NAME = "ItemManager";
+    /// <summary> 装備UIマネージャーのタグ名 </summary>
+    public const string EQUIPMENT_UI_COMPONENTS_MANAGER_TAG = "EquipmentUIComponentsManager";
 }

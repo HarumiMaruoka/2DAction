@@ -4,7 +4,6 @@ using System.IO;
 using UnityEngine;
 
 /// <summary> 
-/// まだ実装してない。<br/>
 /// 全ての装備の情報を管理するクラス。<br/>
 /// 全ての装備の情報を提供する。<br/>
 /// </summary>

@@ -35,9 +35,19 @@ public class EquipmentButton : UseEventSystemBehavior
 
     //<===== メンバー関数 =====>//
     /// <summary> このボタンの装備を設定する。 </summary>
-    public void Set_Equipment(Equipment equipment)
+    public void Set_EquipmentButton(Equipment equipment)
     {
         _myEquipment = equipment;
+        // 設定された値が "null でなければ"このボタンをアクティブにする。
+        if (_myEquipment != null)
+        {
+            gameObject.SetActive(true);
+        }
+        // そうでなければこのボタンをアクティブにする。
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     /// <summary> 装備名テキストを更新する </summary>
