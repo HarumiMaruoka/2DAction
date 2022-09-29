@@ -1,12 +1,12 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundOperator : MonoBehaviour
 {
-    //¡AÄ¶‚³‚ê‚Ä‚¢‚éƒTƒEƒ“ƒh
+    //ä»Šã€å†ç”Ÿã•ã‚Œã¦ã„ã‚‹ã‚µã‚¦ãƒ³ãƒ‰
     [SerializeField] AudioSource _beforeSound;
-    //V‚µ‚­Ä¶‚·‚éƒTƒEƒ“ƒh
+    //æ–°ã—ãå†ç”Ÿã™ã‚‹ã‚µã‚¦ãƒ³ãƒ‰
     AudioSource _newSound;
 
     void Start()
@@ -14,26 +14,20 @@ public class SoundOperator : MonoBehaviour
         _newSound = GetComponent<AudioSource>();
     }
 
-
-    void Update()
-    {
-        
-    }
-
-    //ŒÃ‚¢BGM‚ğ~‚ß‚é
+    //å¤ã„BGMã‚’æ­¢ã‚ã‚‹
     void StopBGM()
     {
-        //ŒÃ‚¢BGM‚ªÄ¶‚³‚ê‚Ä‚¢‚ê‚Î~‚ß‚é
+        //å¤ã„BGMãŒå†ç”Ÿã•ã‚Œã¦ã„ã‚Œã°æ­¢ã‚ã‚‹
         if (_beforeSound.isPlaying)
         {
             _beforeSound.Stop();
         }
     }
 
-    //V‚µ‚¢BGM‚ğÄ¶‚·‚é
+    //æ–°ã—ã„BGMã‚’å†ç”Ÿã™ã‚‹
     void PlayBGM()
     {
-        //V‚µ‚¢BGM‚ªÄ¶‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎÄ¶‚·‚é
+        //æ–°ã—ã„BGMãŒå†ç”Ÿã•ã‚Œã¦ã„ãªã‘ã‚Œã°å†ç”Ÿã™ã‚‹
         if (!_newSound.isPlaying)
         {
             _newSound.Play();

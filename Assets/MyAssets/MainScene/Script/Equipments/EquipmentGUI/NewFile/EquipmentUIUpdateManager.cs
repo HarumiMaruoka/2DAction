@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// まだ実装していない。<br/>
 /// 装備UIの更新を担当するクラス。<br/>
 /// </summary>
 public class EquipmentUIUpdateManager : UseEventSystemBehavior
@@ -28,18 +27,29 @@ public class EquipmentUIUpdateManager : UseEventSystemBehavior
     //===== Unityメッセージ =====//
     void Update()
     {
-        // 選択しているオブジェクトが変更された時、かつ、UpdateEquipmentUIに値が入っている時に呼び出す。
-        if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject && ChangeSelectedObject != null)
+        // 選択しているオブジェクトが変更された時デリゲートに登録された処理を呼び出す。
+        if (_beforeSelectedGameObject != _eventSystem.currentSelectedGameObject)
         {
-            ChangeSelectedObject(_eventSystem.currentSelectedGameObject, _beforeSelectedGameObject);
+            if (ChangeSelectedObject != null)
+            {
+                ChangeSelectedObject(_eventSystem.currentSelectedGameObject, _beforeSelectedGameObject);
+            }
         }
+        // "着用している装備"と、"所持している装備"を交換したときに、デリゲートに登録された処理を呼び出す。
         if (EquipmentManager.Instance.IsSwap)
         {
-            SwapEquipmentUpdate_UseSelectedGameObject
-                (_eventSystem.currentSelectedGameObject, _beforeSelectedGameObject);
-            SwapEquipmentUpdate();
+            if (SwapEquipmentUpdate_UseSelectedGameObject != null)
+            {
+                SwapEquipmentUpdate_UseSelectedGameObject
+                    (_eventSystem.currentSelectedGameObject, _beforeSelectedGameObject);
+            }
+            if (SwapEquipmentUpdate != null)
+            {
+                SwapEquipmentUpdate();
+            }
             EquipmentManager.Instance.IsSwap = false;
         }
+        // 次フレーム用に、現在の値を保存しておく。
         _beforeSelectedGameObject = _eventSystem.currentSelectedGameObject;
     }
 }

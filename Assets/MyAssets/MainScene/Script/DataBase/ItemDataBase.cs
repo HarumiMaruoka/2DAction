@@ -39,9 +39,13 @@ public class ItemDataBase : MonoBehaviour
 
     //<===== メンバー変数 =====>//
     /// <summary> アイテムデータが入ったcsvファイルの絶対パス </summary>
-    [Header("アイテムデータが入ったcsvファイルへの絶対パス"), SerializeField] string _itemCSVPath;
+    [Header("アイテムデータが入ったcsvファイルへの絶対パス"), SerializeField]
+    string _itemCSVPath;
     /// <summary> アイテム所持数を保存しているjsonファイルへのパス </summary>
-    [Header("確認用 : アイテム所持数を保存しているjsonファイルへのパス"), SerializeField] string _itemJsonPath;
+    [Header("確認用 : アイテム所持数を保存しているjsonファイルへのパス"), SerializeField]
+    string _itemJsonPath;
+    [Header("ItemData csv"), SerializeField]
+    TextAsset _itemDataCsv = default;
 
     /// <summary> 全てのアイテムの情報を格納している変数 </summary>
     Item[] _itemData = new Item[(int)Item.ItemID.ITEM_ID_END];
@@ -113,7 +117,6 @@ public class ItemDataBase : MonoBehaviour
         //このスクリプトがアタッチされたオブジェクトは、シーンを跨いでもデストロイされないようにする。
         DontDestroyOnLoad(gameObject);
 
-
         // アイテム所持数を保存しているファイルへのパスを取得し変数に保存。
         _itemJsonPath = Path.Combine(Application.persistentDataPath, "ItemNumberOfPossessionsFile.json");
 
@@ -131,28 +134,39 @@ public class ItemDataBase : MonoBehaviour
         bool isFirstLine = true;//一行目かどうかを判断するBooleanの初期化
 
         //CSVファイルからアイテムデータを読み込み、配列に保存する
-        StreamReader sr = new StreamReader(@_itemCSVPath);//ファイルを開く
-        while (!sr.EndOfStream)// 末尾まで繰り返す
+        //StreamReader sr = new StreamReader(@_itemCSVPath);//ファイルを開く
+        try
         {
-            string[] values = sr.ReadLine().Split(',');//一行読み込み区切って保存する
-
-            //最初の行(ヘッダーの行)はスキップする
-            if (isFirstLine)
+            // ファイルを開く
+            var sr = new StringReader(_itemDataCsv.text);
+            // ファイルから読み込み、フィールドに保存する。
+            string value = "";
+            while ((value = sr.ReadLine()) != null)// 末尾まで繰り返す
             {
-                isFirstLine = false;
-                continue;
-            }
+                //最初の行(ヘッダーの行)はスキップする
+                if (isFirstLine)
+                {
+                    isFirstLine = false;
+                    continue;
+                }
 
-            //種類別で生成し保存する
-            switch (values[2])
-            {
-                case "HealItem": _itemData[index] = new HealItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.HEAL, int.Parse(values[3]), values[4]); break;
-                case "PowerUpItem": _itemData[index] = new PowerUpItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.POWER_UP, int.Parse(values[3]), values[4]); break;
-                case "MinusItem": _itemData[index] = new MinusItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.MINUS_ITEM, int.Parse(values[3]), values[4]); break;
-                case "KeyItem": _itemData[index] = new KeyItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.KEY, int.Parse(values[3]), values[4]); break;
-                default: Debug.LogError("設定されていないItemTypeです。"); break;
+                string[] values = value.Split(',');//一行読み込み区切って保存する
+
+                //種類別で生成し保存する
+                switch (values[2])
+                {
+                    case "HealItem": _itemData[index] = new HealItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.HEAL, int.Parse(values[3]), values[4]); break;
+                    case "PowerUpItem": _itemData[index] = new PowerUpItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.POWER_UP, int.Parse(values[3]), values[4]); break;
+                    case "MinusItem": _itemData[index] = new MinusItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.MINUS_ITEM, int.Parse(values[3]), values[4]); break;
+                    case "KeyItem": _itemData[index] = new KeyItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.KEY, int.Parse(values[3]), values[4]); break;
+                    default: Debug.LogError("設定されていないItemTypeです。"); break;
+                }
+                index++;
             }
-            index++;
+        }
+        catch(FileNotFoundException e)
+        {
+            Debug.LogError($"エラー！修正してください!\n{e.Message}");
         }
     }
 

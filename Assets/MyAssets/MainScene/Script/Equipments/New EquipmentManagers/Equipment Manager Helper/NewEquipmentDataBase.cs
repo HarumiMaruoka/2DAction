@@ -10,6 +10,10 @@ using UnityEngine;
 public class NewEquipmentDataBase
 {
     //===== フィールド / プロパティ =====//
+    // エディター拡張を作る。
+    // Resourceのフォルダに入れる。
+    // テキストアセット化する。
+    // パーシステントデータパス
     /// <summary> 装備情報を格納しているファイルへのパス </summary>
     const string _csvFilePath = @"C:\Users\vantan\Desktop\2DActionBasicInformation\EquipmentDataBase.csv";
     /// <summary> 全ての装備の情報を保存しておくフィールド </summary>

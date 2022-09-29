@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// 選択されているパーツを装備することによる変化量を描画するコンポーネント。<br/>
 /// 描画するエリア : 左上のエリアの右側 <br/>
 /// </summary>
-public class DrawAlteration : UseEventSystemBehavior
+public class OldDrawAlteration : UseEventSystemBehavior
 {
     //===== フィールド / プロパティ =====//
     /// <summary> 子オブジェクトのテキスト群 </summary>

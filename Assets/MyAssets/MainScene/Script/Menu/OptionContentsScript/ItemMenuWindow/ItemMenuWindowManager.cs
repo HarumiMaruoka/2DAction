@@ -356,10 +356,14 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
             //各フィルターのコンテントの子としてインスタンシエイトする。
             switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
             {
-                case Item.ItemType.HEAL: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
-                case Item.ItemType.POWER_UP: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
-                case Item.ItemType.MINUS_ITEM: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
-                case Item.ItemType.KEY: temporaryObject = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
+                case Item.ItemType.HEAL: temporaryObject = 
+                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
+                case Item.ItemType.POWER_UP: temporaryObject = 
+                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
+                case Item.ItemType.MINUS_ITEM: temporaryObject =
+                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
+                case Item.ItemType.KEY: temporaryObject = 
+                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
                 default: Debug.LogError("エラー! : 不正な値です"); break;
             }
             //データをセット

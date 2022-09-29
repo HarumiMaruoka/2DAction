@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary> 
 /// 装備画面に、プレイヤーステータスを描画するコンポーネント。
 /// </summary>
-public class DrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
+public class OldDrawPlayerStatus_OnEquipmentWindow : MonoBehaviour
 {
 
     /// <summary> このクラスを初期化したかどうか </summary>

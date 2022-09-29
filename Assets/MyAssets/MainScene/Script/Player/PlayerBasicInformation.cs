@@ -9,7 +9,7 @@ public class PlayerBasicInformation : MonoBehaviour
     AudioSource _hitEnemySound;
     Rigidbody2D _rigidbody2D;
 
-    [Header("Botton群"), SerializeField] GameObject _botton;
+    [Header("Button群"), SerializeField] GameObject _button;
 
     //各コンポーネント
     PlayerStateManagement _newPlayerStateManagement;
@@ -40,7 +40,7 @@ public class PlayerBasicInformation : MonoBehaviour
         if (PlayerStatusManager.Instance.PlayerHealthPoint < 1)
         {
             _newPlayerStateManagement._isDead = true;
-            _botton.SetActive(true);
+            _button.SetActive(true);
         }
     }
     private void OnEnable()

@@ -17,4 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MyAssets/Scenes/StageTow.unity
     guid: 84e7f7095f19bae45803105ac272ede6
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: f0a6868b57cdbe7478e94589904b6caa, type: 2}

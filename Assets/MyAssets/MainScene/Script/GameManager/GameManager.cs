@@ -17,8 +17,11 @@ public class GameManager : MonoBehaviour
     /// <summary> 初期化に成功したかどうかを表す変数。 </summary>
     bool _isInitialized = false;
 
-    [Header("フェードイン/アウト用のパネル"), SerializeField] GameObject _fadePanel;
-    [Header("フェードインに掛ける時間"), SerializeField] float _timeToFadeIn;
+    [Header("フェードイン / アウト関連")]
+    [Tooltip("フェードイン/アウト用のパネル"), SerializeField]
+    GameObject _fadePanel;
+    [Tooltip("フェードインに掛ける時間"), SerializeField]
+    float _timeToFadeIn;
 
     // ポーズ開始時に実行するデリゲート
     static public System.Action OnPause = default;

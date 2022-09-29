@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary> 現在装備しているパーツを表示するコンポーネント </summary>
-public class Draw_NowEquipped : UseEventSystemBehavior
+public class OldDraw_NowEquipped : UseEventSystemBehavior
 {
     const int REFT_ARM = 0;
     const int RIGHT_ARM = 1;

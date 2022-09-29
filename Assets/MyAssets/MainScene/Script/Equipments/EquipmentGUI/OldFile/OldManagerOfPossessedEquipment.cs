@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary> 
 /// 所持している装備のボタンを管理するコンポーネント
 /// </summary>
-public class ManagerOfPossessedEquipment : UseEventSystemBehavior
+public class OldManagerOfPossessedEquipment : UseEventSystemBehavior
 {
     //===== フィールド =====//
     [Header("ボタンの親となるべきコンテント"), SerializeField] Transform _content;

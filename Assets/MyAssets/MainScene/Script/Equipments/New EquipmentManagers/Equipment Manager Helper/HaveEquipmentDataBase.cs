@@ -99,22 +99,22 @@ public class HaveEquipmentDataBase
                 var haveEquipUI = GameObject.FindObjectOfType<EquipmentUIComponentsManager>()?.
                     ManagerOfPossessedEquipmentReference;
 
-                //if (haveEquipUI != null)
-                //{
-                //    if (_haveEquipmentID._equipments[i] != -1)
-                //    {
-                //        haveEquipUI.EquipmentButtons[i].
-                //            Set_EquipmentButton(
-                //            EquipmentManager.Instance.NewEquipmentDataBase.
-                //            EquipmentData[_haveEquipmentID._equipments[i]]);
-                //    }
-                //    else
-                //    {
-                //        haveEquipUI.EquipmentButtons[i].
-                //            Set_EquipmentButton(null);
-                //    }
-                //}
-                //Debug.Log("取得に成功しました。");
+                if (haveEquipUI != null)
+                {
+                    if (_haveEquipmentID._equipments[i] != -1)
+                    {
+                        haveEquipUI.EquipmentButtons[i].
+                            Set_EquipmentButton(
+                            EquipmentManager.Instance.NewEquipmentDataBase.
+                            EquipmentData[_haveEquipmentID._equipments[i]]);
+                    }
+                    else
+                    {
+                        haveEquipUI.EquipmentButtons[i].
+                            Set_EquipmentButton(null);
+                    }
+                }
+                Debug.Log("取得に成功しました。");
                 return true;
             }
         }

@@ -1,0 +1,42 @@
+このフォルダに関する事のメモ
+
+Addressable AssetSettings.asset : 
+	・プロジェクトに置けるAddressableのあらゆる設定が保存される
+	・GroupsやProfilesに関する情報なども保存される
+
+AssetGroups/ :
+	・Groupに属しているアセットのGUIDやLabel情報を管理
+	・デフォルトで作成されるGroups以外にも自分で追加可能
+
+AssetGroups/Built In Data.asset
+	・ResourcesやScenes in Buildに関わる情報を管理
+	・初期状態で作成される
+
+AssetGroups/Default Local Group.asset
+	・Playerビルドに含めるアセットを管理
+	　(管理下にあるアセットは、Playerビルド時にStreamingAssetsにコピーされる)
+	・初期状態で作成される
+
+Schemas/
+	・Groupの詳細な設定を管理
+	・Group毎に対応するSchemaが配置される
+
+AssetGroupTemplates/
+	・新規にGroupを作成する際のテンプレート
+	・オリジナルのGroupを作成する際のテンプレート
+	・オリジナルのGroup Templateを作成した場合は、
+	　AddressableAssetSettingsに追加する必要がある。
+
+DataBuilders/
+	・ビルド時やエディタ再生時に用いられる設定
+	・どのようにAssetBundleをビルドするのかなどを定義したScriptableObjectが配置される
+
+DefaultObject.asset
+	・SddressableAssetSettings.assetの在処を示すためのScriptableObject
+	・EditorBuildSettingsというエディタ用APIを通してPlayerビルドに同梱される
+	・このアセットがPlayerビルドに含められることにより、保持しているSettingsアセットの
+	　GUIDからAddressableAssetSettings.assetを探して同梱されるようになる
+
+
+基本的に編集する機会は多くないが、DataBuildersやAssetGroupTemplatesといった
+ディレクトリ群もAddressablesを構成するうえで不可欠な存在である

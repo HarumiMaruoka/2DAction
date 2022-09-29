@@ -71,11 +71,11 @@ public class UseItemManager : MonoBehaviour
         risingValue._shortRangeAttackPower *= (float)_offensivePowerUpValue.Value * 0.01f;
         risingValue._longRangeAttackPower *= (float)_offensivePowerUpValue.Value * 0.01f;
         PlayerStatusManager.Instance.Other_RisingValue = risingValue;
-        Debug.Log($"現在のプレイヤーの遠距離攻撃力は\n" +
-            $"{PlayerStatusManager.Instance.ConsequentialPlayerStatus._longRangeAttackPower}だぜ");
-        Debug.Log($"現在のプレイヤーの近距離攻撃力は\n" +
-            $"{PlayerStatusManager.Instance.ConsequentialPlayerStatus._shortRangeAttackPower}だぜ");
-        Debug.Log($"_offensivePowerUpValueの値は現在{_offensivePowerUpValue}です");
+        Debug.Log($"現在のプレイヤーの遠距離攻撃力は" +
+            $"\"{PlayerStatusManager.Instance.ConsequentialPlayerStatus._longRangeAttackPower}\"です");
+        Debug.Log($"現在のプレイヤーの近距離攻撃力は" +
+            $"{PlayerStatusManager.Instance.ConsequentialPlayerStatus._shortRangeAttackPower}です");
+        Debug.Log($"\"_offensivePowerUpValueの値は現在{_offensivePowerUpValue}\"です");
     }
 
     //===== publicメソッド =====//
