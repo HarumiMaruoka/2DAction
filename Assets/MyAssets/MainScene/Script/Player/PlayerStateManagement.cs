@@ -1,40 +1,46 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç®¡ç†ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+/// </summary>
 public class PlayerStateManagement : MonoBehaviour
 {
     public enum PlayerState
     {
-        //Move
-        IDLE,//’Êí
-        RUN,//•à‚«
-        DASH,//ƒ_ƒbƒVƒ…
-        JUMP,//ƒWƒƒƒ“ƒv
-        HOVER,//ƒzƒo[
-        FALL,//—‰º
-        SLIDING,//ƒXƒ‰ƒCƒfƒBƒ“ƒO
-        CLIMB,//’òq¸~
+        // Move
+        IDLE,//é€šå¸¸
+        RUN,//æ­©ã
+        DASH,//ãƒ€ãƒƒã‚·ãƒ¥
+        JUMP,//ã‚¸ãƒ£ãƒ³ãƒ—
+        HOVER,//ãƒ›ãƒãƒ¼
+        FALL,//è½ä¸‹
+        SLIDING,//ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°
+        CLIMB,//æ¢¯å­æ˜‡é™
 
-        //Attack
-        SHOT,//ƒVƒ‡ƒbƒg
-        RUN_SHOT,//•à‚«ƒVƒ‡ƒbƒg
-        DASH_SHOT,//ƒ_ƒbƒVƒ…ƒVƒ‡ƒbƒg
-        JUMP_SHOT,//‹ó’†ƒVƒ‡ƒbƒg
-        CLIMB_SHOT,//’òq¸~’†ƒVƒ‡ƒbƒg
+        // Attack
+        SHOT,//ã‚·ãƒ§ãƒƒãƒˆ
+        RUN_SHOT,//æ­©ãã‚·ãƒ§ãƒƒãƒˆ
+        DASH_SHOT,//ãƒ€ãƒƒã‚·ãƒ¥ã‚·ãƒ§ãƒƒãƒˆ
+        JUMP_SHOT,//ç©ºä¸­ã‚·ãƒ§ãƒƒãƒˆ
+        CLIMB_SHOT,//æ¢¯å­æ˜‡é™ä¸­ã‚·ãƒ§ãƒƒãƒˆ
 
-        //Be killed
-        BEATEN,//‚â‚ç‚ê
-        KILLED,//“|‚³‚ê‚½
+        // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å–°ã‚‰ã£ãŸæ™‚
+        DAMAGE,
+        //å€’ã•ã‚ŒãŸæ™‚ / æ­»
+        DIE,
     }
-
+    /// <summary>  ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆ  </summary>
     public PlayerState _playerState { get; private set; } = PlayerState.IDLE;
+    /// <summary>  å…¥åŠ›ç®¡ç†ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ  </summary>
     InputManager _inputManager;
+    /// <summary>  é€Ÿåº¦ã§åˆ¤å®šã™ã‚‹éš›ã«ä½¿ç”¨ã™ã‚‹  </summary>
     Rigidbody2D _rigidBody2D;
-    Animator _animator;
-    PlayerBasicInformation _playerBasicInformation;
+    /// <summary>  æ¥åœ°åˆ¤å®šã§åˆ¤å®šã™ã‚‹éš›ã«ä½¿ç”¨ã™ã‚‹ </summary>
     PlayerMoveManager _playerMoveManager;
-    AnimationManagement _newAnimationManagement;
+    /// <summary> ç‰¹å®šã®æ¡ä»¶ã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é€Ÿåº¦ã‚’å¤‰æ›´ã™ã‚‹ </summary>
+    PlayerAnimationManager _newAnimationManagement;
     SpriteRenderer _spriteRenderer;
     AudioSource _hitEnemySound;
 
@@ -53,15 +59,13 @@ public class PlayerStateManagement : MonoBehaviour
     public bool _isSlidingNow { get; set; }
 
     IEnumerator _stopProcessingCoroutine = default;
-    [Tooltip("ƒXƒ‰ƒCƒfƒBƒ“ƒO‚ÌŠÔ"), SerializeField] float _slidingTime;
+    [Tooltip("ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°ã®æ™‚é–“"), SerializeField] float _slidingTime;
 
     void Start()
     {
         _inputManager = GetComponent<InputManager>();
         _rigidBody2D = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-        _playerBasicInformation = GetComponent<PlayerBasicInformation>();
-        _newAnimationManagement = GetComponent<AnimationManagement>();
+        _newAnimationManagement = GetComponent<PlayerAnimationManager>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerMoveManager = GetComponent<PlayerMoveManager>();
         _hitEnemySound = GetComponent<AudioSource>();
@@ -112,18 +116,18 @@ public class PlayerStateManagement : MonoBehaviour
         {
             if (_isMove)
             {
-                //Idleó‘Ô‚Å‰Šú‰»‚·‚é
-                //(‰½‚à‚È‚¯‚ê‚ÎƒvƒŒƒCƒ„[‚ÍIdleó‘Ô)
+                //IdleçŠ¶æ…‹ã§åˆæœŸåŒ–ã™ã‚‹
+                //(ä½•ã‚‚ãªã‘ã‚Œã°ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯IdleçŠ¶æ…‹)
                 _playerState = PlayerState.IDLE;
 
-                //ó‘Ô‚ğ•ÏX‚·‚é
+                //çŠ¶æ…‹ã‚’å¤‰æ›´ã™ã‚‹
                 MoveManage();
                 AttackManage();
                 Sliding();
             }
             OtherActionManage();
         }
-        //ˆÚ“®‚Å‚«‚é‚©‚Ç‚¤‚©
+        //ç§»å‹•ã§ãã‚‹ã‹ã©ã†ã‹
         if (_isSlidingNow || _isHitEnemy)
         {
             _isMove = false;
@@ -177,7 +181,17 @@ public class PlayerStateManagement : MonoBehaviour
         if (_inputManager._inputHorizontal != 0)
         {
             _playerState = PlayerState.RUN;
-            _spriteRenderer.flipX = _inputManager._inputHorizontal < 0 ? true : false;
+             _spriteRenderer.flipX = _inputManager._inputHorizontal < 0 ? true : false;
+            //var localScale = transform.localScale;
+            //if (_inputManager._inputHorizontal > 0f && localScale.x < 0f)
+            //{
+            //    localScale.x *= -1f;
+            //}
+            //else if (_inputManager._inputHorizontal < 0f && localScale.x > 0f)
+            //{
+            //    localScale.x *= -1f;
+            //}
+            //transform.localScale = localScale;
         }
     }
 
@@ -191,7 +205,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     void Jump()
     {
-        if (_rigidBody2D.velocity.y > 0 && !_playerMoveManager.GetIsGround())//”ñÚ’n‚©‚Âã¸’†
+        if (_rigidBody2D.velocity.y > 0 && !_playerMoveManager.GetIsGround())//éæ¥åœ°ã‹ã¤ä¸Šæ˜‡ä¸­
         {
             _playerState = PlayerState.JUMP;
         }
@@ -199,7 +213,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     void Fall()
     {
-        if (_rigidBody2D.velocity.y < 0 && !_playerMoveManager.GetIsGround())//”ñÚ’n‚©‚Â—‰º’†
+        if (_rigidBody2D.velocity.y < 0 && !_playerMoveManager.GetIsGround())//éæ¥åœ°ã‹ã¤è½ä¸‹ä¸­
         {
             _playerState = PlayerState.FALL;
         }
@@ -237,23 +251,23 @@ public class PlayerStateManagement : MonoBehaviour
 
     void Climb()
     {
-        //’òq‚ğ¸~‚·‚é‚Ìˆ—
+        //æ¢¯å­ã‚’æ˜‡é™ã™ã‚‹æ™‚ã®å‡¦ç†
         if (_isClimbContact)
         {
-            //c‚Ì“ü—Í‚ª‚ ‚é
+            //ç¸¦ã®å…¥åŠ›ãŒã‚ã‚‹æ™‚
             if (_inputManager._inputVertical != 0)
             {
                 _playerState = PlayerState.CLIMB;
-                _newAnimationManagement._ClimbSpeed = 1f;
+                _newAnimationManagement._climbAnimSpeed = 1f;
             }
-            //c‚Ì“ü—Í‚ª‚È‚­‚È‚Á‚½‚Ìˆ—
+            //ç¸¦ã®å…¥åŠ›ãŒãªããªã£ãŸæ™‚ã®å‡¦ç†
             else
             {
-                //ƒAƒjƒ[ƒVƒ‡ƒ“‚ğˆê’â~‚·‚é
+                //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä¸€æ™‚åœæ­¢ã™ã‚‹
                 _playerState = PlayerState.CLIMB;
-                _newAnimationManagement._ClimbSpeed = 0f;
+                _newAnimationManagement._climbAnimSpeed = 0f;
             }
-            //’…’n‚µ‚½‚Æ‚«
+            //ç€åœ°ã—ãŸã¨ã
             if (_playerMoveManager.GetIsGround())
             {
                 _playerState = PlayerState.IDLE;
@@ -264,10 +278,10 @@ public class PlayerStateManagement : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        //’òq‚ÆÚG‚µ‚Ä‚¢‚é‚Æ‚«‚Ìˆ—
+        //æ¢¯å­ã¨æ¥è§¦ã—ã¦ã„ã‚‹ã¨ãã®å‡¦ç†
         if (collision.tag == "Ladder")
         {
-            //’òq‚ğ“o‚éê‡
+            //æ¢¯å­ã‚’ç™»ã‚‹å ´åˆ
             if (_inputManager._inputVertical != 0)
             {
                 _isClimbContact = true;
@@ -277,7 +291,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        //’òq‚ÆÚG‚µ‚Ä‚¢‚é‚Æ‚«‚Ìˆ—
+        //æ¢¯å­ã¨æ¥è§¦ã—ã¦ã„ã‚‹ã¨ãã®å‡¦ç†
         if (collision.tag == "Ladder")
         {
             _isClimbContact = false;
@@ -328,7 +342,7 @@ public class PlayerStateManagement : MonoBehaviour
     {
         if (_isHitEnemy)
         {
-            _playerState = PlayerState.BEATEN;
+            _playerState = PlayerState.DAMAGE;
         }
     }
 
@@ -336,11 +350,11 @@ public class PlayerStateManagement : MonoBehaviour
     {
         if (_isDead)
         {
-            _playerState = PlayerState.KILLED;
+            _playerState = PlayerState.DIE;
         }
     }
 
-    //ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚©‚çŒÄ‚Ño‚·
+    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã‹ã‚‰å‘¼ã³å‡ºã™
     public void ChibiRoboComeback()
     {
         _isHitEnemy = false;

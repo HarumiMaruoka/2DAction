@@ -16,10 +16,10 @@ public class PlayerHaveItemData
     // コンストラクタ
     public PlayerHaveItemData() 
     {
+        // jsonファイルへのパスを取得する。
         _jsonFilePathName = Path.Combine(Application.persistentDataPath, "PlayerHaveItemData.json");
         Init();
     }
-
     //===== このクラスで使用する型 =====//
     /// <summary> 
     /// アイテムの所持数を管理する構造体 : <br/>

@@ -79,7 +79,6 @@ public class ItemDataBase
                             case "KeyItem": _itemData[index] = new KeyItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.KEY, int.Parse(values[3]), values[4]); break;
                             default: Debug.LogError("設定されていないItemTypeです。"); break;
                         }
-                        Debug.Log($"<color=yellow>{_itemData[index]._name}</color>");
                         index++;
                     }
                 };

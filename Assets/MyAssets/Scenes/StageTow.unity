@@ -60586,7 +60586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPointSlider: {fileID: 1488654399}
-  _hoverSlider: {fileID: 1397789246}
+  _staminaSlider: {fileID: 1397789246}
 --- !u!212 &1954662064
 SpriteRenderer:
   m_ObjectHideFlags: 0

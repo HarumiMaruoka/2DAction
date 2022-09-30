@@ -1,13 +1,20 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationManagement : MonoBehaviour
+/// <summary>
+/// プレイヤーのアニメーションを制御するコンポーネント
+/// </summary>
+public class PlayerAnimationManager : MonoBehaviour
 {
+    //===== フィールド =====//
+    /// <summary> PlayerにアタッチされたAnimatorコンポーネント </summary>
     Animator _animator;
-    PlayerStateManagement _newPlayerStateManagement;
+    /// <summary> プレイヤーのステートを管理するコンポーネント </summary>
+    PlayerStateManagement _playerStateManagement;
 
-    //Move
+    //=== アニメーターに渡すフィールド ===//
+    // Move
     bool _isRun;
     bool _isDash;
     bool _isJump;
@@ -15,7 +22,6 @@ public class AnimationManagement : MonoBehaviour
     bool _isFall;
     bool _isSliding;
     bool _isClimb;
-    public float _ClimbSpeed { get; set; }
 
     //Attack
     bool _isShot;
@@ -25,19 +31,25 @@ public class AnimationManagement : MonoBehaviour
     bool _isClimbShot;
 
     //Be killed
-    bool _isBeaten;
-    bool _isKilled;
+    bool _isDamage;
+    bool _isDie;
+
+    //===== プロパティ =====//
+    /// <summary>
+    /// 梯子昇降中のアニメーションスピード
+    /// </summary>
+    public float _climbAnimSpeed { get; set; }
 
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _newPlayerStateManagement = GetComponent<PlayerStateManagement>();
+        _playerStateManagement = GetComponent<PlayerStateManagement>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        SetAnimFalse();
+        InitAnimParamAll();
         ChangeAnimation();
         SetAnim();
     }
@@ -54,14 +66,14 @@ public class AnimationManagement : MonoBehaviour
 
     void OnPause()
     {
-        _animator.speed=Constants.PAUSE_ANIM_SPEED;
+        _animator.speed = Constants.PAUSE_ANIM_SPEED;
     }
     void OnResume()
     {
         _animator.speed = Constants.NOMAL_ANIM_SPEED;
     }
 
-    void SetAnimFalse()
+    void InitAnimParamAll()
     {
         _isRun = false;
         _isDash = false;
@@ -77,13 +89,15 @@ public class AnimationManagement : MonoBehaviour
         _isDashShot = false;
         _isClimbShot = false;
 
-        _isBeaten = false;
-        _isKilled = false;
+        _isDamage = false;
+        _isDie = false;
     }
-
+    /// <summary>
+    /// ステートによって特定の値を切り替える
+    /// </summary>
     void ChangeAnimation()
     {
-        switch (_newPlayerStateManagement._playerState)
+        switch (_playerStateManagement._playerState)
         {
             case PlayerStateManagement.PlayerState.RUN: _isRun = true; break;
             case PlayerStateManagement.PlayerState.DASH: _isDash = true; break;
@@ -96,14 +110,16 @@ public class AnimationManagement : MonoBehaviour
             case PlayerStateManagement.PlayerState.SHOT: _isShot = true; break;
             case PlayerStateManagement.PlayerState.RUN_SHOT: _isRunShot = true; break;
             case PlayerStateManagement.PlayerState.JUMP_SHOT: _isJumpShot = true; break;
-            case PlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true;break;
+            case PlayerStateManagement.PlayerState.DASH_SHOT: _isDashShot = true; break;
             case PlayerStateManagement.PlayerState.CLIMB_SHOT: _isClimbShot = true; break;
 
-            case PlayerStateManagement.PlayerState.BEATEN: _isBeaten = true; break;
-            case PlayerStateManagement.PlayerState.KILLED: _isKilled = true; break;
+            case PlayerStateManagement.PlayerState.DAMAGE: _isDamage = true; break;
+            case PlayerStateManagement.PlayerState.DIE: _isDie = true; break;
         }
     }
-
+    /// <summary>
+    /// アニメーターに値を渡す
+    /// </summary>
     void SetAnim()
     {
         _animator.SetBool("isRun", _isRun);
@@ -113,7 +129,7 @@ public class AnimationManagement : MonoBehaviour
         _animator.SetBool("isFall", _isFall);
         _animator.SetBool("isSliding", _isSliding);
         _animator.SetBool("isClimb", _isClimb);
-        _animator.SetFloat("ClimbSpeed", _ClimbSpeed);
+        _animator.SetFloat("ClimbSpeed", _climbAnimSpeed);
 
         _animator.SetBool("isShot", _isShot);
         _animator.SetBool("isRunShot", _isRunShot);
@@ -121,7 +137,7 @@ public class AnimationManagement : MonoBehaviour
         _animator.SetBool("isDashShot", _isDashShot);
         _animator.SetBool("isClimbShot", _isClimbShot);
 
-        _animator.SetBool("isBeaten", _isBeaten);
-        _animator.SetBool("isKilled", _isKilled);
+        _animator.SetBool("isBeaten", _isDamage);
+        _animator.SetBool("isKilled", _isDie);
     }
 }

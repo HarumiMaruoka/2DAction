@@ -73,7 +73,7 @@ public class OldItemDataBase : MonoBehaviour
     }
     void Start()
     {
-        Debug.Log(ItemManager.Instance);
+
     }
     void Update()
     {

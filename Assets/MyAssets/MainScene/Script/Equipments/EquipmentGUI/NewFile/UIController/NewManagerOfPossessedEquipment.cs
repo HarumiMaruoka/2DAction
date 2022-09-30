@@ -24,6 +24,8 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
     /// </summary>
     Text[] _riseValueTexts;
 
+    bool _isInit = false;
+
     //===== プロパティ =====//
     /// <summary> 管理するボタン群のプロパティ </summary>
     public EquipmentButton[] EquipmentButtons { get => _equipmentButtons; }
@@ -38,6 +40,10 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
     void OnEnable()
     {
         EquipmentUIUpdateManager.ChangeSelectedObject += Update_DrawEquipmentInformation;
+        if (_isInit)
+        {
+            Set_ValueToButtonALL();
+        }
     }
     void OnDisable()
     {
@@ -64,6 +70,8 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
         }
         //装備の情報を表示するテキストオブジェクトを取得し、変数に保存しておく。
         _riseValueTexts = _equipmentInformationParents.transform.GetComponentsInChildren<Text>();
+
+        _isInit = true;
     }
     /// <summary> 全てのボタンに装備情報を設定する。 </summary>
     void Set_ValueToButtonALL()
@@ -77,15 +85,16 @@ public class NewManagerOfPossessedEquipment : UseEventSystemBehavior
     /// <param name="index"> 変更したいボタンのインデックス </param>
     void Set_ValueToButton(int index)
     {
-        // 所持している装備のIDを取得する。
-        //int thisEquipmentID = EquipmentDataBase.Instance.HaveEquipmentID._equipmentsID[index];
-        int thisEquipmentID =
+        Debug.Log($"_equipmentButtonGameObjects[index].GetComponent<EquipmentButton>()");
+
+        // 所持している装備を管理しているクラスからIDを取得する。
+        int setEquipmentID =
             EquipmentManager.Instance.HaveEquipmentData.HaveEquipment._equipments[index];
         
-        // ボタンに装備情報をセットする。
-        if (thisEquipmentID != -1)
+        // 取得したIDをボタンに設定する。
+        if (setEquipmentID != -1)
             _equipmentButtonGameObjects[index].GetComponent<EquipmentButton>().
-                Set_EquipmentButton(EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData[thisEquipmentID]);
+                Set_EquipmentButton(EquipmentManager.Instance.NewEquipmentDataBase.EquipmentData[setEquipmentID]);
         // -1なら所持していないのでボタンにnullを設定する。
         else _equipmentButtonGameObjects[index].GetComponent<EquipmentButton>().Set_EquipmentButton(null);
     }

@@ -2,8 +2,9 @@
 using UnityEngine;
 
 /// <summary> 
-/// まだ実装していない。<br/>
-/// プレイヤーが所持している装備を管理するクラス : <br/>
+/// <para>
+/// プレイヤーが所持している装備を管理するクラス : 
+/// </para>
 /// プレイヤーが所持している装備の情報を提供する。<br/>
 /// プレイヤーが所持している装備の情報をjsonファイルに書き込んだり<br/>
 /// jsonファイルから読み込んだりする機能を提供する。<br/>
@@ -30,6 +31,7 @@ public class HaveEquipmentDataBase
     public const int _maxHaveVolume = 20;
     /// <summary> 所持している装備のデータを保存しているファイルへのパス </summary>
     string _equipmentHaveJsonFilePath = "";
+    NewManagerOfPossessedEquipment _equipmentUI;
 
     // コンストラクタ
     public HaveEquipmentDataBase()
@@ -46,6 +48,9 @@ public class HaveEquipmentDataBase
     /// </summary>
     bool Init()
     {
+        _equipmentUI =
+            GameObject.FindObjectOfType<EquipmentUIComponentsManager>()?.
+            ManagerOfPossessedEquipmentReference;
         _equipmentHaveJsonFilePath = Path.Combine(Application.persistentDataPath, "HaveEquippedFile.json");
         // 所持できる装備分の配列用のメモリを確保する。
         _haveEquipmentID._equipments = new int[Constants.EQUIPMENT_MAX_HAVE_VALUE];
@@ -92,28 +97,10 @@ public class HaveEquipmentDataBase
         // 空のスロットを見つけ、そこに保存する。
         for (int i = 0; i < _haveEquipmentID._equipments.Length; i++)
         {
-            // 空スロットであればブロックを実行。
+            // 空スロットで見つけたら、そのスロットに取得した装備のIDを設定する。
             if (_haveEquipmentID._equipments[i] == (int)EquipmentID.None)
             {
                 _haveEquipmentID._equipments[i] = getEquipmentsID;
-                var haveEquipUI = GameObject.FindObjectOfType<EquipmentUIComponentsManager>()?.
-                    ManagerOfPossessedEquipmentReference;
-
-                if (haveEquipUI != null)
-                {
-                    if (_haveEquipmentID._equipments[i] != -1)
-                    {
-                        haveEquipUI.EquipmentButtons[i].
-                            Set_EquipmentButton(
-                            EquipmentManager.Instance.NewEquipmentDataBase.
-                            EquipmentData[_haveEquipmentID._equipments[i]]);
-                    }
-                    else
-                    {
-                        haveEquipUI.EquipmentButtons[i].
-                            Set_EquipmentButton(null);
-                    }
-                }
                 Debug.Log("取得に成功しました。");
                 return true;
             }
