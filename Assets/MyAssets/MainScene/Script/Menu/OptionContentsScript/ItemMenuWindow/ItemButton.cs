@@ -40,7 +40,7 @@ public class ItemButton : MonoBehaviour
             Debug.LogError("PlayerManagerがnullです！");
         }
         //所持数を取得
-        _nowItemVolume = ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
+        _nowItemVolume = OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
             Update_ItemVolume();
@@ -71,14 +71,14 @@ public class ItemButton : MonoBehaviour
     {
         if (_itemVolumText != null)
         {
-            _itemVolumText.text = " × " + ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+            _itemVolumText.text = " × " + OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
         }
     }
     /// <summary> ボタンを押したら実行する </summary>
     public void Use_ThisItem()
     {
         // ゲームオブジェクトに処理を預ける必要がない処理はアイテム自身から実行する。
-        ItemDataBase.Instance.ItemData[(int)MyItem._myID].UseItem();
+        OldItemDataBase.Instance.ItemData[(int)MyItem._myID].UseItem();
 
         // ゲームオブジェクトとして表現すべきものはインスタンシエイトする。
         switch (MyItem._myID)

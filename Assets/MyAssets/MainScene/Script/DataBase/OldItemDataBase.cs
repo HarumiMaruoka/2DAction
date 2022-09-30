@@ -8,7 +8,7 @@ using UnityEngine;
 /// 全てのアイテムの情報と、
 /// プレイヤーが所持しているアイテムを管理するクラス。
 /// </summary>
-public class ItemDataBase : MonoBehaviour
+public class OldItemDataBase : MonoBehaviour
 {
     //<===== このクラスで使用する型 =====>//
     /// <summary> アイテムの所持数を管理する構造体 </summary>
@@ -21,21 +21,21 @@ public class ItemDataBase : MonoBehaviour
 
     //<===== シングルトン関係 =====>//
     /// <summary> GameManagerのインスタンス </summary>
-    private static ItemDataBase _instance;
+    private static OldItemDataBase _instance;
     /// <summary> GameManagerのインスタンス </summary>
-    public static ItemDataBase Instance
+    public static OldItemDataBase Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new ItemDataBase();
+                _instance = new OldItemDataBase();
             }
             return _instance;
         }
     }
     //プライベートなコンストラクタ
-    private ItemDataBase() { }
+    private OldItemDataBase() { }
 
     //<===== メンバー変数 =====>//
     /// <summary> アイテムデータが入ったcsvファイルの絶対パス </summary>
@@ -73,7 +73,7 @@ public class ItemDataBase : MonoBehaviour
     }
     void Start()
     {
-
+        Debug.Log(ItemManager.Instance);
     }
     void Update()
     {

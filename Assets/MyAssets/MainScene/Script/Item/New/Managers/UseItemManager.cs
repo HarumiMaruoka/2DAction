@@ -4,9 +4,9 @@ using UniRx;
 using UnityEngine;
 
 /// <summary>
-/// アイテム使用を管理するマネージャー。<br/>
+/// アイテム使用を表現するためのコンポーネント。<br/>
 /// ゲームオブジェクトで表現すべき全てのアイテムのプレハブを持つ。<br/>
-/// 使用時はここからインスタンシエイトしてください。<br/>
+/// アイテム使用時に、ここからインスタンシエイトする。<br/>
 /// </summary>
 public class UseItemManager : MonoBehaviour
 {

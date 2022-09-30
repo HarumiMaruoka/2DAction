@@ -28,9 +28,9 @@ public class DropItem : MonoBehaviour, IDrops
             try
             {
                 // 取得時にメッセージを表示する。
-                Debug.Log($"{ItemDataBase.Instance.ItemData[(int)_getID]._name}を取得しました!");
+                Debug.Log($"{OldItemDataBase.Instance.ItemData[(int)_getID]._name}を取得しました!");
                 // アイテムを増やす。
-                ItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_getID, 1);
+                OldItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_getID, 1);
                 Destroy(gameObject);
             }
             catch (IndexOutOfRangeException e)

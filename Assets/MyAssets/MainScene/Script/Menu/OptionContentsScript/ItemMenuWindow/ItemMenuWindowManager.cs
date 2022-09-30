@@ -351,7 +351,7 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
             //ALLコンテントの子としてインスタンシエイトする。
             _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.ALL].transform);
             //データをセット
-            _itemButtons[i].GetComponent<ItemButton>().SetItemData(ItemDataBase.Instance.ItemData[i]);
+            _itemButtons[i].GetComponent<ItemButton>().SetItemData(OldItemDataBase.Instance.ItemData[i]);
 
             //各フィルターのコンテントの子としてインスタンシエイトする。
             switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
@@ -367,7 +367,7 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
                 default: Debug.LogError("エラー! : 不正な値です"); break;
             }
             //データをセット
-            temporaryObject.GetComponent<ItemButton>().SetItemData(ItemDataBase.Instance.ItemData[i]);
+            temporaryObject.GetComponent<ItemButton>().SetItemData(OldItemDataBase.Instance.ItemData[i]);
         }
     }
     /// <summary> コンテントの子を取得し、変数に保存する。 </summary>
@@ -388,7 +388,7 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
             {
                 //所持数が0かどうか判定する。
                 //0個であれば非アクティブにする
-                if (ItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                if (OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
                 {
                     item[i][j].gameObject.SetActive(false);
                 }

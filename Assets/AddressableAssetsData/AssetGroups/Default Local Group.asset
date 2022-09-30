@@ -16,7 +16,15 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 162d294a33be9784ebd1759e14ea234e
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: f5d84c1ffc4ab204e823e76f7ab95a5c
+    m_Address: Assets/MyAssets/MainScene/TextAsset/EquipmentDataBase.csv
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 755ddf6e0fbfbee44833c9863d792cfa
+    m_Address: ItemData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 89208d9cfcfea8a4c80dbf0b77204e60, type: 2}
   m_SchemaSet:
