@@ -93,7 +93,7 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
     /// <summary> 道具画面がアクティブになった時の処理 </summary>
     private void OnEnable()
     {
-
+        NewItemDataBase.Instance.AllItemDataBase.OtherInti += Initialize_ThisClass;
     }
 
     //=========フィルター変更に関する処理=========//
@@ -351,23 +351,29 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
             //ALLコンテントの子としてインスタンシエイトする。
             _itemButtons[i] = Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.ALL].transform);
             //データをセット
-            _itemButtons[i].GetComponent<ItemButton>().SetItemData(OldItemDataBase.Instance.ItemData[i]);
+            _itemButtons[i].GetComponent<ItemButton>().SetItemData(
+                NewItemDataBase.Instance.AllItemDataBase.ItemData[i]);
 
             //各フィルターのコンテントの子としてインスタンシエイトする。
             switch (_itemButtons[i].GetComponent<ItemButton>().MyItem._myType)
             {
-                case Item.ItemType.HEAL: temporaryObject = 
-                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
-                case Item.ItemType.POWER_UP: temporaryObject = 
-                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
-                case Item.ItemType.MINUS_ITEM: temporaryObject =
-                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
-                case Item.ItemType.KEY: temporaryObject = 
-                        Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
+                case Item.ItemType.HEAL:
+                    temporaryObject =
+                    Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.HEAL].transform); break;
+                case Item.ItemType.POWER_UP:
+                    temporaryObject =
+                    Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.POWER_UP].transform); break;
+                case Item.ItemType.MINUS_ITEM:
+                    temporaryObject =
+                    Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.MINUS_ITEM].transform); break;
+                case Item.ItemType.KEY:
+                    temporaryObject =
+                    Instantiate(_itemButtonPrefab, Vector3.zero, Quaternion.identity, _contents[(int)ItemFilter.KEY].transform); break;
                 default: Debug.LogError("エラー! : 不正な値です"); break;
             }
             //データをセット
-            temporaryObject.GetComponent<ItemButton>().SetItemData(OldItemDataBase.Instance.ItemData[i]);
+            temporaryObject.GetComponent<ItemButton>().SetItemData(
+                NewItemDataBase.Instance.AllItemDataBase.ItemData[i]);
         }
     }
     /// <summary> コンテントの子を取得し、変数に保存する。 </summary>
@@ -388,7 +394,8 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
             {
                 //所持数が0かどうか判定する。
                 //0個であれば非アクティブにする
-                if (OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
+                if (NewItemDataBase.Instance.PlayerHaveItemData.
+                    HaveItemData._itemVolume[(int)item[i][j].GetComponent<ItemButton>().MyItem._myID] == 0)
                 {
                     item[i][j].gameObject.SetActive(false);
                 }
@@ -448,8 +455,11 @@ public class ItemMenuWindowManager : UseEventSystemBehavior
     {
         _currentItemFilter = itemFilter;
     }
-    /// <summary> アイテムの所持数が0になった時の処理 </summary>
-    public void ShouldDo_HaveItemZero(ItemButton item, Item.ItemID ID, ItemFilter filter)
+    /// <summary> 
+    /// アイテムの所持数が0になった時の処理 : <br/>
+    /// 
+    /// </summary>
+    public void ShouldDo_HaveItemZero(ItemButton item)
     {
         //一番上のアクティブなボタンを取得
         ItemButton itemTop = Get_TopActiveObject(_currentItemFilter);

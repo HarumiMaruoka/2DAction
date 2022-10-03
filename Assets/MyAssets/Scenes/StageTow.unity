@@ -27878,16 +27878,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403081135}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afcd29ba492f2f4ca258a910bbdcb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemCSVPath: C:\Users\vantan\Desktop\2DActionBasicInformation\ItemInformation.csv
-  _itemJsonPath: 
-  _itemDataCsv: {fileID: 4900000, guid: 755ddf6e0fbfbee44833c9863d792cfa, type: 3}
-  _itemVolume:
-    _itemNumberOfPossessions: 
 --- !u!1 &407399434
 GameObject:
   m_ObjectHideFlags: 0

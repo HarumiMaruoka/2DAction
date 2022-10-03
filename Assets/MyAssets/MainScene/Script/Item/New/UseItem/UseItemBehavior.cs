@@ -12,17 +12,9 @@ public class UseItemBehavior : MonoBehaviour
     /// <summary> このクラスで使用するコルーチンの保存先。</summary>
     IEnumerator _waitEffectTimeCoroutine = default;
     [Tooltip("消滅までの時間"), SerializeField]
-    float _destroyTime = 10f;
+    protected float _destroyTime = 10f;
     [Tooltip("効果量"), SerializeField]
-    float _effectValue = 10f;
-    /// <summary>
-    /// 効果開始処理
-    /// </summary>
-    protected System.Action OnEffectStart;
-    /// <summary>
-    /// 効果終了処理
-    /// </summary>
-    protected System.Action OnEffectEnd;
+    protected float _effectValue = 10f;
 
     //===== Unityメッセージ =====//
     protected virtual void Start()
@@ -59,16 +51,28 @@ public class UseItemBehavior : MonoBehaviour
     {
         StartCoroutine(_waitEffectTimeCoroutine);
     }
-    IEnumerator WaitEffectTime()
+    /// <summary>
+    /// 効果の適用開始処理。<br/>
+    /// 継承先で独自の処理を実装してください。
+    /// </summary>
+    protected virtual void OnEffect() { }
+    /// <summary>
+    /// 効果の適用解除処理。 <br/>
+    /// 継承先で独自の処理を実装してください。
+    /// </summary>
+    protected virtual void OffEffect() { }
+
+    //===== コルーチン =====//
+    protected IEnumerator WaitEffectTime()
     {
         float timer = 0f;
-        OnEffectStart();
+        OnEffect();
         while (timer < _destroyTime)
         {
             timer += Time.deltaTime;
             yield return null;
         }
-        OnEffectEnd();
+        OffEffect();
         Destroy(gameObject);
     }
 }

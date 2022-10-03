@@ -28,14 +28,16 @@ public class DropItem : MonoBehaviour, IDrops
             try
             {
                 // 取得時にメッセージを表示する。
-                Debug.Log($"{OldItemDataBase.Instance.ItemData[(int)_getID]._name}を取得しました!");
+                // Debug.Log($"{OldItemDataBase.Instance.ItemData[(int)_getID]._name}を取得しました!");
+                Debug.Log($"{NewItemDataBase.Instance.AllItemDataBase.ItemData[(int)_getID]._name}を取得しました!");
                 // アイテムを増やす。
-                OldItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_getID, 1);
+                // OldItemDataBase.Instance.MakeChanges_ItemNumberOfPossessions((int)_getID, 1);
+                NewItemDataBase.Instance.PlayerHaveItemData.MakeChangesHaveItemData((int)_getID, 1);
                 Destroy(gameObject);
             }
             catch (IndexOutOfRangeException e)
             {
-                Debug.LogError($"{gameObject.name}のフィールド\"_getID=>{_getID}は範囲外です。");
+                Debug.LogError($"{gameObject.name}のフィールド\"_getID=>{_getID}\"は範囲外です。");
             }
         }
     }

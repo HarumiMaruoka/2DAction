@@ -54,7 +54,7 @@ public class PlayerHaveItemData
     /// </summary>
     private void Init()
     {
-        
+        _haveItemData._itemVolume = new int[(int)Item.ItemID.ITEM_ID_END];
     }
 
     //===== publicメソッド =====//

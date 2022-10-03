@@ -30,26 +30,25 @@ public class PlayerAnimationManager : MonoBehaviour
     bool _isDashShot;
     bool _isClimbShot;
 
-    //Be killed
+    //Damage and Die
     bool _isDamage;
     bool _isDie;
 
     //===== プロパティ =====//
     /// <summary>
-    /// 梯子昇降中のアニメーションスピード
+    /// 梯子昇降中のアニメーションスピードを制御する用のフィールド。
     /// </summary>
     public float _climbAnimSpeed { get; set; }
 
+    //===== Unityメッセージ =====//
     void Start()
     {
         _animator = GetComponent<Animator>();
         _playerStateManagement = GetComponent<PlayerStateManagement>();
     }
-
-    // Update is called once per frame
     void Update()
     {
-        InitAnimParamAll();
+        ResetAnimParamAll();
         ChangeAnimation();
         SetAnim();
     }
@@ -64,6 +63,7 @@ public class PlayerAnimationManager : MonoBehaviour
         GameManager.OnResume -= OnResume;
     }
 
+    //===== privateメッセージ =====//
     void OnPause()
     {
         _animator.speed = Constants.PAUSE_ANIM_SPEED;
@@ -72,8 +72,7 @@ public class PlayerAnimationManager : MonoBehaviour
     {
         _animator.speed = Constants.NOMAL_ANIM_SPEED;
     }
-
-    void InitAnimParamAll()
+    void ResetAnimParamAll()
     {
         _isRun = false;
         _isDash = false;

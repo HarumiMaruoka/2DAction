@@ -133,9 +133,10 @@ public class PlayerMoveManager : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
         if (_isGizmo)
         {
+            Gizmos.color = Color.red;
+
             //右のgizmo
             Gizmos.DrawCube(_overLapBoxOffsetRight + transform.position, _overLapBoxSizeVertical);
             //左のgizmo
@@ -149,7 +150,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     void OnPause()
     {
-        _playerStateManagement._isPause = true;
+        _playerStateManagement.IsPause = true;
 
         // Rigidbody2Dを停止させる。
         _angularVelocity = _rigidBody2D.angularVelocity;
@@ -162,7 +163,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     void OnResume() 
     {
-        _playerStateManagement._isPause = false;
+        _playerStateManagement.IsPause = false;
 
         // Rigidbody2Dの停止を解除する。
         _rigidBody2D.simulated = true;
@@ -183,9 +184,9 @@ public class PlayerMoveManager : MonoBehaviour
         _newImpulse = Vector2.zero;
         _newVelocity = Vector2.zero;
 
-        if (_playerStateManagement._isMove &&
-            !_playerStateManagement._isDead &&
-            !_playerStateManagement._isPause)
+        if (_playerStateManagement.IsMove &&
+            !_playerStateManagement.IsDead &&
+            !_playerStateManagement.IsPause)
         {
             //プレイヤーが向いている方向を取得
             _isRigth = !_spriteRendere.flipX;
@@ -253,7 +254,7 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 _newImpulse += _isRigth ? new Vector2(_slidingSpeed, 0f) : new Vector2(-_slidingSpeed, 0f);
                 _canJump = false;//ジャンプは実行しない
-                _playerStateManagement._isSlidingNow = true;//現在スライディング中であることを表す
+                _playerStateManagement.IsSlidingNow = true;//現在スライディング中であることを表す
             }
         }
     }

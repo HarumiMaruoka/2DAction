@@ -26,6 +26,8 @@ public class ItemDataBase
     /// 全てのアイテムデータ <br/>
     /// </summary>
     private Item[] _itemData = new Item[(int)Item.ItemID.ITEM_ID_END];
+    public System.Action<Item> OnSetItemButton;
+    public System.Func<bool> OtherInti;
 
     //===== Property =====//
     /// <summary>
@@ -33,11 +35,12 @@ public class ItemDataBase
     /// </summary>
     public Item[] ItemData => _itemData;
 
+
     //===== private Method =====//
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Init()
+    public void Init()
     {
         OnLoadItemData();
         Debug.Log("<color=yellow>ItemDataBase 初期化終了</color>");
@@ -79,6 +82,10 @@ public class ItemDataBase
                             case "KeyItem": _itemData[index] = new KeyItem((Item.ItemID)int.Parse(values[0]), values[1], Item.ItemType.KEY, int.Parse(values[3]), values[4]); break;
                             default: Debug.LogError("設定されていないItemTypeです。"); break;
                         }
+
+                        OnSetItemButton(_itemData[index]);
+                        OtherInti();
+
                         index++;
                     }
                 };

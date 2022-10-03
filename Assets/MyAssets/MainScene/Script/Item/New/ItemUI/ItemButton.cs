@@ -3,24 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// アイテムウィンドウのUIの一つ。<br/>
+/// アイテムのボタン自身のコンポーネント <br/>
+/// </summary>
 public class ItemButton : MonoBehaviour
 {
-    //<===== メンバー変数 =====>//
-    //アイテム名のテキスト
+    //===== メンバー変数 =====//
+    /// <summary>
+    /// アイテム名を描画する為の子オブジェクトの
+    /// テキストコンポーネント
+    /// </summary>
     Text _itemNameText;
-    //個数のテキスト
+    /// <summary>
+    /// 個数を描画する為の子オブジェクトの
+    /// テキストコンポーネント
+    /// </summary>
     Text _itemVolumText;
-
-    //このButtonが持つItem
+    /// <summary>
+    /// このボタンが持つアイテムの情報
+    /// </summary>
     Item _myItem;
     public Item MyItem { get => _myItem; }
-
-    int _beforeItemVolume;
+    /// <summary>
+    /// 現在フレームのこのアイテムの所持数
+    /// </summary>
     int _nowItemVolume;
-
+    /// <summary>
+    /// 前フレームのこのアイテムの所持数
+    /// </summary>
+    int _beforeItemVolume;
+    /// <summary>
+    /// &lt; アイテムUIを統括する者 &gt; <br/>
+    /// アイテムウィンドウマネージャー <br/>
+    /// </summary>
     ItemMenuWindowManager _itemWindowManager;
 
-    //<===== Unityメッセージ =====>//
+    //===== Unityメッセージ =====//
     void Start()
     {
         _itemWindowManager = GameObject.FindGameObjectWithTag("ToolWindow").GetComponent<ItemMenuWindowManager>();
@@ -40,7 +59,7 @@ public class ItemButton : MonoBehaviour
             Debug.LogError("PlayerManagerがnullです！");
         }
         //所持数を取得
-        _nowItemVolume = OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID];
+        _nowItemVolume = NewItemDataBase.Instance.PlayerHaveItemData.HaveItemData._itemVolume[(int)_myItem._myID];
         if (_nowItemVolume != _beforeItemVolume)
         {
             Update_ItemVolume();
@@ -50,18 +69,19 @@ public class ItemButton : MonoBehaviour
         {
             Debug.Log(_myItem._name + "の所持数が0になりました。\n" +
                 "_myItem._nameのボタンを非アクティブにします。");
-            _itemWindowManager.ShouldDo_HaveItemZero(this, _myItem._myID, (ItemMenuWindowManager.ItemFilter)_myItem._myType);
+            _itemWindowManager.ShouldDo_HaveItemZero(this);
         }
         _beforeItemVolume = _nowItemVolume;
     }
     /// <summary> アイテムボタンがアクティブになった時の処理。 </summary>
     void OnEnable()
     {
+        NewItemDataBase.Instance.AllItemDataBase.OnSetItemButton += SetItemData;
         //所持数をセットする
         Update_ItemVolume();
     }
 
-    //<===== publicメンバー関数 =====>//
+    //===== publicメソッド =====//
     public void SetItemData(Item item)
     {
         _myItem = item;
@@ -71,14 +91,14 @@ public class ItemButton : MonoBehaviour
     {
         if (_itemVolumText != null)
         {
-            _itemVolumText.text = " × " + OldItemDataBase.Instance.ItemVolume._itemNumberOfPossessions[(int)_myItem._myID].ToString() + " ";
+            _itemVolumText.text = " × " + NewItemDataBase.Instance.PlayerHaveItemData.HaveItemData._itemVolume[(int)_myItem._myID].ToString() + " ";
         }
     }
     /// <summary> ボタンを押したら実行する </summary>
     public void Use_ThisItem()
     {
         // ゲームオブジェクトに処理を預ける必要がない処理はアイテム自身から実行する。
-        OldItemDataBase.Instance.ItemData[(int)MyItem._myID].UseItem();
+        NewItemDataBase.Instance.AllItemDataBase.ItemData[(int)MyItem._myID].UseItem();
 
         // ゲームオブジェクトとして表現すべきものはインスタンシエイトする。
         switch (MyItem._myID)

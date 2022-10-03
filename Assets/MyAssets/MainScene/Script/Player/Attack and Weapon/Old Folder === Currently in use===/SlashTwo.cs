@@ -48,11 +48,6 @@ public class SlashTwo : MonoBehaviour
             AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
             enemy.HitPlayerAttack(_slashOffensivePower);
         }
-        if(collision.TryGetComponent(out BossBase boss))
-        {
-            AudioSource.PlayClipAtPoint(_hitSlash, transform.position, _soundVolume);
-            boss.HitPlayerAttack(_slashOffensivePower);
-        }
     }
 
     private void OnEnable()

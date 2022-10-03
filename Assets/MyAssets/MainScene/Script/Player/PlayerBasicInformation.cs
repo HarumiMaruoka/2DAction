@@ -39,7 +39,7 @@ public class PlayerBasicInformation : MonoBehaviour
         //player の体力がなくなったら消滅する
         if (PlayerStatusManager.Instance.PlayerHealthPoint < 1)
         {
-            _newPlayerStateManagement._isDead = true;
+            _newPlayerStateManagement.IsDead = true;
             _button.SetActive(true);
         }
     }
@@ -74,21 +74,13 @@ public class PlayerBasicInformation : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         //無敵状態であれば攻撃を受けない
-        if (!_isGodMode && !_newPlayerStateManagement._isDead)
+        if (!_isGodMode && !_newPlayerStateManagement.IsDead)
         {
             //Enemyと接触したらEnemyのHitPlayer関数を実行する
             if (collision.gameObject.TryGetComponent(out EnemyBase enemy))
             {
                 enemy.HitPlayer(_rigidbody2D);
-                _newPlayerStateManagement._isHitEnemy = true;
-                _hitEnemySound.Play();
-                _waitGodModeIntervalCoroutine = WaitGodModeInterval();
-                StartCoroutine(_waitGodModeIntervalCoroutine);
-            }
-            if (collision.gameObject.TryGetComponent(out BossBase boss))
-            {
-                boss.HitPlayer();
-                _newPlayerStateManagement._isHitEnemy = true;
+                _newPlayerStateManagement.IsHitEnemy = true;
                 _hitEnemySound.Play();
                 _waitGodModeIntervalCoroutine = WaitGodModeInterval();
                 StartCoroutine(_waitGodModeIntervalCoroutine);
@@ -113,12 +105,12 @@ public class PlayerBasicInformation : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Godモードでも"Deadステート"でもなければ実行する。
-        if (!_isGodMode && !_newPlayerStateManagement._isDead)
+        if (!_isGodMode && !_newPlayerStateManagement.IsDead)
         {
             if (collision.gameObject.TryGetComponent(out IAttackOnPlayer _enemy))
             {
                 _enemy.HitPlayer(_rigidbody2D);
-                _newPlayerStateManagement._isHitEnemy = true;
+                _newPlayerStateManagement.IsHitEnemy = true;
                 _hitEnemySound.Play();
                 //一定時間無敵にする。
                 _waitGodModeIntervalCoroutine = WaitGodModeInterval();

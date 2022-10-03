@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class PlayerStateManagement : MonoBehaviour
 {
+    /// <summary>
+    /// プレイヤーが表現できるステートの一覧
+    /// </summary>
     public enum PlayerState
     {
         // Move
@@ -31,35 +34,80 @@ public class PlayerStateManagement : MonoBehaviour
         //倒された時 / 死
         DIE,
     }
-    /// <summary>  現在のステート  </summary>
-    public PlayerState _playerState { get; private set; } = PlayerState.IDLE;
-    /// <summary>  入力管理コンポーネント  </summary>
-    InputManager _inputManager;
-    /// <summary>  速度で判定する際に使用する  </summary>
-    Rigidbody2D _rigidBody2D;
-    /// <summary>  接地判定で判定する際に使用する </summary>
-    PlayerMoveManager _playerMoveManager;
-    /// <summary> 特定の条件でアニメーションの速度を変更する </summary>
-    PlayerAnimationManager _newAnimationManagement;
-    SpriteRenderer _spriteRenderer;
-    AudioSource _hitEnemySound;
 
+    //===== インスペクタ変数 =====//
+    [Tooltip("スライディングの時間"), SerializeField] float _slidingTime;
+
+    //===== フィールド =====//
+    /// <summary>  
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 入力管理コンポーネント。
+    /// </summary>
+    InputManager _inputManager = default;
+    /// <summary>  
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 速度で判定する際に使用する。
+    /// </summary>
+    Rigidbody2D _rigidBody2D = default;
+    /// <summary> 
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 接地判定で判定する際に使用する。
+    /// </summary>
+    PlayerMoveManager _playerMoveManager = default;
+    /// <summary> 
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 特定の条件でアニメーションの速度を変更する際に使用する。
+    /// </summary>
+    PlayerAnimationManager _newAnimationManagement = default;
+    /// <summary> 
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 絵の向きを反転させる為に使用する。
+    /// </summary>
+    SpriteRenderer _spriteRenderer = default;
+    /// <summary>
+    /// Playerにアタッチされたコンポーネント。<br/>
+    /// 敵に接触した際にヒットSEを鳴らす為に使用する。
+    /// </summary>
+    AudioSource _audioSource = default;
+
+    /// <summary>
+    /// 梯子に接触しているかどうかを表す値
+    /// </summary>
     bool _isClimbContact = false;
-
+    /// <summary>
+    /// 攻撃中かどうか表す値
+    /// </summary>
     bool _isAttack = false;
+    /// <summary>
+    /// ホバー中かどうかを表す値
+    /// </summary>
+    bool _isHoverMode = false;
 
-    public bool _isHitEnemy { get; set; }
-    bool _beforeFrameIsHitEnemy;
-    public bool _isDead { get; set; }
-    public bool _isMove { get; set; }
-    public bool _isPause { get; set; }
-
-    bool _isHoverMode;
-
-    public bool _isSlidingNow { get; set; }
+    //===== プロパティ =====//
+    /// <summary>  現在のステートを表す値  </summary>
+    public PlayerState _playerState { get; private set; } = PlayerState.IDLE;
+    /// <summary>
+    /// Enimy/EnemyAttackに接触したかどうか
+    /// </summary>
+    public bool IsHitEnemy { get; set; } = false;
+    /// <summary>
+    /// プレイヤーの体力があるかどうか / 死んでいるかどうか
+    /// </summary>
+    public bool IsDead { get; set; } = false;
+    /// <summary>
+    /// 移動できるかどうかの値
+    /// </summary>
+    public bool IsMove { get; set; } = true;
+    /// <summary>
+    /// ポーズ中かどうかを表す値
+    /// </summary>
+    public bool IsPause { get; set; } = false;
+    /// <summary>
+    /// スライディング中かどうか表す値
+    /// </summary>
+    public bool IsSlidingNow { get; set; } = false;
 
     IEnumerator _stopProcessingCoroutine = default;
-    [Tooltip("スライディングの時間"), SerializeField] float _slidingTime;
 
     void Start()
     {
@@ -68,10 +116,7 @@ public class PlayerStateManagement : MonoBehaviour
         _newAnimationManagement = GetComponent<PlayerAnimationManager>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerMoveManager = GetComponent<PlayerMoveManager>();
-        _hitEnemySound = GetComponent<AudioSource>();
-
-        _isMove = true;
-        _isPause = false;
+        _audioSource = GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -108,13 +153,13 @@ public class PlayerStateManagement : MonoBehaviour
     {
         if (PlayerStatusManager.Instance.PlayerHealthPoint <= 0)
         {
-            _isDead = true;
-            _isMove = false;
+            IsDead = true;
+            IsMove = false;
         }
 
-        if (!_isDead)
+        if (!IsDead)
         {
-            if (_isMove)
+            if (IsMove)
             {
                 //Idle状態で初期化する
                 //(何もなければプレイヤーはIdle状態)
@@ -128,19 +173,19 @@ public class PlayerStateManagement : MonoBehaviour
             OtherActionManage();
         }
         //移動できるかどうか
-        if (_isSlidingNow || _isHitEnemy)
+        if (IsSlidingNow || IsHitEnemy)
         {
-            _isMove = false;
+            IsMove = false;
         }
         else
         {
-            _isMove = true;
+            IsMove = true;
         }
-        if (_hitEnemySound.time > 0.8f)
+        if (_audioSource.time > 0.8f)
         {
-            _hitEnemySound.Stop();
+            _audioSource.Stop();
         }
-        Killed();
+        Die();
     }
 
     void MoveManage()
@@ -173,7 +218,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     void OtherActionManage()
     {
-        Beaten();
+        Damage();
     }
 
     void Run()
@@ -181,17 +226,7 @@ public class PlayerStateManagement : MonoBehaviour
         if (_inputManager._inputHorizontal != 0)
         {
             _playerState = PlayerState.RUN;
-             _spriteRenderer.flipX = _inputManager._inputHorizontal < 0 ? true : false;
-            //var localScale = transform.localScale;
-            //if (_inputManager._inputHorizontal > 0f && localScale.x < 0f)
-            //{
-            //    localScale.x *= -1f;
-            //}
-            //else if (_inputManager._inputHorizontal < 0f && localScale.x > 0f)
-            //{
-            //    localScale.x *= -1f;
-            //}
-            //transform.localScale = localScale;
+            _spriteRenderer.flipX = _inputManager._inputHorizontal < 0 ? true : false;
         }
     }
 
@@ -241,7 +276,7 @@ public class PlayerStateManagement : MonoBehaviour
 
     void Sliding()
     {
-        if (_isSlidingNow)
+        if (IsSlidingNow)
         {
             _playerState = PlayerState.SLIDING;
             _stopProcessingCoroutine = StopProcessing(_slidingTime);
@@ -338,17 +373,17 @@ public class PlayerStateManagement : MonoBehaviour
         }
     }
 
-    void Beaten()
+    void Damage()
     {
-        if (_isHitEnemy)
+        if (IsHitEnemy)
         {
             _playerState = PlayerState.DAMAGE;
         }
     }
 
-    void Killed()
+    void Die()
     {
-        if (_isDead)
+        if (IsDead)
         {
             _playerState = PlayerState.DIE;
         }
@@ -357,21 +392,21 @@ public class PlayerStateManagement : MonoBehaviour
     //アニメーションイベントから呼び出す
     public void ChibiRoboComeback()
     {
-        _isHitEnemy = false;
+        IsHitEnemy = false;
         _isHoverMode = false;
-        _hitEnemySound.Stop();
+        _audioSource.Stop();
     }
 
     IEnumerator StopProcessing(float stopTime)
     {
         float timer = 0f;
-        _isSlidingNow = true;
+        IsSlidingNow = true;
         while (timer < stopTime)
         {
             timer += Time.deltaTime;
             yield return null;
         }
-        _isSlidingNow = false;
+        IsSlidingNow = false;
         _stopProcessingCoroutine = null;
     }
 }

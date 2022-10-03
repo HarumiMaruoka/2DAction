@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// アイテム使用による、
-/// 攻撃力上昇を表す為のコンポーネント
+/// アイテムID06用に作成したコンポーネント。<br/>
+/// 敵の移動速度を一定時間減らす。<br/>
 /// </summary>
-public class UseOffensivePowerItem : MonoBehaviour
+public class OldUseEnemyMoveSpeedDownItem : MonoBehaviour
 {
     //===== フィールド / プロパティ =====//
     [Header("このアイテムのステータス")]
     [Tooltip("消滅までの時間"), SerializeField]
     float _destroyTime = 10f;
-    [Tooltip("強化倍率(%) : 100(%)で2倍"), SerializeField]
-    int _powerUpValue = 100;
+    [Tooltip("減退倍率(%) : 100(%)で0,50%で半分になる"), SerializeField]
+    float _moveSpeedDownValue = 10f;
     /// <summary> コルーチン </summary>
     IEnumerator _waitDestroyCoroutine = default;
+
 
     //===== Unityメッセージ =====//
     void Start()
@@ -49,13 +50,13 @@ public class UseOffensivePowerItem : MonoBehaviour
     IEnumerator WaitDestroy()
     {
         float timer = 0f;
-        UseItemManager.Instance.OffensivePowerUpValueChange(_powerUpValue);
+        UseItemManager.Instance.EnemyMoveSpeedDownValueChange(_moveSpeedDownValue);
         while (timer < _destroyTime)
         {
             timer += Time.deltaTime;
             yield return null;
         }
-        UseItemManager.Instance.OffensivePowerUpValueChange(-_powerUpValue);
+        UseItemManager.Instance.EnemyMoveSpeedDownValueChange(-_moveSpeedDownValue);
         Destroy(gameObject);
     }
 }

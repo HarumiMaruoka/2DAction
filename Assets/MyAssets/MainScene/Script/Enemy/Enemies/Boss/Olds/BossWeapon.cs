@@ -9,13 +9,12 @@ using UnityEngine;
 /// </summary>
 public class BossWeapon : MonoBehaviour
 {
-    //<=========== メンバー変数 ===========>//
+    //===== メンバー変数 =====//
     //プレイヤーのコンポーネント
     GameObject _playerObject;
     protected Transform _playerPos;
     protected PlayerBasicInformation _playerBasicInformation;
     protected Rigidbody2D _playersRigidBody2D;
-    protected PlayerMoveManager _playerMoveManager;
 
     //自身のコンポーネント
     Animator _animator;
@@ -33,7 +32,7 @@ public class BossWeapon : MonoBehaviour
     bool _isInitialized = false;
 
 
-    //<=========== Unityメッセージ ===========>//
+    //===== Unityメッセージ =====//
     void Start()
     {
         if (!(_isInitialized = Initialize_BossAttack()))
@@ -54,7 +53,7 @@ public class BossWeapon : MonoBehaviour
         }
     }
 
-    //<=========== privateメンバー関数 ===========>//
+    //===== privateメソッド =====//
     /// <summary> BossAttackの初期化関数 </summary>
     /// <returns> 初期化に成功したら true を返す。 </returns>
     bool Initialize_BossAttack()
@@ -95,14 +94,6 @@ public class BossWeapon : MonoBehaviour
             Debug.LogError($"PlayerにアタッチされたRigidbody2Dコンポーネントの取得に失敗しました : {gameObject.name}");
             return false;
         }
-
-        _playerMoveManager = _playerObject.GetComponent<PlayerMoveManager>();
-        if (_playerMoveManager == null)
-        {
-            Debug.LogError($"PlayerにアタッチされたPlayerMoveManagerコンポーネントの取得に失敗しました : {gameObject.name}");
-            return false;
-        }
-
         return true;
     }
     /// <summary> このゲームオブジェクトにアタッチされているコンポーネントを取得する。 </summary>
@@ -131,7 +122,7 @@ public class BossWeapon : MonoBehaviour
 
 
 
-    //<=========== publicメンバー関数 ===========>//
+    //===== publicメソッド =====//
     //プレイヤーから呼び出す
     public void HitPlayer()//プレイヤーの体力を減らし、ノックバックさせる。
     {
@@ -151,7 +142,7 @@ public class BossWeapon : MonoBehaviour
         }
     }
 
-    //<=== 以下アニメーションイベントから呼び出す？作ったの結構前で忘れてしまった。要確認。 ===>//
+    //===== アニメーションイベントから呼び出す想定で作成したもの =====//
     public void OnCollider()
     {
         _collider2D.enabled = true;
